@@ -8,9 +8,7 @@ let instance: Database.Database | null = null;
 export function getDb(): Database.Database {
   if (instance) return instance;
 
-  const dbPath =
-    process.env.NESTOR_DB_PATH ??
-    path.join(os.homedir(), '.nestor', 'nestor.db');
+  const dbPath = process.env.NESTOR_DB_PATH ?? path.join(os.homedir(), '.nestor', 'nestor.db');
 
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
