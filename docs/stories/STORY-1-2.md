@@ -88,6 +88,7 @@
 **Issues encountered:**
 - `bmad/config.yaml` was not prettier-formatted; fixed in follow-up commit `b5a60e5` before CI went green.
 - `gh api --field` cannot pass nested JSON objects; resolved by using `--input -` with a heredoc.
+- **2026-05-09 — Dependabot major-bump conflicts:** Dependabot PRs bumped `@typescript-eslint/eslint-plugin` to `^8.59.2` and `eslint` to `^10.3.0` independently, each causing `npm ci` ERESOLVE failures. Root cause: the whole ESLint v8 toolchain (`@typescript-eslint` v7, `eslint-config-airbnb-typescript@18`, `eslint-config-airbnb-base@15`) must move as a unit — no upstream package supports ESLint v10 or typescript-eslint v8 yet. Fix: added `ignore: version-update:semver-major` in `dependabot.yml` for all 8 ESLint-ecosystem packages; added `overrides` in root `package.json` to pin `eslint@^8.57.0`, `@typescript-eslint/eslint-plugin@^7.0.0`, and `@typescript-eslint/parser@^7.0.0`.
 
 **Remaining manual checks:**
 - Verify CI fails correctly on a bad PR (lint/typecheck gates) — deferred to first real feature PR.
