@@ -132,21 +132,30 @@ Nestor runs on a single low-power device (Intel NUC or Raspberry Pi 5) with no h
 
 ## Technology Stack
 
+> **Version reference** (last checked 2026-05-09 against npm latest):
+> Node.js 22 LTS · TypeScript 6 · React 19 · react-router-dom 7 · Express 5 ·
+> @tanstack/react-query 5 · zustand 5 · framer-motion 12 · react-hook-form 7 ·
+> date-fns 4 · @tanstack/react-virtual 3 · i18next 26 · react-i18next 17 ·
+> better-sqlite3 12 · node-cron 4 · tsdav 2 · cheerio 1 · ical.js 2 · bcrypt 6 ·
+> multer 2 · ws 8 · axios 1 · zod 4 · sharp 0.34 · express-rate-limit 8 ·
+> Jest 30 · @testing-library/react 16 · Supertest 7 · Playwright 1.59 ·
+> ESLint 8 (pinned — Airbnb config) · Prettier 3 · Husky 9
+
 ### Frontend
 
-**Choice:** React 18 (SPA, TypeScript)
+**Choice:** React 19 (SPA, TypeScript)
 
-**Rationale:** React is already specified in the PRD and is the right choice for a complex, stateful UI with many interactive modules. TypeScript adds type safety critical for a large codebase with many contributors. The SPA model is appropriate — SEO is irrelevant for a LAN-served application, and the rich client-side interactivity (drag-and-drop, animations, touch gestures) maps well to React.
+**Rationale:** React is already specified in the PRD and is the right choice for a complex, stateful UI with many interactive modules. TypeScript adds type safety critical for a large codebase with many contributors. The SPA model is appropriate — SEO is irrelevant for a LAN-served application, and the rich client-side interactivity (drag-and-drop, animations, touch gestures) maps well to React. React 19 introduces the React Compiler (optional, reduces manual memoisation), the Actions API for async state transitions, and `ref` as a plain prop (no more `forwardRef`).
 
 **Key libraries:**
-- `react-router-dom` v6 — client-side routing per module/profile
-- `i18next` + `react-i18next` — internationalisation
-- `react-query` (TanStack Query) — server state, caching, background refetch
-- `zustand` — lightweight client state (profile, settings, alert count)
-- `framer-motion` — animations (spring, carousel, completion bursts)
-- `react-hook-form` — form management throughout
-- `date-fns` — locale-aware date/time formatting
-- `react-virtualized` — long list performance (shopping list, logs)
+- `react-router-dom` v7 — client-side routing per module/profile (v7 merges Remix patterns; data loaders available if needed)
+- `i18next` v26 + `react-i18next` v17 — internationalisation
+- `@tanstack/react-query` v5 — server state, caching, background refetch
+- `zustand` v5 — lightweight client state (profile, settings, alert count)
+- `framer-motion` v12 — animations (spring, carousel, completion bursts)
+- `react-hook-form` v7 — form management throughout
+- `date-fns` v4 — locale-aware date/time formatting (ESM-first, excellent tree-shaking)
+- `@tanstack/react-virtual` v3 — long list performance (shopping list, logs); preferred over the unmaintained `react-virtualized`
 
 **Trade-offs:** React adds bundle size vs. vanilla JS, but the developer ecosystem and component reuse across 10+ nav modules easily justifies it.
 
@@ -154,21 +163,25 @@ Nestor runs on a single low-power device (Intel NUC or Raspberry Pi 5) with no h
 
 ### Backend
 
-**Choice:** Node.js 20 LTS + Express 4
+**Choice:** Node.js 22 LTS + Express 5
 
-**Rationale:** Already specified in PRD. Node.js is the right choice for an I/O-bound application (CalDAV sync, plugin HTTP calls, file I/O for photos). Single language across frontend and backend reduces context switching for contributors. Express is minimal and well-understood globally, keeping the barrier to community contribution low.
+**Rationale:** Already specified in PRD. Node.js is the right choice for an I/O-bound application (CalDAV sync, plugin HTTP calls, file I/O for photos). Single language across frontend and backend reduces context switching for contributors. Express is minimal and well-understood globally, keeping the barrier to community contribution low. Node.js 22 ("Jod") is the current active LTS (Node 20 entered maintenance-only in April 2026); it ships native WebSocket client, stable `fetch`, and V8 12.4 performance improvements. Express 5 (stable since 2024) adds native async/await support in route handlers — no more try/catch wrappers needed.
 
 **Key libraries:**
-- `better-sqlite3` — synchronous SQLite driver (simpler than async for a single-device app)
-- `node-cron` — scheduled jobs (sync intervals, reminder checks)
-- `node-caldav-adapter` + `tsdav` — CalDAV client for Google/Apple/Yahoo
-- `cheerio` + Schema.org parser — recipe URL scraping
-- `ical.js` — iCal parsing
-- `bcrypt` — PIN hashing
+- `better-sqlite3` v12 — synchronous SQLite driver (simpler than async for a single-device app)
+- `node-cron` v4 — scheduled jobs (sync intervals, reminder checks)
+- `tsdav` v2 — CalDAV client for Google/Apple/Yahoo
+- `cheerio` v1 + Schema.org parser — recipe URL scraping
+- `ical.js` v2 — iCal parsing
+- `bcrypt` v6 — PIN hashing
 - `aes-256-gcm` (Node.js `crypto`) — credential encryption at rest
-- `multer` — photo/document uploads
-- `ws` — WebSocket for real-time alert push to frontend
-- `axios` — HTTP client for external API calls (weather, plugins)
+- `multer` v2 — photo/document uploads (v2 API differs from v1; use `upload.single()`/`upload.array()`)
+- `ws` v8 — WebSocket for real-time alert push to frontend
+- `axios` v1 — HTTP client for external API calls (weather, plugins)
+- `zod` v4 — API input validation schemas
+- `sharp` v0.34 — recipe/pet photo resizing on upload
+- `express-rate-limit` v8 — rate limiting on PIN endpoints
+- `sanitize-filename` v1 — upload filename sanitisation
 
 **Trade-offs:** Node.js single-threaded event loop is a good fit for this I/O-bound workload. CPU-intensive tasks (Whisper STT, image processing) are offloaded to the separate voice process or worker threads.
 
@@ -240,11 +253,11 @@ All external service connections are **opt-in** and clearly documented to the us
 - Release: tag push → build → create GitHub Release with install script checksum
 
 **Testing:**
-- Unit: Jest + React Testing Library (target: 80% coverage on business logic)
-- Integration: Supertest against Express routes with in-memory SQLite
-- E2E: Playwright (key flows: setup wizard, profile switch, event add, alert dismiss)
+- Unit: Jest v30 + React Testing Library v16 (target: 80% coverage on business logic)
+- Integration: Supertest v7 against Express routes with in-memory SQLite
+- E2E: Playwright v1.59 (key flows: setup wizard, profile switch, event add, alert dismiss)
 
-**Code style:** ESLint (Airbnb config), Prettier, Husky pre-commit hooks
+**Code style:** ESLint v8 (Airbnb config — pinned to v8 as `eslint-config-airbnb-base` has not yet published ESLint v9/v10 support), Prettier v3, Husky v9 pre-commit hooks
 
 **Monitoring:** journald logs (accessible via `journalctl -u nestor-server`). Future: optional structured JSON logging to file.
 
@@ -907,7 +920,7 @@ GET    /api/v1/weather                      — Current weather + 5-day (?lat=&l
 **Requirement:** Touch response < 100ms perceived latency; animations at 60fps; carousel swipe smooth.
 
 **Architecture Solution:**
-- React 18 concurrent rendering — time-slices non-urgent updates
+- React 19 concurrent rendering + React Compiler (optional) — time-slices non-urgent updates, reduces manual `useMemo`/`useCallback`
 - Framer Motion layout animations — GPU-accelerated CSS transforms only (no layout-triggering properties)
 - TanStack Query: stale-while-revalidate — UI never blocks waiting for API response
 - Virtualized lists for long scrollable content (shopping list, recipe library, health logs)
@@ -997,7 +1010,7 @@ GET    /api/v1/weather                      — Current weather + 5-day (?lat=&l
 
 **Architecture Solution:**
 - Single-line bash install script: `curl -fsSL https://get.nestor.app/install.sh | bash`
-- Script installs: nvm + Node.js 20, SQLite, Chromium, Onboard, Piper TTS, Whisper, OpenWakeWord, clones repo, creates systemd services, configures kiosk mode, detects orientation, launches first-boot wizard
+- Script installs: nvm + Node.js 22 LTS, SQLite, Chromium, Onboard, Piper TTS, Whisper, OpenWakeWord, clones repo, creates systemd services, configures kiosk mode, detects orientation, launches first-boot wizard
 - First-boot wizard is a React full-screen experience — no terminal required after install
 - All config stored in SQLite `app_settings` — no config files to edit manually
 - In-app updates: `POST /api/v1/system/update` → pulls GitHub release, runs migrations, restarts service
@@ -1410,7 +1423,7 @@ Tag push (v1.2.3)
 |-----|---------|------------------|
 | Local-first / Privacy | SQLite on-device, all external connections opt-in | Network audit CI check |
 | 24/7 reliability | systemd restart, WAL mode, plugin isolation | 30-day uptime test |
-| Touch performance | React 18 concurrent, Framer Motion GPU, lazy load | Lighthouse CI, hardware test |
+| Touch performance | React 19 concurrent + Compiler, Framer Motion GPU, lazy load | Lighthouse CI, hardware test |
 | Plugin isolation | try/catch wrapping, context API, no direct DB access | Chaos tests in CI |
 | Internationalisation | i18next throughout, locale settings, date-fns | i18n lint, French locale test |
 | Accessibility | Per-profile text size, WCAG targets, touch targets | axe-core in Playwright |
