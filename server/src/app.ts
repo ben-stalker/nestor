@@ -4,6 +4,7 @@ import express, { type Express } from 'express';
 import errorHandler from './middleware/errorHandler';
 import httpLogger from './middleware/logger';
 import requestId from './middleware/requestId';
+import clientErrorsRouter from './routes/clientErrors';
 import healthRouter from './routes/health';
 
 const CLIENT_DIST = path.resolve(__dirname, '../../client/dist');
@@ -16,6 +17,7 @@ export default function createApp(): Express {
   app.use(express.json({ limit: '10mb' }));
 
   app.use(healthRouter);
+  app.use(clientErrorsRouter);
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
