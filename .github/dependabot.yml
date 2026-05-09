@@ -5,8 +5,22 @@ updates:
     schedule:
       interval: weekly
     ignore:
-      # eslint-config-airbnb-typescript@18 requires @typescript-eslint v7;
-      # no v19 exists yet — block major bumps until the ecosystem catches up.
+      # The entire ESLint v8 toolchain is coupled: @typescript-eslint v7,
+      # eslint-config-airbnb-typescript@18, and eslint-config-airbnb-base@15
+      # all peer against eslint@^8. Block major bumps for the whole group
+      # until upstream packages support ESLint v10+ and typescript-eslint v8+.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-airbnb-base"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-airbnb-typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-prettier"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-import-resolver-typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-plugin-import"
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@typescript-eslint/eslint-plugin"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@typescript-eslint/parser"
