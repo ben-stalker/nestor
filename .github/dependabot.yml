@@ -4,6 +4,13 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # eslint-config-airbnb-typescript@18 requires @typescript-eslint v7;
+      # no v19 exists yet — block major bumps until the ecosystem catches up.
+      - dependency-name: "@typescript-eslint/eslint-plugin"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript-eslint/parser"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
