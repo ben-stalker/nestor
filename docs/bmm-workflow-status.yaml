@@ -42,6 +42,7 @@ phases:
           - STORY-1.2
           - STORY-1.3
           - STORY-1.4
+          - STORY-1.5
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -61,4 +62,7 @@ notes: >
   createApp() factory, requestId middleware, errorHandler middleware, pino-http logger,
   GET /health with DB ping, graceful SIGTERM/SIGINT shutdown (10s timeout), uncaught
   exception handlers. 12 tests passing (3 suites). Fixed pre-existing prettier issues.
-  Next: STORY-1.5.
+  STORY-1.5 complete (2026-05-09): BaseRepository abstract class (protected get/all/run
+  helpers), AppSettingsRepository with in-memory cache (null-out invalidation on write),
+  migration 001_app_settings.sql, settings-keys.ts with Zod schemas for 19 known keys
+  plus validateSetting helper. 19 new tests (31 total passing). Next: STORY-1.6.
