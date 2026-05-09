@@ -45,6 +45,7 @@ phases:
           - STORY-1.5
           - STORY-1.6
           - STORY-1.7
+          - STORY-1.8
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -77,4 +78,10 @@ notes: >
   (dev-only), useAppStore Zustand slice (activeProfileId, adminPin, alertCount,
   voiceStatus), apiFetch wrapper (X-Profile-Id/X-Admin-Pin headers), ErrorBoundary
   with recovery card + POST /api/v1/client-errors logging. 46 total tests passing.
-  Next: STORY-1.8.
+  STORY-1.8 complete (2026-05-09): AES-256-GCM encryption helper for credentials at rest.
+  CryptoService class + module-level encrypt/decrypt exports. HKDF-SHA256 key derivation
+  from machine-id + auto-generated 32-byte salt stored in app_settings.encryption_salt.
+  getMachineId() with /etc/machine-id → ~/.nestor/machine-id (UUID, mode 0600) fallback.
+  Output format v1:<iv_b64>:<tag_b64>:<ct_b64>; GCM auth tag tamper detection.
+  17 new tests (48 server total, 63 overall). lint + typecheck clean.
+  Next: STORY-1.9.
