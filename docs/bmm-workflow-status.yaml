@@ -35,13 +35,18 @@ phases:
       sprint_planning:
         status: complete
         file: docs/sprint-plan-nestor-2026-05-08.md
-      dev_stories: pending
+      dev_stories:
+        status: in_progress
+        completed:
+          - STORY-1.1
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
   Sprint plan generated 2026-05-08 — 178 stories across 20 epics, 14 sprints,
-  112 stories in MVP (Sprints 1–10, ~20 weeks single-developer). Next step: expand
-  Sprint 1 stories into individual story files via bmad:create-story and begin
-  implementation with bmad:dev-story.
+  112 stories in MVP (Sprints 1–10, ~20 weeks single-developer).
+  STORY-1.1 complete (2026-05-09): monorepo scaffold, npm workspaces, TypeScript 6,
+  ESLint 8/Airbnb, Prettier 3, Husky 9, lint-staged 17. All 4 scripts passing.
+  Architecture doc updated to latest library versions (React 19, Express 5, Node 22 LTS, etc).
+  Next: STORY-1.2 (GitHub issue/PR templates, branch protection docs).
