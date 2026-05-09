@@ -6,10 +6,7 @@ const MIGRATION_FILENAME_RE = /^\d{3}_[a-z0-9_]+\.sql$/;
 
 const MIGRATIONS_DIR = path.join(__dirname, '..', '..', 'migrations');
 
-export function runMigrations(
-  db: Database.Database,
-  migrationsDir: string = MIGRATIONS_DIR,
-): void {
+export function runMigrations(db: Database.Database, migrationsDir: string = MIGRATIONS_DIR): void {
   const allFiles = fs
     .readdirSync(migrationsDir)
     .filter((f) => {
@@ -26,10 +23,7 @@ export function runMigrations(
   // runner can record all files, including 000 itself.
   const bootstrapFile = allFiles.find((f) => f.startsWith('000_'));
   if (bootstrapFile) {
-    const bootstrapSql = fs.readFileSync(
-      path.join(migrationsDir, bootstrapFile),
-      'utf8',
-    );
+    const bootstrapSql = fs.readFileSync(path.join(migrationsDir, bootstrapFile), 'utf8');
     db.exec(bootstrapSql);
   }
 
@@ -47,11 +41,10 @@ export function runMigrations(
 
     db.transaction(() => {
       db.exec(sql);
-      db
-        .prepare(
-          'INSERT INTO applied_migrations (filename, applied_at) VALUES (?, ?)',
-        )
-        .run(filename, Date.now());
+      db.prepare('INSERT INTO applied_migrations (filename, applied_at) VALUES (?, ?)').run(
+        filename,
+        Date.now(),
+      );
     })();
   });
 }
