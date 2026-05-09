@@ -1,2 +1,2 @@
-// Client entry point — Vite bootstrapped in STORY-1.4
+// Vite entry is index.html → src/main.tsx
 export {};
