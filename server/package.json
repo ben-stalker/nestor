@@ -5,8 +5,34 @@
   "scripts": {
     "lint": "eslint . --ext .ts --no-error-on-unmatched-pattern",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"No tests yet\" && exit 0",
-    "build": "tsc -b"
+    "test": "jest",
+    "build": "tsc -b",
+    "db:reset": "node -e \"if(process.env.NODE_ENV==='production') process.exit(1); require('fs').rmSync(process.env.NESTOR_DB_PATH || require('path').join(require('os').homedir(),'.nestor','nestor.db'),{force:true})\""
   },
-  "devDependencies": {}
+  "dependencies": {
+    "better-sqlite3": "^12.9.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.9"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.test.ts"],
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "tsconfig": {
+            "module": "CommonJS",
+            "moduleResolution": "node",
+            "types": ["jest", "node"]
+          }
+        }
+      ]
+    }
+  }
 }
