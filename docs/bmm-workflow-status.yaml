@@ -1,0 +1,47 @@
+version: "6.0.0"
+project_name: "Nestor"
+project_type: web-app
+project_level: 3
+last_updated: "2026-05-08"
+
+phases:
+  phase_1_analysis:
+    status: complete
+    workflows:
+      product_brief: skipped
+      research: skipped
+      brainstorm: skipped
+
+  phase_2_planning:
+    status: complete
+    workflows:
+      prd:
+        status: complete
+        file: nestor-prd.md
+      tech_spec: skipped
+      ux_design: pending
+
+  phase_3_solutioning:
+    status: complete
+    workflows:
+      architecture:
+        status: complete
+        file: docs/architecture-nestor-2026-05-08.md
+      gate_check: pending
+
+  phase_4_implementation:
+    status: in_progress
+    workflows:
+      sprint_planning:
+        status: complete
+        file: docs/sprint-plan-nestor-2026-05-08.md
+      dev_stories: pending
+
+current_phase: phase_4_implementation
+recommended_next: dev_stories
+notes: >
+  PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  Sprint plan generated 2026-05-08 — 178 stories across 20 epics, 14 sprints,
+  112 stories in MVP (Sprints 1–10, ~20 weeks single-developer). Next step: expand
+  Sprint 1 stories into individual story files via bmad:create-story and begin
+  implementation with bmad:dev-story.

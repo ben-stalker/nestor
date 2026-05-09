@@ -1,0 +1,12 @@
+{
+  "name": "@nestor/server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .ts --no-error-on-unmatched-pattern",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No tests yet\" && exit 0",
+    "build": "tsc -b"
+  },
+  "devDependencies": {}
+}
