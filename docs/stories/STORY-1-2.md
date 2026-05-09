@@ -18,15 +18,15 @@
 
 ## Acceptance Criteria
 
-- [ ] Public GitHub repo created (MIT licence, README, default branch `main`)
-- [ ] `.github/workflows/ci.yml` runs on `pull_request` and `push: main`
-- [ ] CI job runs (in this order, all must pass): `npm ci`, `npm run typecheck`, `npm run lint`, `npx prettier --check .`, `npm run test`
-- [ ] Required status checks configured on `main` branch protection so PRs cannot merge while red
-- [ ] Branch protection requires at least one approving review on PRs
-- [ ] Dependabot config (`.github/dependabot.yml`) enabled for `npm` (weekly) and `github-actions` (weekly)
-- [ ] Issue templates: `.github/ISSUE_TEMPLATE/bug.yml`, `feature.yml`, `plugin-proposal.yml`
-- [ ] PR template (`.github/pull_request_template.md`) with checklist (tests added, i18n strings updated, docs updated, CHANGELOG entry)
-- [ ] CI runs on Node 20 (matches `.nvmrc`); cache `~/.npm` for speed
+- [x] Public GitHub repo created (MIT licence, README, default branch `main`)
+- [x] `.github/workflows/ci.yml` runs on `pull_request` and `push: main`
+- [x] CI job runs (in this order, all must pass): `npm ci`, `npm run typecheck`, `npm run lint`, `npx prettier --check .`, `npm run test`
+- [x] Required status checks configured on `main` branch protection so PRs cannot merge while red
+- [x] Branch protection requires at least one approving review on PRs
+- [x] Dependabot config (`.github/dependabot.yml`) enabled for `npm` (weekly) and `github-actions` (weekly)
+- [x] Issue templates: `.github/ISSUE_TEMPLATE/bug.yml`, `feature.yml`, `plugin-proposal.yml`
+- [x] PR template (`.github/pull_request_template.md`) with checklist (tests added, i18n strings updated, docs updated, CHANGELOG entry)
+- [x] CI runs on Node 22 (matches `.nvmrc`); cache `~/.npm` for speed
 
 ---
 
@@ -70,13 +70,25 @@
 
 - [ ] Manual: open a PR with an intentional lint error → CI fails on lint step
 - [ ] Manual: open a PR with a TypeScript error → CI fails on typecheck step
-- [ ] Manual: open a PR with all clean → CI passes
-- [ ] Manual: confirm Dependabot opens a sample PR within a week (or trigger manually via `gh dependabot update`)
+- [x] Manual: open a PR with all clean → CI passes (verified on push to `main`, run 25604823166)
+- [x] Manual: confirm Dependabot opens a sample PR within a week — Dependabot PRs opened immediately after first push
 - [ ] Branch protection blocks merging when `ci` is red
 
 ---
 
-## Notes
+## Completion Notes
 
-- Repo URL goes in `package.json#repository`, the install script (STORY-19.5), and root README.
-- Branch protection requires admin permissions on the repo — coordinate with the repo owner.
+**Completed:** 2026-05-09
+
+**Deviations from spec:**
+- Node version updated from 20 to **22.22.2** (Node 22 LTS "Jod") in `.nvmrc` — architecture spec mandates Node 22; Node 20 entered maintenance-only in April 2026.
+- Repo created as **private** initially, then made public to enable branch protection rules (free plan restriction).
+- Branch protection set via `gh api` rather than web UI.
+
+**Issues encountered:**
+- `bmad/config.yaml` was not prettier-formatted; fixed in follow-up commit `b5a60e5` before CI went green.
+- `gh api --field` cannot pass nested JSON objects; resolved by using `--input -` with a heredoc.
+
+**Remaining manual checks:**
+- Verify CI fails correctly on a bad PR (lint/typecheck gates) — deferred to first real feature PR.
+- Add repo URL to `package.json#repository` and root README when repo is stable (noted for STORY-19.5).
