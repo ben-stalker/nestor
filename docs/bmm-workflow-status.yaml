@@ -44,6 +44,7 @@ phases:
           - STORY-1.4
           - STORY-1.5
           - STORY-1.6
+          - STORY-1.7
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -70,4 +71,10 @@ notes: >
   STORY-1.6 complete (2026-05-09): Vite 8 + React 19 + Tailwind v4 frontend bootstrap.
   @tailwindcss/vite plugin, react-router-dom v7, BrowserRouter + Routes placeholder,
   Nestor splash screen, Express static serving for production, tsx watch dev script,
-  concurrently root dev script, 2 RTL tests (33 total passing). Next: STORY-1.7.
+  concurrently root dev script, 2 RTL tests (33 total passing).
+  STORY-1.7 complete (2026-05-09): TanStack Query + Zustand + global ErrorBoundary.
+  QueryClientProvider (30s stale, retry 1, no refetchOnWindowFocus), ReactQueryDevtools
+  (dev-only), useAppStore Zustand slice (activeProfileId, adminPin, alertCount,
+  voiceStatus), apiFetch wrapper (X-Profile-Id/X-Admin-Pin headers), ErrorBoundary
+  with recovery card + POST /api/v1/client-errors logging. 46 total tests passing.
+  Next: STORY-1.8.

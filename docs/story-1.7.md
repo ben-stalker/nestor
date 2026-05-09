@@ -1,6 +1,6 @@
 # STORY-1.7: TanStack Query + Zustand setup
 
-**Status:** in_progress
+**Status:** complete
 **Epic:** EPIC-1 — Project Foundation & Dev Environment
 **Estimate:** M (2 days)
 **Priority:** P1
@@ -20,17 +20,18 @@ Wire TanStack Query and Zustand into the React shell with a global error boundar
 
 ## Tasks
 
-- [ ] Install @tanstack/react-query, @tanstack/react-query-devtools, zustand
-- [ ] Create `client/src/store/appStore.ts` (Zustand slice)
-- [ ] Create `client/src/api/client.ts` (fetch wrapper)
-- [ ] Create `client/src/components/ErrorBoundary.tsx`
-- [ ] Update `client/src/main.tsx` — add QueryClientProvider + ErrorBoundary
-- [ ] Add `server/src/routes/clientErrors.ts` — POST /api/v1/client-errors
-- [ ] Register client errors route in `server/src/app.ts`
-- [ ] Write tests (ErrorBoundary, appStore, apiClient)
-- [ ] Run full test suite; all passing
-- [ ] QA pass
+- [x] Install @tanstack/react-query, @tanstack/react-query-devtools, zustand
+- [x] Create `client/src/store/appStore.ts` (Zustand slice)
+- [x] Create `client/src/api/client.ts` (fetch wrapper)
+- [x] Create `client/src/components/ErrorBoundary.tsx`
+- [x] Update `client/src/main.tsx` — add QueryClientProvider + ErrorBoundary
+- [x] Add `server/src/routes/clientErrors.ts` — POST /api/v1/client-errors
+- [x] Register client errors route in `server/src/app.ts`
+- [x] Write tests (ErrorBoundary, appStore, apiClient)
+- [x] Run full test suite; all passing (46 total: 31 server + 15 client)
+- [x] QA pass
 
 ## Progress Log
 
 - 2026-05-09: Story started
+- 2026-05-09: Story complete. Merged to main, pushed. 46 tests passing.
