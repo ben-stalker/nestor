@@ -6,12 +6,14 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
+    ecmaFeatures: { jsx: true },
     tsconfigRootDir: __dirname,
     project: [
       './tsconfig.json',
       './server/tsconfig.json',
       './server/tsconfig.test.json',
       './client/tsconfig.json',
+      './client/tsconfig.test.json',
     ],
   },
   plugins: ['@typescript-eslint', 'import'],
@@ -35,5 +37,24 @@ module.exports = {
     'no-console': 'warn',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
+  overrides: [
+    {
+      files: [
+        'client/src/**/*.tsx',
+        'client/src/**/*.ts',
+        'client/tests/**/*.tsx',
+        'client/tests/**/*.ts',
+      ],
+      rules: {
+        'react/react-in-jsx-scope': 'off',
+      },
+    },
+    {
+      files: ['**/*.config.ts', '**/*.config.js', '**/tests/**/*.ts', '**/tests/**/*.tsx'],
+      rules: {
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      },
+    },
+  ],
   ignorePatterns: ['dist/', 'node_modules/', '*.js', '*.cjs', '*.mjs'],
 };

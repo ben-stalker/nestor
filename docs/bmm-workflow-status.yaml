@@ -43,6 +43,7 @@ phases:
           - STORY-1.3
           - STORY-1.4
           - STORY-1.5
+          - STORY-1.6
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -65,4 +66,8 @@ notes: >
   STORY-1.5 complete (2026-05-09): BaseRepository abstract class (protected get/all/run
   helpers), AppSettingsRepository with in-memory cache (null-out invalidation on write),
   migration 001_app_settings.sql, settings-keys.ts with Zod schemas for 19 known keys
-  plus validateSetting helper. 19 new tests (31 total passing). Next: STORY-1.6.
+  plus validateSetting helper. 19 new tests (31 total passing).
+  STORY-1.6 complete (2026-05-09): Vite 8 + React 19 + Tailwind v4 frontend bootstrap.
+  @tailwindcss/vite plugin, react-router-dom v7, BrowserRouter + Routes placeholder,
+  Nestor splash screen, Express static serving for production, tsx watch dev script,
+  concurrently root dev script, 2 RTL tests (33 total passing). Next: STORY-1.7.
