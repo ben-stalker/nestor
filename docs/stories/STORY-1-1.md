@@ -4,7 +4,7 @@
 **Sprint:** 1 — Foundations
 **Estimate:** S (1d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -18,17 +18,17 @@
 
 ## Acceptance Criteria
 
-- [ ] Top-level `package.json` with npm workspaces declaring `server`, `client`, and `plugins/*`
-- [ ] `tsconfig.base.json` with `"strict": true`, `"target": "ES2022"`, `"moduleResolution": "Node"`, and project references for `server` and `client`
-- [ ] ESLint configured with `eslint-config-airbnb-base` + `@typescript-eslint`
-- [ ] Prettier configured (single quotes, 2-space indent, trailing commas) with `.prettierrc.json`
-- [ ] `.editorconfig` enforces LF line endings and 2-space indent
-- [ ] `.gitignore` excludes `node_modules`, `dist`, `*.db`, `~/.nestor/`, `.env*`, `coverage/`
-- [ ] `.nvmrc` pins Node 20 LTS (e.g. `20.11.0`)
-- [ ] Husky installed; pre-commit hook runs `lint-staged` which executes `eslint --fix` and `prettier --write` on staged files
-- [ ] `LICENSE` (MIT, copyright Ben), `README.md` placeholder, `CHANGELOG.md` (Keep a Changelog format), `CONTRIBUTING.md`
-- [ ] Root scripts defined and passing on the empty repo: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`
-- [ ] Each workspace contains its own minimal `package.json` and `tsconfig.json` extending the base
+- [x] Top-level `package.json` with npm workspaces declaring `server`, `client`, and `plugins/*`
+- [x] `tsconfig.base.json` with `"strict": true`, `"target": "ES2022"`, `"moduleResolution": "Node"`, and project references for `server` and `client`
+- [x] ESLint configured with `eslint-config-airbnb-base` + `@typescript-eslint`
+- [x] Prettier configured (single quotes, 2-space indent, trailing commas) with `.prettierrc.json`
+- [x] `.editorconfig` enforces LF line endings and 2-space indent
+- [x] `.gitignore` excludes `node_modules`, `dist`, `*.db`, `~/.nestor/`, `.env*`, `coverage/`
+- [x] `.nvmrc` pins Node 20 LTS (e.g. `20.11.0`)
+- [x] Husky installed; pre-commit hook runs `lint-staged` which executes `eslint --fix` and `prettier --write` on staged files
+- [x] `LICENSE` (MIT, copyright Ben), `README.md` placeholder, `CHANGELOG.md` (Keep a Changelog format), `CONTRIBUTING.md`
+- [x] Root scripts defined and passing on the empty repo: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`
+- [x] Each workspace contains its own minimal `package.json` and `tsconfig.json` extending the base
 
 ---
 
@@ -82,12 +82,12 @@
 
 ## Test Checklist
 
-- [ ] `npm install` completes with no errors
-- [ ] `npm run lint` exits 0 on empty repo
-- [ ] `npm run typecheck` exits 0
-- [ ] `npm run test` exits 0 (no tests yet, but Jest stub OK)
-- [ ] `npm run build` exits 0
-- [ ] Husky hook fires on `git commit` and runs `lint-staged`
+- [x] `npm install` completes with no errors
+- [x] `npm run lint` exits 0 on empty repo
+- [x] `npm run typecheck` exits 0
+- [x] `npm run test` exits 0 (no tests yet, stub echo)
+- [x] `npm run build` exits 0
+- [x] Husky hook fires on `git commit` and runs `lint-staged`
 - [ ] Manual: introduce an ESLint violation in a `.ts` file; pre-commit blocks the commit until fixed
 
 ---
@@ -97,3 +97,17 @@
 - License is MIT per PRD §Open Source / §Licence.
 - Keep `README.md` minimal here; the full README lands in STORY-20.10.
 - Issue and PR templates land in STORY-1.2 (GitHub-specific work).
+
+---
+
+## Implementation Notes
+
+**Completed:** 2026-05-09
+**Actual effort:** S (matched estimate)
+
+- `git init` + renamed default branch to `main`
+- npm workspaces installed; 322 packages, 0 vulnerabilities
+- Husky v9 used; `npx husky init` auto-adds `prepare` script to root `package.json`
+- ESLint `--no-error-on-unmatched-pattern` added to workspace lint scripts so they pass before any `.ts` files exist
+- Stub `src/index.ts` added to each workspace so `tsc -b` has at least one input file (TypeScript requires this)
+- Client `tsconfig.json` uses `moduleResolution: bundler` / `module: ESNext` ready for Vite (STORY-1.4)
