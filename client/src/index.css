@@ -359,7 +359,9 @@
   font-weight: 600;
   cursor: pointer;
   flex-shrink: 0;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .guest-overlay__exit-btn:hover {
