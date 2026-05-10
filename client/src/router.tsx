@@ -4,6 +4,17 @@ import AppShell from './core/AppShell';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
 
+function Placeholder({ name }: { name: string }) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-warm text-primary">
+      <div className="text-center">
+        <h1 className="text-h1 font-bold tracking-tight">{name}</h1>
+        <p className="mt-2 text-body text-secondary">Coming soon</p>
+      </div>
+    </main>
+  );
+}
+
 export default function Router() {
   return (
     <Routes>
@@ -18,14 +29,21 @@ export default function Router() {
         />
       )}
       <Route element={<AppShell />}>
+        <Route index element={<Placeholder name="Home" />} />
+        <Route path="/calendar" element={<Placeholder name="Calendar" />} />
+        <Route path="/food" element={<Placeholder name="Food" />} />
+        <Route path="/vehicles" element={<Placeholder name="Travel" />} />
+        <Route path="/family" element={<Placeholder name="Family" />} />
+        <Route path="/house" element={<Placeholder name="House" />} />
+        <Route path="/finance" element={<Placeholder name="Finance" />} />
+        <Route path="/pets" element={<Placeholder name="Pets" />} />
+        <Route path="/ev" element={<Placeholder name="EV" />} />
+        <Route path="/board" element={<Placeholder name="Board" />} />
         <Route
           path="*"
           element={
             <main className="flex min-h-screen items-center justify-center bg-warm text-primary">
-              <div className="text-center">
-                <h1 className="text-display font-bold tracking-tight">Nestor</h1>
-                <p className="mt-4 text-body text-secondary">Your family&#39;s home hub</p>
-              </div>
+              <p className="text-body text-secondary">Page not found</p>
             </main>
           }
         />

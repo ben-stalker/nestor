@@ -3,6 +3,8 @@ import apiFetch from '../../api/client';
 
 export interface AppSettings {
   orientation?: 'auto' | 'portrait' | 'landscape';
+  enabled_nav_modes?: string[];
+  nav_layout?: 'single' | 'double' | 'scrollable' | 'hamburger';
   [key: string]: unknown;
 }
 
