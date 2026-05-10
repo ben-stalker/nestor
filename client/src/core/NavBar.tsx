@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MoreHorizontal } from 'lucide-react';
 import clsx from 'clsx';
+import { useQuery } from '@tanstack/react-query';
 import { useOrientation } from './hooks/useOrientation';
 import { useAppSettings } from './hooks/useAppSettings';
 import useAppStore from '../store/appStore';
 import Modal from '../shared/ui/Modal';
-import { DEFAULT_NAV_MODES, NAV_MODE_MAP } from './navModes';
+import apiFetch from '../api/client';
+import { DEFAULT_NAV_MODES, NAV_MODE_MAP, NAV_MODE_PERMISSION } from './navModes';
 import type { NavMode } from './navModes';
 
 interface NavButtonProps {
@@ -66,13 +68,32 @@ export default function NavBar() {
   const { data: settings } = useAppSettings();
   const [moreOpen, setMoreOpen] = useState(false);
 
+  const kioskProfileId = settings?.kiosk_lock ?? null;
+
+  const { data: kioskPermissions } = useQuery<Record<string, boolean>>({
+    queryKey: ['profile-permissions', kioskProfileId],
+    queryFn: () =>
+      apiFetch<Record<string, boolean>>(`/api/v1/profiles/${kioskProfileId}/permissions`),
+    enabled: kioskProfileId !== null,
+    staleTime: 60_000,
+  });
+
   const enabledIds: string[] = settings?.enabled_nav_modes ?? DEFAULT_NAV_MODES.map((m) => m.id);
   const layout = settings?.nav_layout ?? 'scrollable';
 
-  const modes = enabledIds.flatMap((id) => {
+  const allModes = enabledIds.flatMap((id) => {
     const mode = NAV_MODE_MAP.get(id);
     return mode ? [mode] : [];
   });
+
+  // In kiosk mode, hide nav modes the locked profile has no permission to access.
+  const modes = kioskProfileId
+    ? allModes.filter((mode) => {
+        const permKey = NAV_MODE_PERMISSION[mode.id];
+        if (!permKey) return true; // no permission gate → always visible (e.g. home)
+        return kioskPermissions ? Boolean(kioskPermissions[permKey]) : false;
+      })
+    : allModes;
 
   // Landscape: vertical side rail
   if (orientation === 'landscape') {

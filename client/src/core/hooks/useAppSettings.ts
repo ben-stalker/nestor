@@ -5,6 +5,7 @@ export interface AppSettings {
   orientation?: 'auto' | 'portrait' | 'landscape';
   enabled_nav_modes?: string[];
   nav_layout?: 'single' | 'double' | 'scrollable' | 'hamburger';
+  kiosk_lock?: string | null;
   [key: string]: unknown;
 }
 

@@ -58,6 +58,7 @@ phases:
           - STORY-2.7
           - STORY-2.8
           - STORY-2.9
+          - STORY-2.10
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -181,4 +182,13 @@ notes: >
   colour-coded, plugin filter registry (registerPlugin/unregisterPlugin). App
   shell CSS grid updated: portrait now 88px filters column + main + navbar;
   landscape now rail + filters/main stacked rows. 33 new client tests
-  (144 client total; 185 server total). lint + typecheck clean. Next: STORY-2.10.
+  (144 client total; 185 server total). lint + typecheck clean.
+  STORY-2.10 complete (2026-05-10): Kiosk-child mode. KioskLockSchema changed
+  to string|null (profile ID). kioskLock middleware (403 KIOSK_LOCKED) applied
+  to profiles write routes. Admin router: POST /kiosk-lock (activate) + POST
+  /kiosk-unlock (verify any admin PIN + clear) — both exempt from kiosk middleware.
+  KioskOverlay: lock icon indicator + hidden bottom-right triple-tap (3×/800ms)
+  → AdminPinPrompt → invalidates settings on success. AvatarStrip disabled with
+  avatar-strip--locked class. NavBar filters modes via NAV_MODE_PERMISSION map
+  against locked profile permissions. 14 new server tests (199 total), 17 new
+  client tests (161 total). lint + typecheck clean. Next: STORY-2.11.

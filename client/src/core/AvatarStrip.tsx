@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useProfiles, PROFILES_KEY } from './hooks/useProfiles';
+import { useAppSettings } from './hooks/useAppSettings';
 import { applyProfileSettings } from './applyProfileSettings';
 import useAppStore from '../store/appStore';
 import Avatar from '../shared/ui/Avatar';
@@ -10,10 +11,12 @@ import type { Profile } from '../api/profiles';
 
 export default function AvatarStrip() {
   const { data: profiles, isLoading } = useProfiles();
+  const { data: settings } = useAppSettings();
   const activeProfileId = useAppStore((s) => s.activeProfileId);
   const setActiveProfile = useAppStore((s) => s.setActiveProfile);
   const queryClient = useQueryClient();
   const [pinTarget, setPinTarget] = useState<Profile | null>(null);
+  const isKioskLocked = Boolean(settings?.kiosk_lock);
 
   function switchTo(profile: Profile) {
     setActiveProfile(String(profile.id));
@@ -50,7 +53,12 @@ export default function AvatarStrip() {
 
   return (
     <>
-      <div className="avatar-strip" aria-label="Profile switcher" role="toolbar">
+      <div
+        className={clsx('avatar-strip', isKioskLocked && 'avatar-strip--locked')}
+        aria-label="Profile switcher"
+        aria-disabled={isKioskLocked || undefined}
+        role="toolbar"
+      >
         {profiles.map((profile) => {
           const isActive = String(profile.id) === activeProfileId;
           return (

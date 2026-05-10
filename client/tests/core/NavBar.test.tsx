@@ -211,6 +211,80 @@ describe('NavBar — portrait hamburger layout', () => {
   });
 });
 
+describe('NavBar — kiosk mode', () => {
+  it('hides nav modes the locked profile lacks permission for', async () => {
+    const apiFetch = (await import('../../src/api/client')).default;
+    // child profile: has view_calendar, view_food, view_pets, view_board — NOT view_finance, view_house, view_vehicles
+    vi.mocked(apiFetch).mockImplementation((path: string) => {
+      if (String(path).includes('/permissions')) {
+        return Promise.resolve({
+          view_calendar: true,
+          view_food: true,
+          tick_shopping: true,
+          view_chores: true,
+          view_pets: true,
+          view_board: true,
+          view_contacts: true,
+          view_finance: false,
+          view_house: false,
+          view_vehicles: false,
+        });
+      }
+      return Promise.resolve(null);
+    });
+
+    const qc = makeQC();
+    qc.setQueryData(['app-settings'], { kiosk_lock: '2' });
+    qc.setQueryData(['profile-permissions', '2'], {
+      view_calendar: true,
+      view_food: true,
+      tick_shopping: true,
+      view_chores: true,
+      view_pets: true,
+      view_board: true,
+      view_contacts: true,
+      view_finance: false,
+      view_house: false,
+      view_vehicles: false,
+    });
+
+    renderNavBar('/', qc);
+
+    // Permitted modes visible
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Calendar')).toBeInTheDocument();
+    expect(screen.getByText('Food')).toBeInTheDocument();
+    expect(screen.getByText('Pets')).toBeInTheDocument();
+    expect(screen.getByText('Board')).toBeInTheDocument();
+
+    // Restricted modes hidden
+    expect(screen.queryByText('Finance')).not.toBeInTheDocument();
+    expect(screen.queryByText('House')).not.toBeInTheDocument();
+    expect(screen.queryByText('Travel')).not.toBeInTheDocument();
+  });
+
+  it('shows no gated modes while permissions are loading', () => {
+    const qc = makeQC();
+    qc.setQueryData(['app-settings'], { kiosk_lock: '2' });
+    // Don't seed profile-permissions — simulates loading state
+
+    renderNavBar('/', qc);
+
+    // Home has no permission gate → always visible
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    // All gated modes should be hidden while permissions are undefined
+    expect(screen.queryByText('Calendar')).not.toBeInTheDocument();
+    expect(screen.queryByText('Finance')).not.toBeInTheDocument();
+  });
+
+  it('shows all modes when kiosk_lock is null', () => {
+    const qc = makeQC();
+    qc.setQueryData(['app-settings'], { kiosk_lock: null });
+    renderNavBar('/', qc);
+    expect(screen.getAllByRole('link')).toHaveLength(10);
+  });
+});
+
 describe('NavBar — landscape rail', () => {
   beforeEach(() => {
     vi.mocked(useOrientation).mockReturnValue('landscape');

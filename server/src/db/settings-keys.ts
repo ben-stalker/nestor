@@ -24,7 +24,7 @@ export const QuietHoursSchema = z.object({
   end: z.string(),
 });
 
-export const KioskLockSchema = z.boolean();
+export const KioskLockSchema = z.string().nullable();
 
 export const SetupCompleteSchema = z.boolean();
 
