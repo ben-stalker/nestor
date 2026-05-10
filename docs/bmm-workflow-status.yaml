@@ -59,6 +59,7 @@ phases:
           - STORY-2.8
           - STORY-2.9
           - STORY-2.10
+          - STORY-2.11
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -191,4 +192,15 @@ notes: >
   → AdminPinPrompt → invalidates settings on success. AvatarStrip disabled with
   avatar-strip--locked class. NavBar filters modes via NAV_MODE_PERMISSION map
   against locked profile permissions. 14 new server tests (199 total), 17 new
-  client tests (161 total). lint + typecheck clean. Next: STORY-2.11.
+  client tests (161 total). lint + typecheck clean.
+  STORY-2.11 complete (2026-05-10): Guest lock-screen overlay. Server: POST
+  /api/v1/admin/verify-pin (side-effect-free admin PIN check, rate-limited).
+  Client: guestProfileId + setGuestMode in appStore (not persisted). verifyAdminPin
+  API call. AdminPinPrompt extracted to shared/ui/AdminPinPrompt.tsx with generic
+  onVerify prop — KioskOverlay updated to use it. GuestOverlay: fixed full-screen
+  overlay with header (avatar + name + today's date), 2×2 grid of placeholder
+  sections (Today's Events, Child Routines, Emergency Contacts, Today's Meal),
+  exit button → AdminPinPrompt → clears guestProfileId. AvatarStrip: guest-type
+  profile click activates guest mode (with optional PIN gate) instead of switching.
+  AppShell renders GuestOverlay. CSS guest-overlay layout. 5 new server tests
+  (204 total), 19 new client tests (180 total). lint + typecheck clean.

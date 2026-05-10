@@ -7,6 +7,7 @@ beforeEach(() => {
     adminPin: null,
     alertCount: 0,
     voiceStatus: 'idle',
+    guestProfileId: null,
   });
 });
 
@@ -39,5 +40,20 @@ describe('useAppStore', () => {
   it('setVoiceStatus updates voiceStatus', () => {
     useAppStore.getState().setVoiceStatus('listening');
     expect(useAppStore.getState().voiceStatus).toBe('listening');
+  });
+
+  it('guestProfileId is null by default', () => {
+    expect(useAppStore.getState().guestProfileId).toBeNull();
+  });
+
+  it('setGuestMode sets guestProfileId', () => {
+    useAppStore.getState().setGuestMode('5');
+    expect(useAppStore.getState().guestProfileId).toBe('5');
+  });
+
+  it('setGuestMode clears guestProfileId when called with null', () => {
+    useAppStore.getState().setGuestMode('5');
+    useAppStore.getState().setGuestMode(null);
+    expect(useAppStore.getState().guestProfileId).toBeNull();
   });
 });

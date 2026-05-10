@@ -8,6 +8,7 @@ import { APP_SETTINGS_KEY } from './hooks/useAppSettings';
 import NavBar from './NavBar';
 import FilterPanel from './FilterPanel';
 import KioskOverlay from './KioskOverlay';
+import GuestOverlay from './GuestOverlay';
 
 export default function AppShell() {
   const orientation = useOrientation();
@@ -26,6 +27,7 @@ export default function AppShell() {
       <FilterPanel />
       <Outlet />
       <KioskOverlay />
+      <GuestOverlay />
     </div>
   );
 }

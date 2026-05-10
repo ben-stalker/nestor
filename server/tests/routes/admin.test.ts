@@ -125,6 +125,58 @@ describe('POST /api/v1/admin/kiosk-unlock', () => {
   });
 });
 
+describe('POST /api/v1/admin/verify-pin', () => {
+  let db: Database.Database;
+  let settingsRepo: AppSettingsRepository;
+  let profileRepo: ProfileRepository;
+  let app: ReturnType<typeof makeApp>;
+
+  beforeEach(() => {
+    db = makeDb();
+    settingsRepo = new AppSettingsRepository(db);
+    profileRepo = new ProfileRepository(db);
+    app = makeApp(settingsRepo, profileRepo);
+  });
+
+  afterEach(() => db.close());
+
+  it('returns { valid: false } when no admin profiles exist', async () => {
+    const res = await request(app).post('/api/v1/admin/verify-pin').send({ pin: '1234' });
+    expect(res.status).toBe(200);
+    expect((res.body as ValidBody).valid).toBe(false);
+  });
+
+  it('returns { valid: false } when PIN is wrong', async () => {
+    profileRepo.create({ name: 'Admin', type: 'admin', colour: '#112233', pin: '9999' });
+    const res = await request(app).post('/api/v1/admin/verify-pin').send({ pin: '1111' });
+    expect(res.status).toBe(200);
+    expect((res.body as ValidBody).valid).toBe(false);
+  });
+
+  it('returns { valid: true } when PIN is correct and does NOT modify any state', async () => {
+    profileRepo.create({ name: 'Admin', type: 'admin', colour: '#112233', pin: '4321' });
+    settingsRepo.set('kiosk_lock', '5');
+    const res = await request(app).post('/api/v1/admin/verify-pin').send({ pin: '4321' });
+    expect(res.status).toBe(200);
+    expect((res.body as ValidBody).valid).toBe(true);
+    // kiosk_lock must NOT be cleared — verify-pin has no side effects
+    expect(settingsRepo.get<string>('kiosk_lock')).toBe('5');
+  });
+
+  it('accepts PIN from any admin profile', async () => {
+    profileRepo.create({ name: 'Admin1', type: 'admin', colour: '#112233', pin: 'aaaa' });
+    profileRepo.create({ name: 'Admin2', type: 'admin', colour: '#445566', pin: 'bbbb' });
+    const res = await request(app).post('/api/v1/admin/verify-pin').send({ pin: 'bbbb' });
+    expect((res.body as ValidBody).valid).toBe(true);
+  });
+
+  it('returns 400 when pin is missing', async () => {
+    const res = await request(app).post('/api/v1/admin/verify-pin').send({});
+    expect(res.status).toBe(400);
+    expect((res.body as ErrorBody).code).toBe('VALIDATION_ERROR');
+  });
+});
+
 describe('kiosk-lock is not blocked by its own middleware', () => {
   it('activate and unlock routes work even when kiosk is locked', async () => {
     const db = makeDb();

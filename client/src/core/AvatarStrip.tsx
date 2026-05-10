@@ -14,6 +14,7 @@ export default function AvatarStrip() {
   const { data: settings } = useAppSettings();
   const activeProfileId = useAppStore((s) => s.activeProfileId);
   const setActiveProfile = useAppStore((s) => s.setActiveProfile);
+  const setGuestMode = useAppStore((s) => s.setGuestMode);
   const queryClient = useQueryClient();
   const [pinTarget, setPinTarget] = useState<Profile | null>(null);
   const isKioskLocked = Boolean(settings?.kiosk_lock);
@@ -26,6 +27,14 @@ export default function AvatarStrip() {
   }
 
   function handleAvatarClick(profile: Profile) {
+    if (profile.type === 'guest') {
+      if (profile.pinSet) {
+        setPinTarget(profile);
+      } else {
+        setGuestMode(String(profile.id));
+      }
+      return;
+    }
     if (profile.pinSet) {
       setPinTarget(profile);
     } else {
@@ -35,7 +44,11 @@ export default function AvatarStrip() {
 
   function handlePinSuccess(profile: Profile) {
     setPinTarget(null);
-    switchTo(profile);
+    if (profile.type === 'guest') {
+      setGuestMode(String(profile.id));
+    } else {
+      switchTo(profile);
+    }
   }
 
   if (isLoading || !profiles) {

@@ -55,6 +55,30 @@ const PROFILE_B: Profile = {
   created_at: 2000,
 };
 
+const PROFILE_GUEST_NO_PIN: Profile = {
+  id: 3,
+  name: 'Babysitter',
+  type: 'guest',
+  colour: '#88c98e',
+  avatar_path: null,
+  pinSet: false,
+  text_size: 'default',
+  simplified_nav: 0,
+  created_at: 3000,
+};
+
+const PROFILE_GUEST_PIN: Profile = {
+  id: 4,
+  name: 'GuestPinned',
+  type: 'guest',
+  colour: '#7b9ed9',
+  avatar_path: null,
+  pinSet: true,
+  text_size: 'default',
+  simplified_nav: 0,
+  created_at: 4000,
+};
+
 function makeQC(profiles: Profile[]) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   qc.setQueryData(['profiles'], profiles);
@@ -161,6 +185,43 @@ describe('AvatarStrip — PIN-required switch', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+});
+
+describe('AvatarStrip — guest mode entry', () => {
+  it('activates guest mode directly for guest profile with no PIN', () => {
+    useAppStore.setState({ activeProfileId: '1', guestProfileId: null });
+    renderStrip([PROFILE_A, PROFILE_GUEST_NO_PIN]);
+    fireEvent.click(screen.getByRole('button', { name: /switch to babysitter/i }));
+    expect(useAppStore.getState().guestProfileId).toBe('3');
+    expect(useAppStore.getState().activeProfileId).toBe('1');
+  });
+
+  it('does not switch active profile when entering guest mode', () => {
+    useAppStore.setState({ activeProfileId: '1', guestProfileId: null });
+    renderStrip([PROFILE_A, PROFILE_GUEST_NO_PIN]);
+    fireEvent.click(screen.getByRole('button', { name: /switch to babysitter/i }));
+    expect(useAppStore.getState().activeProfileId).toBe('1');
+  });
+
+  it('opens PinPrompt for guest profile with PIN before activating guest mode', () => {
+    useAppStore.setState({ activeProfileId: '1', guestProfileId: null });
+    renderStrip([PROFILE_A, PROFILE_GUEST_PIN]);
+    fireEvent.click(screen.getByRole('button', { name: /switch to guestpinned/i }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(useAppStore.getState().guestProfileId).toBeNull();
+  });
+
+  it('activates guest mode after correct PIN for pinned guest profile', async () => {
+    vi.mocked(verifyPin).mockResolvedValue({ valid: true });
+    useAppStore.setState({ activeProfileId: '1', guestProfileId: null });
+    renderStrip([PROFILE_A, PROFILE_GUEST_PIN]);
+    fireEvent.click(screen.getByRole('button', { name: /switch to guestpinned/i }));
+
+    '9876'.split('').forEach((d) => fireEvent.click(screen.getByRole('button', { name: d })));
+
+    await waitFor(() => expect(useAppStore.getState().guestProfileId).toBe('4'));
+    expect(useAppStore.getState().activeProfileId).toBe('1');
   });
 });
 

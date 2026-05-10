@@ -9,11 +9,13 @@ interface AppState {
   alertCount: number;
   voiceStatus: VoiceStatus;
   badgeCounts: Record<string, number>;
+  guestProfileId: string | null;
 
   setActiveProfile: (profileId: string | null, adminPin?: string | null) => void;
   setAlertCount: (count: number) => void;
   setVoiceStatus: (status: VoiceStatus) => void;
   setBadgeCount: (modeId: string, count: number) => void;
+  setGuestMode: (profileId: string | null) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -24,6 +26,7 @@ const useAppStore = create<AppState>()(
       alertCount: 0,
       voiceStatus: 'idle' as VoiceStatus,
       badgeCounts: {},
+      guestProfileId: null,
 
       setActiveProfile: (profileId, adminPin = null) =>
         set({ activeProfileId: profileId, adminPin }),
@@ -34,6 +37,8 @@ const useAppStore = create<AppState>()(
 
       setBadgeCount: (modeId, count) =>
         set((s) => ({ badgeCounts: { ...s.badgeCounts, [modeId]: count } })),
+
+      setGuestMode: (profileId) => set({ guestProfileId: profileId }),
     }),
     {
       name: 'nestor-app',

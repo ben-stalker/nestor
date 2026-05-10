@@ -14,3 +14,10 @@ export async function unlockKiosk(pin: string): Promise<{ valid: boolean }> {
     body: { pin },
   });
 }
+
+export async function verifyAdminPin(pin: string): Promise<{ valid: boolean }> {
+  return apiFetch<{ valid: boolean }>('/api/v1/admin/verify-pin', {
+    method: 'POST',
+    body: { pin },
+  });
+}
