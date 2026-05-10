@@ -1,17 +1,16 @@
 import { Router, type RequestHandler } from 'express';
 import { z } from 'zod';
+import createRequireAdminPin from '../middleware/requireAdminPin';
+import { createPinVerifyLimiter } from '../middleware/rateLimit';
 import ProfileRepository, { LastAdminError } from '../repositories/ProfileRepository';
 import { CreateProfileSchema, UpdateProfileSchema } from '../types/profile';
-import { createPinVerifyLimiter } from '../middleware/rateLimit';
 
 const VerifyPinSchema = z.object({ pin: z.string().min(1) });
-
-// TODO(STORY-2.3): replace with real admin-PIN middleware
-const requireAdminPin: RequestHandler = (_req, _res, next) => next();
 
 export default function createProfilesRouter(
   repo: ProfileRepository,
   pinLimiter: RequestHandler = createPinVerifyLimiter(),
+  adminPinMiddleware: RequestHandler = createRequireAdminPin(repo),
 ): Router {
   const router = Router();
 
@@ -19,7 +18,7 @@ export default function createProfilesRouter(
     res.json(repo.list());
   });
 
-  router.post('/', requireAdminPin, (req, res) => {
+  router.post('/', adminPinMiddleware, (req, res) => {
     const result = CreateProfileSchema.safeParse(req.body);
     if (!result.success) {
       res.status(400).json({
@@ -33,7 +32,7 @@ export default function createProfilesRouter(
     res.status(201).json(profile);
   });
 
-  router.patch('/:id', requireAdminPin, (req, res) => {
+  router.patch('/:id', adminPinMiddleware, (req, res) => {
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) {
       res.status(400).json({ error: 'Invalid id', code: 'INVALID_ID' });
@@ -60,7 +59,7 @@ export default function createProfilesRouter(
     }
   });
 
-  router.delete('/:id', requireAdminPin, (req, res) => {
+  router.delete('/:id', adminPinMiddleware, (req, res) => {
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) {
       res.status(400).json({ error: 'Invalid id', code: 'INVALID_ID' });

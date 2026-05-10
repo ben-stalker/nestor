@@ -51,6 +51,7 @@ phases:
           - STORY-1.11
           - STORY-2.1
           - STORY-2.2
+          - STORY-2.3
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -122,4 +123,12 @@ notes: >
   via express-rate-limit), GET /:id/permissions. Zod validation on all inputs.
   requireAdminPin stub (next() passthrough; TODO for STORY-2.3). pin_hash never exposed
   in any response. express-rate-limit v8 installed. 22 new tests (143 server total).
-  lint + typecheck clean. Next: STORY-2.3.
+  lint + typecheck clean.
+  STORY-2.3 complete (2026-05-10): Profile and admin-PIN middleware.
+  requireProfile middleware (X-Profile-Id header → req.profile, 401 UNKNOWN_PROFILE on
+  missing/invalid). requirePermission(permKey) (403 PERMISSION_DENIED with details).
+  createRequireAdminPin with 15s in-memory cache of admin pin_hashes via new
+  ProfileRepository.listAdminPinHashes(). Express.Request augmented with profile?: Profile
+  via server/src/types/express.d.ts. profiles.ts stub replaced with real middleware;
+  route factory accepts injected adminPinMiddleware for testability. 20 new tests
+  (163 server total). lint + typecheck clean. Next: STORY-2.4.

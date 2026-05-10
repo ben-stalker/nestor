@@ -4,7 +4,7 @@
 **Sprint:** 2 — Profiles, Shell, & Plumbing
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -18,12 +18,12 @@
 
 ## Acceptance Criteria
 
-- [ ] `requireProfile` middleware reads `X-Profile-Id` header, looks up the profile, attaches `req.profile`; returns 401 if missing or invalid
-- [ ] `requirePermission(permKey: PermissionKey)` middleware checks `req.profile.permissions[permKey] === true`; returns 403 with `{ code: 'PERMISSION_DENIED', details: { required: permKey } }` if missing
-- [ ] `requireAdminPin` middleware reads `X-Admin-Pin` header, finds an admin profile, bcrypt-compares against its `pin_hash`; returns 403 if invalid; succeeds for any admin's PIN
-- [ ] `server/src/middleware/permissions.ts` declares the full permission key catalogue (≈25 keys derived from PRD §5 Profile Permission Matrix): `view_calendar`, `add_calendar_event`, `edit_calendar_event`, `delete_calendar_event`, `view_food`, `add_recipe`, `add_to_shopping`, `tick_shopping`, `clear_shopping`, `view_vehicles`, `book_vehicle`, `manage_vehicles`, `view_chores`, `complete_chore`, `manage_chores`, `view_health_log`, `add_health_log`, `view_finance`, `manage_finance`, `view_house`, `manage_house`, `view_pets`, `manage_pets`, `view_board`, `post_board_message`, `view_contacts`, `manage_contacts`, `manage_settings`, `manage_plugins`
-- [ ] All middlewares export TypeScript types augmenting `Express.Request` with `profile?: Profile`
-- [ ] Unit/integration tests cover each middleware in isolation via Supertest stubs
+- [x] `requireProfile` middleware reads `X-Profile-Id` header, looks up the profile, attaches `req.profile`; returns 401 if missing or invalid
+- [x] `requirePermission(permKey: PermissionKey)` middleware checks `req.profile.permissions[permKey] === true`; returns 403 with `{ code: 'PERMISSION_DENIED', details: { required: permKey } }` if missing
+- [x] `requireAdminPin` middleware reads `X-Admin-Pin` header, finds an admin profile, bcrypt-compares against its `pin_hash`; returns 403 if invalid; succeeds for any admin's PIN
+- [x] `server/src/middleware/permissions.ts` declares the full permission key catalogue (≈25 keys derived from PRD §5 Profile Permission Matrix): `view_calendar`, `add_calendar_event`, `edit_calendar_event`, `delete_calendar_event`, `view_food`, `add_recipe`, `add_to_shopping`, `tick_shopping`, `clear_shopping`, `view_vehicles`, `book_vehicle`, `manage_vehicles`, `view_chores`, `complete_chore`, `manage_chores`, `view_health_log`, `add_health_log`, `view_finance`, `manage_finance`, `view_house`, `manage_house`, `view_pets`, `manage_pets`, `view_board`, `post_board_message`, `view_contacts`, `manage_contacts`, `manage_settings`, `manage_plugins`
+- [x] All middlewares export TypeScript types augmenting `Express.Request` with `profile?: Profile`
+- [x] Unit/integration tests cover each middleware in isolation via Supertest stubs
 
 ---
 
@@ -87,13 +87,13 @@ return (req, res, next) => {
 
 ## Test Checklist
 
-- [ ] Unit: missing `X-Profile-Id` → 401 `UNKNOWN_PROFILE`
-- [ ] Unit: invalid profile ID → 401
-- [ ] Unit: valid profile attaches `req.profile`
-- [ ] Unit: `requirePermission('add_recipe')` denies child profile, allows admin
-- [ ] Unit: `requireAdminPin` accepts valid PIN, rejects wrong PIN
-- [ ] Unit: `requireAdminPin` rejects when no admin profiles exist
-- [ ] Unit: bcrypt cache reuses the hash within 15s window (verify via spy on `bcrypt.compareSync` call count)
+- [x] Unit: missing `X-Profile-Id` → 401 `UNKNOWN_PROFILE`
+- [x] Unit: invalid profile ID → 401
+- [x] Unit: valid profile attaches `req.profile`
+- [x] Unit: `requirePermission('add_recipe')` denies child profile, allows admin
+- [x] Unit: `requireAdminPin` accepts valid PIN, rejects wrong PIN
+- [x] Unit: `requireAdminPin` rejects when no admin profiles exist
+- [x] Unit: bcrypt cache reuses the hash within 15s window (verify via spy on `listAdminPinHashes` call count)
 
 ---
 
@@ -101,3 +101,19 @@ return (req, res, next) => {
 
 - The `manage_settings` and `manage_plugins` keys generally co-require `requireAdminPin` AND the permission — admin acts as a second factor.
 - Permission defaults per profile type land in STORY-2.4; this story does not auto-populate them.
+
+---
+
+## Implementation Notes
+
+**Completed:** 2026-05-10
+
+- Created `server/src/middleware/permissions.ts` — 29 `PermissionKey` constants as `as const` array
+- Created `server/src/types/express.d.ts` — module augmentation for `Express.Request.profile?: Profile`
+- Created `createRequireProfile` (default export) — reads `X-Profile-Id`, coerces to int, returns 401 on invalid/missing
+- Created `requirePermission(permKey)` (default export) — returns 401 if no profile, 403 with `PERMISSION_DENIED` if key not `true`
+- Created `createRequireAdminPin` (default export) — reads `X-Admin-Pin`, 15s cache of admin pin hashes via `repo.listAdminPinHashes()`, bcrypt compares all admin hashes
+- Added `listAdminPinHashes()` to `ProfileRepository` — returns `{ id, pin_hash }[]` for admin profiles
+- Replaced placeholder `requireAdminPin` stub in `profiles.ts` with real `createRequireAdminPin(repo)` default
+- Updated `profiles.ts` route factory to accept injected `adminPinMiddleware` param (default = real middleware)
+- 20 new tests (163 server total, was 143). lint + typecheck clean. Next: STORY-2.4.
