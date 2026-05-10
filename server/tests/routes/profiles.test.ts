@@ -11,6 +11,7 @@ import createProfilesRouter from '../../src/routes/profiles';
 const MIGRATIONS_DIR = path.join(__dirname, '..', '..', 'migrations');
 
 const noopLimiter: RequestHandler = (_req, _res, next) => next();
+const noopAdminPin: RequestHandler = (_req, _res, next) => next();
 
 function makeDb(): Database.Database {
   const db = new Database(':memory:');
@@ -19,10 +20,14 @@ function makeDb(): Database.Database {
   return db;
 }
 
-function makeApp(repo: ProfileRepository, pinLimiter: RequestHandler = noopLimiter) {
+function makeApp(
+  repo: ProfileRepository,
+  pinLimiter: RequestHandler = noopLimiter,
+  adminPin: RequestHandler = noopAdminPin,
+) {
   const app = express();
   app.use(express.json());
-  app.use('/api/v1/profiles', createProfilesRouter(repo, pinLimiter));
+  app.use('/api/v1/profiles', createProfilesRouter(repo, pinLimiter, adminPin));
   app.use(errorHandler);
   return app;
 }

@@ -182,6 +182,12 @@ class ProfileRepository extends BaseRepository {
     this.run('DELETE FROM profiles WHERE id = ?', [id]);
   }
 
+  listAdminPinHashes(): { id: number; pin_hash: string | null }[] {
+    return this.all<{ id: number; pin_hash: string | null }>(
+      `SELECT id, pin_hash FROM profiles WHERE type = 'admin'`,
+    );
+  }
+
   verifyPin(id: number, pin: string): boolean {
     const row = this.queryOne<PinRow>('SELECT pin_hash FROM profiles WHERE id = ?', [id]);
     if (!row || !row.pin_hash) return false;
