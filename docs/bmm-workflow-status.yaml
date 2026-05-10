@@ -52,6 +52,7 @@ phases:
           - STORY-2.1
           - STORY-2.2
           - STORY-2.3
+          - STORY-2.4
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -131,4 +132,11 @@ notes: >
   ProfileRepository.listAdminPinHashes(). Express.Request augmented with profile?: Profile
   via server/src/types/express.d.ts. profiles.ts stub replaced with real middleware;
   route factory accepts injected adminPinMiddleware for testability. 20 new tests
-  (163 server total). lint + typecheck clean. Next: STORY-2.4.
+  (163 server total). lint + typecheck clean.
+  STORY-2.4 complete (2026-05-10): Permission matrix defaults per profile type.
+  server/src/services/permissionDefaults.ts — pure defaultsFor(type) function encoding
+  PRD §5 matrix for all 7 ProfileTypes × 29 PermissionKeys. row() helper builds from
+  granted-set; all others false. POST /api/v1/profiles applies defaults when
+  permissions_json is absent; explicit body overrides. Snapshot tests (7 snapshots, one
+  per type) + completeness + immutability + integration tests. 22 new tests (185 server
+  total). lint + typecheck clean. Next: STORY-2.5.
