@@ -49,6 +49,7 @@ phases:
           - STORY-1.9
           - STORY-1.10
           - STORY-1.11
+          - STORY-2.1
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -106,4 +107,11 @@ notes: >
   stop() halts all jobs on shutdown. Five built-in placeholder jobs: weather-refresh (*/30),
   caldav-sync (*/15), reminder-eval (5 0 *), github-update-poll (0 3 *), vacuum-db (0 3 * * 0).
   node-cron installed (v4.2.1). 23 new tests (93 server total). lint + typecheck clean.
-  Next: STORY-2.1.
+  STORY-2.1 complete (2026-05-10): Profiles schema and repository. Migration 002_profiles.sql
+  creates profiles table with full schema per architecture data model. ProfileRepository
+  extends BaseRepository with list/get/create/update/delete/verifyPin. bcrypt cost 10 for
+  PIN hashing. LastAdminError (code LAST_ADMIN) thrown on last-admin delete. Zod validation
+  on colour hex, name, type enum, text_size enum. JSON columns (accessibility_json,
+  permissions_json) parsed on read. BaseRepository.get renamed to queryOne to allow
+  ProfileRepository.get(id). bcrypt + @types/bcrypt installed. 28 new tests (121 server total).
+  lint + typecheck clean. Next: STORY-2.2.

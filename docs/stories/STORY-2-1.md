@@ -4,7 +4,7 @@
 **Sprint:** 2 — Profiles, Shell, & Plumbing
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,14 +18,14 @@
 
 ## Acceptance Criteria
 
-- [ ] Migration `server/migrations/002_profiles.sql` creates the `profiles` table with columns from Architecture §"Data Model": `id INTEGER PRIMARY KEY`, `name TEXT NOT NULL`, `type TEXT NOT NULL CHECK(type IN ('baby','toddler','child','teen','grandparent','guest','admin'))`, `colour TEXT NOT NULL`, `pin_hash TEXT`, `avatar_path TEXT`, `accessibility_json TEXT`, `permissions_json TEXT NOT NULL`, `text_size TEXT NOT NULL DEFAULT 'default' CHECK(text_size IN ('small','default','large','xlarge'))`, `simplified_nav INTEGER NOT NULL DEFAULT 0`, `created_at INTEGER NOT NULL`
-- [ ] `ProfileRepository` extends `BaseRepository` and implements `list()`, `get(id)`, `create(input)`, `update(id, patch)`, `delete(id)`, `verifyPin(id, pin)`
-- [ ] PIN hashing uses `bcrypt` with cost factor 10
-- [ ] `verifyPin` returns `boolean` (true if PIN matches; false otherwise; false if profile has no `pin_hash`)
-- [ ] Validation via Zod: `colour` matches `/^#[0-9A-Fa-f]{6}$/`, `name` non-empty, `type` is the union enum, `text_size` is the enum
-- [ ] `list()` and `get()` strip `pin_hash` from the returned object
-- [ ] Cannot delete the last admin (repository throws `LastAdminError`)
-- [ ] Unit tests cover all methods + last-admin protection + PIN verify happy/sad paths
+- [x] Migration `server/migrations/002_profiles.sql` creates the `profiles` table with columns from Architecture §"Data Model": `id INTEGER PRIMARY KEY`, `name TEXT NOT NULL`, `type TEXT NOT NULL CHECK(type IN ('baby','toddler','child','teen','grandparent','guest','admin'))`, `colour TEXT NOT NULL`, `pin_hash TEXT`, `avatar_path TEXT`, `accessibility_json TEXT`, `permissions_json TEXT NOT NULL`, `text_size TEXT NOT NULL DEFAULT 'default' CHECK(text_size IN ('small','default','large','xlarge'))`, `simplified_nav INTEGER NOT NULL DEFAULT 0`, `created_at INTEGER NOT NULL`
+- [x] `ProfileRepository` extends `BaseRepository` and implements `list()`, `get(id)`, `create(input)`, `update(id, patch)`, `delete(id)`, `verifyPin(id, pin)`
+- [x] PIN hashing uses `bcrypt` with cost factor 10
+- [x] `verifyPin` returns `boolean` (true if PIN matches; false otherwise; false if profile has no `pin_hash`)
+- [x] Validation via Zod: `colour` matches `/^#[0-9A-Fa-f]{6}$/`, `name` non-empty, `type` is the union enum, `text_size` is the enum
+- [x] `list()` and `get()` strip `pin_hash` from the returned object
+- [x] Cannot delete the last admin (repository throws `LastAdminError`)
+- [x] Unit tests cover all methods + last-admin protection + PIN verify happy/sad paths
 
 ---
 
@@ -73,14 +73,14 @@
 
 ## Test Checklist
 
-- [ ] Unit: `create` with valid input returns profile without `pin_hash`
-- [ ] Unit: `verifyPin` returns true on correct PIN, false on incorrect, false when no PIN set
-- [ ] Unit: `update` patches only provided fields
-- [ ] Unit: `delete` succeeds for non-last admin
-- [ ] Unit: `delete` throws `LastAdminError` for the last admin
-- [ ] Unit: invalid `colour` (not hex) throws Zod validation error
-- [ ] Unit: invalid `type` throws
-- [ ] Unit: `list()` returns multiple profiles ordered by id
+- [x] Unit: `create` with valid input returns profile without `pin_hash`
+- [x] Unit: `verifyPin` returns true on correct PIN, false on incorrect, false when no PIN set
+- [x] Unit: `update` patches only provided fields
+- [x] Unit: `delete` succeeds for non-last admin
+- [x] Unit: `delete` throws `LastAdminError` for the last admin
+- [x] Unit: invalid `colour` (not hex) throws Zod validation error
+- [x] Unit: invalid `type` throws
+- [x] Unit: `list()` returns multiple profiles ordered by id
 
 ---
 
