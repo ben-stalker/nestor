@@ -1,1 +1,83 @@
+/* Inter — self-hosted via @fontsource (Vite bundles into dist) */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/800.css';
+
 @import 'tailwindcss';
+
+/* ─── Design-system tokens ───────────────────────────────────────────────── */
+@theme {
+  /* Font family */
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* Background tokens */
+  --color-warm: #fbf5ec;
+  --color-warm-dark: #2c2a27;
+  --color-surface: #ffffff;
+  --color-surface-elev: #f5f0e8;
+
+  /* Text tokens */
+  --color-primary: #1c1917;
+  --color-secondary: #57534e;
+  --color-muted: #a8a29e;
+
+  /* Mode accent colours (one per nav mode) */
+  --color-mode-home: #f5a623;
+  --color-mode-calendar: #4a90d9;
+  --color-mode-food: #e8621a;
+  --color-mode-vehicles: #5b8db8;
+  --color-mode-family: #e84545;
+  --color-mode-house: #8b6914;
+  --color-mode-finance: #2e7d32;
+  --color-mode-pets: #8b4513;
+  --color-mode-ev: #00897b;
+  --color-mode-board: #546e7a;
+
+  /* Profile colours (12, vibrant but accessible) */
+  --color-profile-1: #ff6b6b;
+  --color-profile-2: #ffab6e;
+  --color-profile-3: #88c98e;
+  --color-profile-4: #45b7b8;
+  --color-profile-5: #7b9ed9;
+  --color-profile-6: #b39dd9;
+  --color-profile-7: #7b4f9e;
+  --color-profile-8: #e88fa3;
+  --color-profile-9: #d4a96a;
+  --color-profile-10: #d4aa00;
+  --color-profile-11: #56b4e9;
+  --color-profile-12: #4cc07a;
+
+  /* Alert colours */
+  --color-alert-urgent: #ef4444;
+  --color-alert-warning: #f59e0b;
+  --color-alert-info: #3b82f6;
+  --color-alert-success: #22c55e;
+
+  /* Type scale (CSS custom properties drive runtime text-size overrides) */
+  --text-display: clamp(3rem, 5vw, 4.5rem);
+  --text-h1: 2rem;
+  --text-h2: 1.5rem;
+  --text-body: 1.125rem;
+  --text-caption: 0.875rem;
+
+  /* Radii */
+  --radius-card: 24px;
+  --radius-button: 16px;
+}
+
+/* ─── Runtime overridable custom properties ──────────────────────────────── */
+:root {
+  --base-font-size: 18px;
+  font-size: var(--base-font-size);
+}
+
+[data-theme='dark'] {
+  --color-warm: #2c2a27;
+  --color-surface: #1c1917;
+  --color-surface-elev: #292524;
+  --color-primary: #fafaf9;
+  --color-secondary: #d6d3d1;
+  --color-muted: #78716c;
+}
