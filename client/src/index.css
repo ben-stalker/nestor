@@ -104,7 +104,16 @@
   grid-template-areas: 'rail filters main';
 }
 
-.app-shell > .navbar { grid-area: navbar; }
-.app-shell > .rail   { grid-area: rail; }
-.app-shell > .filters { grid-area: filters; }
-.app-shell > main    { grid-area: main; overflow: auto; }
+.app-shell > .navbar {
+  grid-area: navbar;
+}
+.app-shell > .rail {
+  grid-area: rail;
+}
+.app-shell > .filters {
+  grid-area: filters;
+}
+.app-shell > main {
+  grid-area: main;
+  overflow: auto;
+}
