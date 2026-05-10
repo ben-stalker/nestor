@@ -48,6 +48,7 @@ phases:
           - STORY-1.8
           - STORY-1.9
           - STORY-1.10
+          - STORY-1.11
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -99,4 +100,10 @@ notes: >
   Client-side useWebSocket() hook with exponential back-off (500ms base, 30s cap, 2x factor).
   11 new server tests (70 total), 8 new client tests (24 total). lint + typecheck clean.
   ESLint updated: no-void allowAsStatement: true (resolves no-floating-promises conflict).
-  Next: STORY-1.11.
+  STORY-1.11 complete (2026-05-10): Job scheduler base. Scheduler class wraps node-cron v4.
+  register(name, cron, handler) — validates expression, wraps in try/catch, tracks runCount/
+  lastRun/lastError. runNow(name) for immediate execution. list() returns JobInfo[].
+  stop() halts all jobs on shutdown. Five built-in placeholder jobs: weather-refresh (*/30),
+  caldav-sync (*/15), reminder-eval (5 0 *), github-update-poll (0 3 *), vacuum-db (0 3 * * 0).
+  node-cron installed (v4.2.1). 23 new tests (93 server total). lint + typecheck clean.
+  Next: STORY-2.1.
