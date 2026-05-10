@@ -2,6 +2,7 @@ import createApp from './app';
 import { closeDb, getDb } from './db/connection';
 import { runMigrations } from './db/migrationRunner';
 import logger from './utils/logger';
+import { createWsServer } from './ws/server';
 
 const PORT = Number(process.env.NESTOR_PORT ?? 3000);
 
@@ -23,6 +24,8 @@ const server = app.listen(PORT, () => {
   logger.info({ port: PORT }, 'Server listening');
 });
 
+const wsServer = createWsServer(server);
+
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 
 function shutdown(signal: string): void {
@@ -33,10 +36,12 @@ function shutdown(signal: string): void {
   }, SHUTDOWN_TIMEOUT_MS);
   timer.unref();
 
-  server.close(() => {
-    closeDb();
-    logger.info('Server closed cleanly');
-    process.exit(0);
+  void wsServer.close().finally(() => {
+    server.close(() => {
+      closeDb();
+      logger.info('Server closed cleanly');
+      process.exit(0);
+    });
   });
 }
 

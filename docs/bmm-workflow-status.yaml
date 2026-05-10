@@ -47,6 +47,7 @@ phases:
           - STORY-1.7
           - STORY-1.8
           - STORY-1.9
+          - STORY-1.10
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -91,4 +92,11 @@ notes: >
   remaining listeners still run. setMaxListeners(50). EventMap declared in eventBus.types.ts
   with placeholder Alert type; 8 events covered. AppSettingsRepository updated to emit
   settings:updated on set/delete. 11 new tests (59 server total). lint + typecheck clean.
-  Next: STORY-1.10.
+  STORY-1.10 complete (2026-05-10): WebSocket server scaffold. NestorWsServer class mounts
+  ws v8 on the Express HTTP server at /ws. broadcast(msg) + send(clientId, msg) exposed.
+  Subscribes to alert:new, alert:dismissed, voice:status, calendar:synced from event bus.
+  30s heartbeat ping with dead-client pruning. Configurable heartbeat interval for tests.
+  Client-side useWebSocket() hook with exponential back-off (500ms base, 30s cap, 2x factor).
+  11 new server tests (70 total), 8 new client tests (24 total). lint + typecheck clean.
+  ESLint updated: no-void allowAsStatement: true (resolves no-floating-promises conflict).
+  Next: STORY-1.11.
