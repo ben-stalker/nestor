@@ -283,3 +283,40 @@
     animation: none;
   }
 }
+
+/* ─── Kiosk mode ─────────────────────────────────────────────────────────── */
+.kiosk-lock-indicator {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-surface) 80%, transparent);
+  color: var(--color-secondary);
+  pointer-events: none;
+}
+
+/* Hidden tap target — bottom-right corner, large enough for touch but invisible */
+.kiosk-tap-target {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 50;
+  width: 56px;
+  height: 56px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: default;
+}
+
+/* Disable avatar strip interactions in kiosk mode */
+.avatar-strip--locked {
+  pointer-events: none;
+  opacity: 0.4;
+}

@@ -7,6 +7,7 @@ import { useWebSocket } from '../hooks/useWebSocket';
 import { APP_SETTINGS_KEY } from './hooks/useAppSettings';
 import NavBar from './NavBar';
 import FilterPanel from './FilterPanel';
+import KioskOverlay from './KioskOverlay';
 
 export default function AppShell() {
   const orientation = useOrientation();
@@ -24,6 +25,7 @@ export default function AppShell() {
       <NavBar />
       <FilterPanel />
       <Outlet />
+      <KioskOverlay />
     </div>
   );
 }

@@ -58,3 +58,17 @@ export const DEFAULT_NAV_MODES: NavMode[] = [
 ];
 
 export const NAV_MODE_MAP = new Map<string, NavMode>(DEFAULT_NAV_MODES.map((m) => [m.id, m]));
+
+// Maps each nav mode to the permission key that gates its visibility in kiosk mode.
+// Modes with no entry (e.g. "home") are always visible.
+export const NAV_MODE_PERMISSION: Partial<Record<NavModeId, string>> = {
+  calendar: 'view_calendar',
+  food: 'view_food',
+  vehicles: 'view_vehicles',
+  family: 'view_chores',
+  house: 'view_house',
+  finance: 'view_finance',
+  pets: 'view_pets',
+  ev: 'view_vehicles',
+  board: 'view_board',
+};

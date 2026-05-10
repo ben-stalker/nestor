@@ -164,6 +164,45 @@ describe('AvatarStrip — PIN-required switch', () => {
   });
 });
 
+describe('AvatarStrip — kiosk mode', () => {
+  it('applies locked class when kiosk_lock is set in app-settings', () => {
+    const qc = makeQC([PROFILE_A, PROFILE_B]);
+    qc.setQueryData(['app-settings'], { kiosk_lock: '2' });
+    vi.mocked(getProfiles).mockResolvedValue([PROFILE_A, PROFILE_B]);
+    render(
+      <QueryClientProvider client={qc}>
+        <AvatarStrip />
+      </QueryClientProvider>,
+    );
+    expect(document.querySelector('.avatar-strip--locked')).toBeInTheDocument();
+  });
+
+  it('sets aria-disabled on the strip when kiosk is locked', () => {
+    const qc = makeQC([PROFILE_A, PROFILE_B]);
+    qc.setQueryData(['app-settings'], { kiosk_lock: '2' });
+    vi.mocked(getProfiles).mockResolvedValue([PROFILE_A, PROFILE_B]);
+    render(
+      <QueryClientProvider client={qc}>
+        <AvatarStrip />
+      </QueryClientProvider>,
+    );
+    const strip = screen.getByRole('toolbar', { name: /profile switcher/i });
+    expect(strip).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('does not apply locked class when kiosk_lock is null', () => {
+    const qc = makeQC([PROFILE_A, PROFILE_B]);
+    qc.setQueryData(['app-settings'], { kiosk_lock: null });
+    vi.mocked(getProfiles).mockResolvedValue([PROFILE_A, PROFILE_B]);
+    render(
+      <QueryClientProvider client={qc}>
+        <AvatarStrip />
+      </QueryClientProvider>,
+    );
+    expect(document.querySelector('.avatar-strip--locked')).not.toBeInTheDocument();
+  });
+});
+
 describe('AvatarStrip — loading state', () => {
   it('shows skeleton when profiles are loading', () => {
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
