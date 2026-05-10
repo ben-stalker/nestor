@@ -4,7 +4,7 @@
 **Sprint:** 1 — Foundations
 **Estimate:** XS (0.5d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,8 +18,8 @@
 
 ## Acceptance Criteria
 
-- [ ] `server/src/core/eventBus.ts` exports a singleton typed EventEmitter
-- [ ] Declared event map covers (with payload types):
+- [x] `server/src/core/eventBus.ts` exports a singleton typed EventEmitter
+- [x] Declared event map covers (with payload types):
   - `alert:new` → `Alert`
   - `alert:dismissed` → `{ id: number }`
   - `calendar:synced` → `{ accountId: number; eventCount: number }`
@@ -28,12 +28,12 @@
   - `plugin:error` → `{ pluginId: string; error: Error }`
   - `voice:status` → `{ status: 'idle' | 'listening' | 'processing' | 'speaking' }`
   - `settings:updated` → `{ keys: string[] }`
-- [ ] Type-safe `emit<K extends keyof EventMap>(event: K, payload: EventMap[K])`
-- [ ] Type-safe `on<K>(event: K, listener: (payload: EventMap[K]) => void)`
-- [ ] `off` and `once` similarly typed
-- [ ] Errors thrown by listeners are caught + logged via pino, do NOT propagate to other listeners or back to the emitter
-- [ ] Documented in code comments with usage examples
-- [ ] Unit tests verify type-safe emit/on, listener isolation on throw
+- [x] Type-safe `emit<K extends keyof EventMap>(event: K, payload: EventMap[K])`
+- [x] Type-safe `on<K>(event: K, listener: (payload: EventMap[K]) => void)`
+- [x] `off` and `once` similarly typed
+- [x] Errors thrown by listeners are caught + logged via pino, do NOT propagate to other listeners or back to the emitter
+- [x] Documented in code comments with usage examples
+- [x] Unit tests verify type-safe emit/on, listener isolation on throw
 
 ---
 
@@ -81,11 +81,11 @@ export const eventBus = new TypedEventBus();
 
 ## Test Checklist
 
-- [ ] Unit: typed emit + on round-trips with correct payload type (TS compile check)
-- [ ] Unit: listener that throws does NOT prevent other listeners from running
-- [ ] Unit: thrown listener error is logged (mock logger)
-- [ ] Unit: `once` fires exactly once
-- [ ] Unit: max listeners not warning at 50
+- [x] Unit: typed emit + on round-trips with correct payload type (TS compile check)
+- [x] Unit: listener that throws does NOT prevent other listeners from running
+- [x] Unit: thrown listener error is logged (mock logger)
+- [x] Unit: `once` fires exactly once
+- [x] Unit: max listeners not warning at 50
 
 ---
 

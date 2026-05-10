@@ -46,6 +46,7 @@ phases:
           - STORY-1.6
           - STORY-1.7
           - STORY-1.8
+          - STORY-1.9
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -84,4 +85,10 @@ notes: >
   getMachineId() with /etc/machine-id → ~/.nestor/machine-id (UUID, mode 0600) fallback.
   Output format v1:<iv_b64>:<tag_b64>:<ct_b64>; GCM auth tag tamper detection.
   17 new tests (48 server total, 63 overall). lint + typecheck clean.
-  Next: STORY-1.9.
+  STORY-1.9 complete (2026-05-10): Typed in-process event bus singleton. TypedEventBus
+  wraps Node EventEmitter with generic emit/on/off/once over EventMap. Custom dispatch
+  loop (forEach + try/catch) isolates listeners — a throwing handler logs via pino and
+  remaining listeners still run. setMaxListeners(50). EventMap declared in eventBus.types.ts
+  with placeholder Alert type; 8 events covered. AppSettingsRepository updated to emit
+  settings:updated on set/delete. 11 new tests (59 server total). lint + typecheck clean.
+  Next: STORY-1.10.
