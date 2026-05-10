@@ -35,13 +35,13 @@ function renderApp() {
 }
 
 describe('App', () => {
-  it('renders Nestor splash heading', () => {
+  it('renders the main navigation', () => {
     renderApp();
-    expect(screen.getByRole('heading', { name: 'Nestor' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument();
   });
 
-  it('renders tagline', () => {
+  it('renders home route placeholder content', () => {
     renderApp();
-    expect(screen.getByText("Your family's home hub")).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
   });
 });

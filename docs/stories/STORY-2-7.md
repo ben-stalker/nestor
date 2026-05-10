@@ -4,7 +4,7 @@
 **Sprint:** 2 — Profiles, Shell, & Plumbing
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 

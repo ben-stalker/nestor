@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useOrientation } from './hooks/useOrientation';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { APP_SETTINGS_KEY } from './hooks/useAppSettings';
+import NavBar from './NavBar';
 
 export default function AppShell() {
   const orientation = useOrientation();
@@ -19,6 +20,7 @@ export default function AppShell() {
 
   return (
     <div className={clsx('app-shell', `app-shell--${orientation}`)} data-orientation={orientation}>
+      <NavBar />
       <Outlet />
     </div>
   );
