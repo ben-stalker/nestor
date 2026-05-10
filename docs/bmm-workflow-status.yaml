@@ -56,6 +56,7 @@ phases:
           - STORY-2.5
           - STORY-2.6
           - STORY-2.7
+          - STORY-2.8
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -160,4 +161,16 @@ notes: >
   landscape vertical rail. Reads enabled_nav_modes + nav_layout from app_settings.
   NavLink active state + aria-current="page". Per-mode badge counts via
   appStore.badgeCounts. Hamburger More sheet uses Modal. 30 new client tests
-  (87 client total; 185 server total). lint + typecheck clean. Next: STORY-2.8.
+  (87 client total; 185 server total). lint + typecheck clean.
+  STORY-2.8 complete (2026-05-10): Profile context + profile switcher avatar strip.
+  Server: pinSet: boolean added to Profile type (SQL CASE WHEN pin_hash IS NOT NULL).
+  Client: ApiError class with status code in apiFetch. Zustand persist middleware
+  for activeProfileId (localStorage). useProfiles() TanStack Query hook,
+  useActiveProfile() derived hook, applyProfileSettings() sets data-text-size +
+  data-simplified-nav on html element. ProfileProvider initializes + syncs active
+  profile. AvatarStrip: horizontal scrollable strip, colour border, tap-to-switch,
+  PIN gate. PinPrompt: numeric keypad, 4-dot indicator, CSS shake keyframe,
+  429 "Too many attempts" surfacing, prefers-reduced-motion aware.
+  CSS: text-size overrides, simplified-nav, avatar-strip layout, shake keyframe.
+  AvatarStrip placed on home page header. 24 new client tests
+  (111 client total; 185 server total). lint + typecheck clean. Next: STORY-2.9.

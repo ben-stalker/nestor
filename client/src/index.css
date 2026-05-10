@@ -117,3 +117,56 @@
   grid-area: main;
   overflow: auto;
 }
+
+/* ─── Per-profile text size overrides ───────────────────────────────────── */
+[data-text-size='small'] { --base-font-size: 15px; }
+[data-text-size='default'] { --base-font-size: 18px; }
+[data-text-size='large'] { --base-font-size: 22px; }
+[data-text-size='xlarge'] { --base-font-size: 26px; }
+
+/* ─── Simplified nav (hide labels) ──────────────────────────────────────── */
+[data-simplified-nav='true'] .nav-label { display: none; }
+
+/* ─── Avatar strip ───────────────────────────────────────────────────────── */
+.avatar-strip {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.75rem 1rem;
+  scrollbar-width: none;
+}
+.avatar-strip::-webkit-scrollbar { display: none; }
+
+.avatar-strip__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-card);
+}
+
+.avatar-strip__item--active {
+  background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+/* ─── Shake animation ────────────────────────────────────────────────────── */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-8px); }
+  80%       { transform: translateX(8px); }
+}
+
+.shake {
+  animation: shake 0.45s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shake { animation: none; }
+}

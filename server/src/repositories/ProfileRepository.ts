@@ -17,7 +17,7 @@ interface ProfileRow {
   name: string;
   type: string;
   colour: string;
-  pin_hash: string | null;
+  pin_set: number;
   avatar_path: string | null;
   accessibility_json: string | null;
   permissions_json: string;
@@ -39,16 +39,19 @@ interface TypeRow {
 }
 
 const PUBLIC_COLUMNS = `
-  id, name, type, colour, avatar_path, accessibility_json,
+  id, name, type, colour,
+  CASE WHEN pin_hash IS NOT NULL THEN 1 ELSE 0 END as pin_set,
+  avatar_path, accessibility_json,
   permissions_json, text_size, simplified_nav, created_at
 `;
 
-function toProfile(row: Omit<ProfileRow, 'pin_hash'>): Profile {
+function toProfile(row: ProfileRow): Profile {
   return {
     id: row.id,
     name: row.name,
     type: row.type as Profile['type'],
     colour: row.colour,
+    pinSet: row.pin_set === 1,
     avatar_path: row.avatar_path,
     accessibility_json: row.accessibility_json
       ? (JSON.parse(row.accessibility_json) as Record<string, unknown>)
@@ -62,17 +65,14 @@ function toProfile(row: Omit<ProfileRow, 'pin_hash'>): Profile {
 
 class ProfileRepository extends BaseRepository {
   list(): Profile[] {
-    const rows = this.all<Omit<ProfileRow, 'pin_hash'>>(
-      `SELECT ${PUBLIC_COLUMNS} FROM profiles ORDER BY id`,
-    );
+    const rows = this.all<ProfileRow>(`SELECT ${PUBLIC_COLUMNS} FROM profiles ORDER BY id`);
     return rows.map(toProfile);
   }
 
   get(id: number): Profile | undefined {
-    const row = this.queryOne<Omit<ProfileRow, 'pin_hash'>>(
-      `SELECT ${PUBLIC_COLUMNS} FROM profiles WHERE id = ?`,
-      [id],
-    );
+    const row = this.queryOne<ProfileRow>(`SELECT ${PUBLIC_COLUMNS} FROM profiles WHERE id = ?`, [
+      id,
+    ]);
     return row ? toProfile(row) : undefined;
   }
 

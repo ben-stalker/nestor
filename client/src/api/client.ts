@@ -1,5 +1,15 @@
 import useAppStore from '../store/appStore';
 
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    message: string,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 type RequestOptions = Omit<RequestInit, 'body'> & {
   body?: unknown;
 };
@@ -25,7 +35,7 @@ async function apiFetch<T = unknown>(path: string, options: RequestOptions = {})
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`API error ${res.status}: ${text}`);
+    throw new ApiError(res.status, `API error ${res.status}: ${text}`);
   }
 
   const contentType = res.headers.get('content-type') ?? '';

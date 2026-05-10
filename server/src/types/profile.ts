@@ -21,6 +21,7 @@ export interface Profile {
   type: ProfileType;
   colour: string;
   avatar_path: string | null;
+  pinSet: boolean;
   accessibility_json: Record<string, unknown> | null;
   permissions_json: Permissions;
   text_size: TextSize;
