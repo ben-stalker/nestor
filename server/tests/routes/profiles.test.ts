@@ -142,6 +142,24 @@ describe('POST /api/v1/profiles', () => {
     expect(res.status).toBe(400);
     expect(body.code).toBe('VALIDATION_ERROR');
   });
+
+  it('applies default permissions when permissions_json is omitted', async () => {
+    const res = await request(app).post('/api/v1/profiles').send(childPayload);
+    expect(res.status).toBe(201);
+    const postBody = res.body as { permissions_json: Record<string, boolean> };
+    expect(postBody.permissions_json.view_calendar).toBe(true);
+    expect(postBody.permissions_json.manage_settings).toBe(false);
+    expect(postBody.permissions_json.view_finance).toBe(false);
+  });
+
+  it('uses explicit permissions_json when provided, overriding defaults', async () => {
+    const res = await request(app)
+      .post('/api/v1/profiles')
+      .send({ ...childPayload, permissions_json: { view_calendar: false, manage_settings: true } });
+    expect(res.status).toBe(201);
+    const explicitBody = res.body as { permissions_json: Record<string, boolean> };
+    expect(explicitBody.permissions_json).toEqual({ view_calendar: false, manage_settings: true });
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -192,6 +210,19 @@ describe('PATCH /api/v1/profiles/:id', () => {
       .send({ name: 'Updated' });
     expect(res.status).toBe(200);
     expect(res.body as ProfileBody).not.toHaveProperty('pin_hash');
+  });
+
+  it('allows flipping individual permission booleans', async () => {
+    const profile = repo.create(childPayload);
+    const res = await request(app)
+      .patch(`/api/v1/profiles/${profile.id}`)
+      .send({ permissions_json: { view_calendar: false, manage_settings: true } });
+    expect(res.status).toBe(200);
+    const patchBody = res.body as { permissions_json: Record<string, boolean> };
+    expect(patchBody.permissions_json).toEqual({
+      view_calendar: false,
+      manage_settings: true,
+    });
   });
 });
 

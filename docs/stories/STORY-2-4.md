@@ -4,7 +4,7 @@
 **Sprint:** 2 — Profiles, Shell, & Plumbing
 **Estimate:** S (1d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,12 +18,12 @@
 
 ## Acceptance Criteria
 
-- [ ] `server/src/services/permissionDefaults.ts` exports `defaultsFor(type: ProfileType): Record<PermissionKey, boolean>` returning a deterministic set per PRD §5 matrix
-- [ ] On `POST /api/v1/profiles`, if `permissions_json` not provided in the body, `defaultsFor(input.type)` is applied automatically
-- [ ] Admin can override any individual permission via `PATCH /api/v1/profiles/:id` (existing endpoint)
-- [ ] Snapshot test asserts the generated defaults for every profile type match the matrix exactly
-- [ ] `defaultsFor` is pure — no DB access, no side effects
-- [ ] Default tables documented inline with the code
+- [x] `server/src/services/permissionDefaults.ts` exports `defaultsFor(type: ProfileType): Record<PermissionKey, boolean>` returning a deterministic set per PRD §5 matrix
+- [x] On `POST /api/v1/profiles`, if `permissions_json` not provided in the body, `defaultsFor(input.type)` is applied automatically
+- [x] Admin can override any individual permission via `PATCH /api/v1/profiles/:id` (existing endpoint)
+- [x] Snapshot test asserts the generated defaults for every profile type match the matrix exactly
+- [x] `defaultsFor` is pure — no DB access, no side effects
+- [x] Default tables documented inline with the code
 
 ---
 
@@ -94,12 +94,12 @@
 
 ## Test Checklist
 
-- [ ] Unit: `defaultsFor('admin')` matches snapshot
-- [ ] Unit: `defaultsFor('child')` matches snapshot (no admin-only permissions true)
-- [ ] Unit: every key in `ALL_PERMISSIONS` is present in every type's defaults
-- [ ] Integration: `POST /api/v1/profiles` without `permissions` populates from defaults
-- [ ] Integration: `POST` with explicit `permissions` overrides defaults
-- [ ] Integration: `PATCH` allows admin to flip individual permission booleans
+- [x] Unit: `defaultsFor('admin')` matches snapshot
+- [x] Unit: `defaultsFor('child')` matches snapshot (no admin-only permissions true)
+- [x] Unit: every key in `ALL_PERMISSIONS` is present in every type's defaults
+- [x] Integration: `POST /api/v1/profiles` without `permissions` populates from defaults
+- [x] Integration: `POST` with explicit `permissions` overrides defaults
+- [x] Integration: `PATCH` allows admin to flip individual permission booleans
 
 ---
 

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import createRequireAdminPin from '../middleware/requireAdminPin';
 import { createPinVerifyLimiter } from '../middleware/rateLimit';
 import ProfileRepository, { LastAdminError } from '../repositories/ProfileRepository';
+import defaultsFor from '../services/permissionDefaults';
 import { CreateProfileSchema, UpdateProfileSchema } from '../types/profile';
 
 const VerifyPinSchema = z.object({ pin: z.string().min(1) });
@@ -28,7 +29,9 @@ export default function createProfilesRouter(
       });
       return;
     }
-    const profile = repo.create(result.data);
+    const { data } = result;
+    const permissions = data.permissions_json ?? defaultsFor(data.type);
+    const profile = repo.create({ ...data, permissions_json: permissions });
     res.status(201).json(profile);
   });
 
