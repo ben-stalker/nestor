@@ -393,3 +393,20 @@
   color: var(--color-secondary);
   margin-bottom: 0.75rem;
 }
+
+/* ─── Idle dim overlay ───────────────────────────────────────────────────── */
+.idle-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #000;
+  opacity: var(--idle-opacity, 0.9);
+  cursor: none;
+  touch-action: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .idle-overlay {
+    transition: opacity 1s ease;
+  }
+}

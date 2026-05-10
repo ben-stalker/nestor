@@ -21,3 +21,14 @@ export async function verifyAdminPin(pin: string): Promise<{ valid: boolean }> {
     body: { pin },
   });
 }
+
+export async function triggerDpmsOff(): Promise<void> {
+  await apiFetch<void>('/api/v1/admin/dpms-off', { method: 'POST' });
+}
+
+export async function setBrightness(level: number): Promise<void> {
+  await apiFetch<void>('/api/v1/admin/brightness', {
+    method: 'POST',
+    body: { level },
+  });
+}

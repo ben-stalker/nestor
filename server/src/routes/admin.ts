@@ -1,3 +1,4 @@
+import { execFile } from 'child_process';
 import bcrypt from 'bcrypt';
 import { Router, type RequestHandler } from 'express';
 import { z } from 'zod';
@@ -5,9 +6,11 @@ import { createPinVerifyLimiter } from '../middleware/rateLimit';
 import AppSettingsRepository from '../repositories/AppSettingsRepository';
 import ProfileRepository from '../repositories/ProfileRepository';
 import { getDb } from '../db/connection';
+import logger from '../utils/logger';
 
 const ActivateKioskSchema = z.object({ profileId: z.string().min(1) });
 const PinSchema = z.object({ pin: z.string().min(1) });
+const BrightnessSchema = z.object({ level: z.number().int().min(0).max(100) });
 
 export default function createAdminRouter(
   settingsRepo: AppSettingsRepository = new AppSettingsRepository(getDb()),
@@ -57,6 +60,36 @@ export default function createAdminRouter(
 
     settingsRepo.delete('kiosk_lock');
     res.status(200).json({ valid: true });
+  });
+
+  // Trigger OS DPMS display-off. Fires xset and responds immediately; failure is non-fatal.
+  router.post('/dpms-off', (_req, res) => {
+    execFile('xset', ['dpms', 'force', 'off'], (err) => {
+      if (err) {
+        logger.warn({ err }, 'dpms-off: xset not available or failed');
+      }
+    });
+    res.status(204).end();
+  });
+
+  // Set DDC/CI brightness (0-100). Fires ddcutil and responds immediately; failure is non-fatal.
+  router.post('/brightness', (req, res) => {
+    const result = BrightnessSchema.safeParse(req.body);
+    if (!result.success) {
+      res.status(400).json({
+        error: 'Validation failed',
+        code: 'VALIDATION_ERROR',
+        details: result.error.flatten(),
+      });
+      return;
+    }
+    const vcp = String(result.data.level);
+    execFile('ddcutil', ['setvcp', '10', vcp], (err) => {
+      if (err) {
+        logger.warn({ err }, 'brightness: ddcutil not available or failed');
+      }
+    });
+    res.status(204).end();
   });
 
   // Verify admin PIN without side effects — used by guest mode exit on the client.

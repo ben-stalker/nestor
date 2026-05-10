@@ -60,6 +60,7 @@ phases:
           - STORY-2.9
           - STORY-2.10
           - STORY-2.11
+          - STORY-2.12
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories

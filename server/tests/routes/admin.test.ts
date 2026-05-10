@@ -1,3 +1,4 @@
+import { execFile } from 'child_process';
 import Database from 'better-sqlite3';
 import express, { type RequestHandler } from 'express';
 import path from 'path';
@@ -7,6 +8,13 @@ import errorHandler from '../../src/middleware/errorHandler';
 import AppSettingsRepository from '../../src/repositories/AppSettingsRepository';
 import ProfileRepository from '../../src/repositories/ProfileRepository';
 import createAdminRouter from '../../src/routes/admin';
+
+jest.mock('child_process', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  execFile: jest.fn((...args: any[]) => (args[args.length - 1] as (e: null) => void)(null)),
+}));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockExecFile = execFile as unknown as jest.MockedFunction<(...a: any[]) => void>;
 
 const MIGRATIONS_DIR = path.join(__dirname, '..', '..', 'migrations');
 
@@ -174,6 +182,89 @@ describe('POST /api/v1/admin/verify-pin', () => {
     const res = await request(app).post('/api/v1/admin/verify-pin').send({});
     expect(res.status).toBe(400);
     expect((res.body as ErrorBody).code).toBe('VALIDATION_ERROR');
+  });
+});
+
+describe('POST /api/v1/admin/dpms-off', () => {
+  let db: Database.Database;
+  let app: ReturnType<typeof makeApp>;
+
+  beforeEach(() => {
+    db = makeDb();
+    app = makeApp(new AppSettingsRepository(db), new ProfileRepository(db));
+    mockExecFile.mockClear();
+  });
+
+  afterEach(() => db.close());
+
+  it('returns 204 and calls xset dpms force off', async () => {
+    const res = await request(app).post('/api/v1/admin/dpms-off').send();
+    expect(res.status).toBe(204);
+    expect(mockExecFile).toHaveBeenCalledWith(
+      'xset',
+      ['dpms', 'force', 'off'],
+      expect.any(Function),
+    );
+  });
+
+  it('returns 204 even when xset errors (graceful failure)', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockExecFile.mockImplementationOnce((...args: any[]) =>
+      (args[args.length - 1] as (e: Error) => void)(new Error('xset not found')),
+    );
+    const res = await request(app).post('/api/v1/admin/dpms-off').send();
+    expect(res.status).toBe(204);
+  });
+});
+
+describe('POST /api/v1/admin/brightness', () => {
+  let db: Database.Database;
+  let app: ReturnType<typeof makeApp>;
+
+  beforeEach(() => {
+    db = makeDb();
+    app = makeApp(new AppSettingsRepository(db), new ProfileRepository(db));
+    mockExecFile.mockClear();
+  });
+
+  afterEach(() => db.close());
+
+  it('returns 204 and calls ddcutil setvcp with correct value', async () => {
+    const res = await request(app).post('/api/v1/admin/brightness').send({ level: 50 });
+    expect(res.status).toBe(204);
+    expect(mockExecFile).toHaveBeenCalledWith(
+      'ddcutil',
+      ['setvcp', '10', '50'],
+      expect.any(Function),
+    );
+  });
+
+  it('returns 204 even when ddcutil errors (graceful failure)', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockExecFile.mockImplementationOnce((...args: any[]) =>
+      (args[args.length - 1] as (e: Error) => void)(new Error('ddcutil not found')),
+    );
+    const res = await request(app).post('/api/v1/admin/brightness').send({ level: 20 });
+    expect(res.status).toBe(204);
+  });
+
+  it('returns 400 for level out of range', async () => {
+    const res = await request(app).post('/api/v1/admin/brightness').send({ level: 150 });
+    expect(res.status).toBe(400);
+    expect((res.body as ErrorBody).code).toBe('VALIDATION_ERROR');
+  });
+
+  it('returns 400 when level is missing', async () => {
+    const res = await request(app).post('/api/v1/admin/brightness').send({});
+    expect(res.status).toBe(400);
+    expect((res.body as ErrorBody).code).toBe('VALIDATION_ERROR');
+  });
+
+  it('clamps level: 0 and 100 are valid boundaries', async () => {
+    const res0 = await request(app).post('/api/v1/admin/brightness').send({ level: 0 });
+    const res100 = await request(app).post('/api/v1/admin/brightness').send({ level: 100 });
+    expect(res0.status).toBe(204);
+    expect(res100.status).toBe(204);
   });
 });
 

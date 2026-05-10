@@ -9,6 +9,7 @@ import NavBar from './NavBar';
 import FilterPanel from './FilterPanel';
 import KioskOverlay from './KioskOverlay';
 import GuestOverlay from './GuestOverlay';
+import IdleOverlay from './IdleOverlay';
 
 export default function AppShell() {
   const orientation = useOrientation();
@@ -28,6 +29,7 @@ export default function AppShell() {
       <Outlet />
       <KioskOverlay />
       <GuestOverlay />
+      <IdleOverlay />
     </div>
   );
 }
