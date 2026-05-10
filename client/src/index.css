@@ -119,13 +119,23 @@
 }
 
 /* ─── Per-profile text size overrides ───────────────────────────────────── */
-[data-text-size='small'] { --base-font-size: 15px; }
-[data-text-size='default'] { --base-font-size: 18px; }
-[data-text-size='large'] { --base-font-size: 22px; }
-[data-text-size='xlarge'] { --base-font-size: 26px; }
+[data-text-size='small'] {
+  --base-font-size: 15px;
+}
+[data-text-size='default'] {
+  --base-font-size: 18px;
+}
+[data-text-size='large'] {
+  --base-font-size: 22px;
+}
+[data-text-size='xlarge'] {
+  --base-font-size: 26px;
+}
 
 /* ─── Simplified nav (hide labels) ──────────────────────────────────────── */
-[data-simplified-nav='true'] .nav-label { display: none; }
+[data-simplified-nav='true'] .nav-label {
+  display: none;
+}
 
 /* ─── Avatar strip ───────────────────────────────────────────────────────── */
 .avatar-strip {
@@ -135,7 +145,9 @@
   padding: 0.75rem 1rem;
   scrollbar-width: none;
 }
-.avatar-strip::-webkit-scrollbar { display: none; }
+.avatar-strip::-webkit-scrollbar {
+  display: none;
+}
 
 .avatar-strip__item {
   display: flex;
@@ -156,11 +168,22 @@
 
 /* ─── Shake animation ────────────────────────────────────────────────────── */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%       { transform: translateX(-8px); }
-  40%       { transform: translateX(8px); }
-  60%       { transform: translateX(-8px); }
-  80%       { transform: translateX(8px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-8px);
+  }
+  80% {
+    transform: translateX(8px);
+  }
 }
 
 .shake {
@@ -168,5 +191,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shake { animation: none; }
+  .shake {
+    animation: none;
+  }
 }
