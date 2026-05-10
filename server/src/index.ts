@@ -1,6 +1,7 @@
 import createApp from './app';
 import { closeDb, getDb } from './db/connection';
 import { runMigrations } from './db/migrationRunner';
+import { Scheduler, registerBuiltinJobs } from './scheduler';
 import logger from './utils/logger';
 import { createWsServer } from './ws/server';
 
@@ -26,6 +27,9 @@ const server = app.listen(PORT, () => {
 
 const wsServer = createWsServer(server);
 
+registerBuiltinJobs();
+logger.info({ jobs: Scheduler.list().map((j) => j.name) }, 'Scheduler started');
+
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 
 function shutdown(signal: string): void {
@@ -36,6 +40,7 @@ function shutdown(signal: string): void {
   }, SHUTDOWN_TIMEOUT_MS);
   timer.unref();
 
+  Scheduler.stop();
   void wsServer.close().finally(() => {
     server.close(() => {
       closeDb();

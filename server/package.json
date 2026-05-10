@@ -13,6 +13,7 @@
   "dependencies": {
     "better-sqlite3": "^12.9.0",
     "express": "^5.2.1",
+    "node-cron": "^4.2.1",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
     "ws": "^8.20.0",
@@ -22,6 +23,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "@types/node-cron": "^3.0.11",
     "@types/supertest": "^7.2.0",
     "@types/ws": "^8.18.1",
     "jest": "^30.4.2",
