@@ -1,5 +1,6 @@
 import logger from '../utils/logger';
 import { SETTING_SCHEMAS } from '../db/settings-keys';
+import eventBus from '../core/eventBus';
 import BaseRepository from './BaseRepository';
 
 interface SettingRow {
@@ -35,7 +36,7 @@ class AppSettingsRepository extends BaseRepository {
       [key, JSON.stringify(value), Date.now()],
     );
     this.cache = null;
-    // TODO: emit settings:updated event on event bus (STORY-1.9)
+    eventBus.emit('settings:updated', { keys: [key] });
   }
 
   setMany(map: Record<string, unknown>): void {
@@ -49,7 +50,7 @@ class AppSettingsRepository extends BaseRepository {
   delete(key: string): void {
     this.run('DELETE FROM app_settings WHERE key = ?', [key]);
     this.cache = null;
-    // TODO: emit settings:updated event on event bus (STORY-1.9)
+    eventBus.emit('settings:updated', { keys: [key] });
   }
 }
 
