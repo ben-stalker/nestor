@@ -54,6 +54,14 @@ export const NavLayoutSchema = z.enum(['default', 'compact', 'expanded']);
 
 export const PluginsEnabledSchema = z.array(z.string());
 
+export const IdleDimSecondsSchema = z.number().int().positive();
+export const IdleSleepSecondsSchema = z.number().int().positive();
+export const IdleDimLevelSchema = z.number().min(0).max(1);
+export const NightModeEnabledSchema = z.boolean();
+export const NightModeStartSchema = z.string().regex(/^\d{2}:\d{2}$/);
+export const NightModeEndSchema = z.string().regex(/^\d{2}:\d{2}$/);
+export const NightModeDimLevelSchema = z.number().min(0).max(1);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -74,6 +82,13 @@ export const SETTING_SCHEMAS = {
   vaccination_schedule_region: VaccinationScheduleRegionSchema,
   nav_layout: NavLayoutSchema,
   plugins_enabled: PluginsEnabledSchema,
+  idle_dim_seconds: IdleDimSecondsSchema,
+  idle_sleep_seconds: IdleSleepSecondsSchema,
+  idle_dim_level: IdleDimLevelSchema,
+  night_mode_enabled: NightModeEnabledSchema,
+  night_mode_start: NightModeStartSchema,
+  night_mode_end: NightModeEndSchema,
+  night_mode_dim_level: NightModeDimLevelSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;

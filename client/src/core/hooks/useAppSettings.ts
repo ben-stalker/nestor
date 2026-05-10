@@ -6,6 +6,13 @@ export interface AppSettings {
   enabled_nav_modes?: string[];
   nav_layout?: 'single' | 'double' | 'scrollable' | 'hamburger';
   kiosk_lock?: string | null;
+  idle_dim_seconds?: number;
+  idle_sleep_seconds?: number;
+  idle_dim_level?: number;
+  night_mode_enabled?: boolean;
+  night_mode_start?: string;
+  night_mode_end?: string;
+  night_mode_dim_level?: number;
   [key: string]: unknown;
 }
 
