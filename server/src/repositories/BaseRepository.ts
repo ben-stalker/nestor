@@ -7,7 +7,7 @@ abstract class BaseRepository {
     this.db = db;
   }
 
-  protected get<T>(sql: string, params: unknown[] = []): T | undefined {
+  protected queryOne<T>(sql: string, params: unknown[] = []): T | undefined {
     return this.db.prepare<unknown[], T>(sql).get(...params);
   }
 
