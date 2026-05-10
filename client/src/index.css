@@ -89,19 +89,22 @@
   background: var(--color-warm);
 }
 
-/* Portrait: filters strip (future) → main content → bottom navbar */
+/* Portrait: 88px filter sidebar left, main right, navbar full-width bottom */
 .app-shell--portrait {
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 88px 1fr;
+  grid-template-rows: 1fr auto;
   grid-template-areas:
-    'filters'
-    'main'
-    'navbar';
+    'filters main'
+    'navbar  navbar';
 }
 
-/* Landscape: 88px icon rail → filters → main content */
+/* Landscape: 88px icon rail left, filter strip top-right, main bottom-right */
 .app-shell--landscape {
-  grid-template-columns: 88px auto 1fr;
-  grid-template-areas: 'rail filters main';
+  grid-template-columns: 88px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'rail filters'
+    'rail main';
 }
 
 .app-shell > .navbar {
@@ -135,6 +138,91 @@
 /* ─── Simplified nav (hide labels) ──────────────────────────────────────── */
 [data-simplified-nav='true'] .nav-label {
   display: none;
+}
+
+/* ─── Filter panel ───────────────────────────────────────────────────────── */
+.filter-panel {
+  background: var(--color-surface);
+}
+
+.filter-panel--portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.25rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--color-surface-elev);
+}
+
+.filter-panel--landscape {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--color-surface-elev);
+}
+
+.filter-panel--landscape::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-section--landscape {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.filter-section--portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  transition:
+    opacity 0.15s,
+    border-color 0.15s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.filter-pill:not(.filter-pill--active) {
+  opacity: 0.45;
+}
+
+.filter-pill--active {
+  border-color: currentColor;
+}
+
+/* Portrait: circular pills */
+.filter-panel--portrait .filter-pill {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  font-size: 0.625rem;
+}
+
+/* Landscape: pill shape */
+.filter-panel--landscape .filter-pill {
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-button);
+  gap: 0.375rem;
+  white-space: nowrap;
 }
 
 /* ─── Avatar strip ───────────────────────────────────────────────────────── */

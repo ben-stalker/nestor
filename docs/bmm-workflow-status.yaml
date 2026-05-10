@@ -57,6 +57,7 @@ phases:
           - STORY-2.6
           - STORY-2.7
           - STORY-2.8
+          - STORY-2.9
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -173,4 +174,11 @@ notes: >
   429 "Too many attempts" surfacing, prefers-reduced-motion aware.
   CSS: text-size overrides, simplified-nav, avatar-strip layout, shake keyframe.
   AvatarStrip placed on home page header. 24 new client tests
-  (111 client total; 185 server total). lint + typecheck clean. Next: STORY-2.9.
+  (111 client total; 185 server total). lint + typecheck clean.
+  STORY-2.9 complete (2026-05-10): Filter panel sidebar/strip. filtersStore
+  (Zustand persist, per-profile keyed filtersByProfile). FilterPanel component:
+  portrait=88px left sidebar, landscape=top strip. "All" toggle, profile pills
+  colour-coded, plugin filter registry (registerPlugin/unregisterPlugin). App
+  shell CSS grid updated: portrait now 88px filters column + main + navbar;
+  landscape now rail + filters/main stacked rows. 33 new client tests
+  (144 client total; 185 server total). lint + typecheck clean. Next: STORY-2.10.
