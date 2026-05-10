@@ -55,6 +55,7 @@ phases:
           - STORY-2.4
           - STORY-2.5
           - STORY-2.6
+          - STORY-2.7
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -150,4 +151,13 @@ notes: >
   TouchTarget, Modal (react-focus-lock + Escape close), Pill, Avatar (initials fallback),
   IconButton, Skeleton (animate-pulse + motion-reduce:animate-none), EmptyState.
   useReducedMotion hook. Lazy /ui gallery route (DEV-only). 33 new client tests
-  (57 client total; 185 server total). lint + typecheck clean. Next: STORY-2.6.
+  (57 client total; 185 server total). lint + typecheck clean.
+  STORY-2.6 complete (2026-05-10): App shell portrait/landscape CSS grid layout
+  with navbar/rail/filters/main grid areas. prettier formatting fixes.
+  STORY-2.7 complete (2026-05-10): Bottom navbar / side rail with mode buttons.
+  lucide-react installed. navModes.ts defines 10 default modes with icons + accent
+  colours. NavBar component: portrait single/double/scrollable/hamburger layouts;
+  landscape vertical rail. Reads enabled_nav_modes + nav_layout from app_settings.
+  NavLink active state + aria-current="page". Per-mode badge counts via
+  appStore.badgeCounts. Hamburger More sheet uses Modal. 30 new client tests
+  (87 client total; 185 server total). lint + typecheck clean. Next: STORY-2.8.
