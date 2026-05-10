@@ -9,6 +9,7 @@ import ProfileRepository from './repositories/ProfileRepository';
 import clientErrorsRouter from './routes/clientErrors';
 import healthRouter from './routes/health';
 import createProfilesRouter from './routes/profiles';
+import settingsRouter from './routes/settings';
 
 const CLIENT_DIST = path.resolve(__dirname, '../../client/dist');
 
@@ -22,6 +23,7 @@ export default function createApp(): Express {
   app.use(healthRouter);
   app.use(clientErrorsRouter);
   app.use('/api/v1/profiles', createProfilesRouter(new ProfileRepository(getDb())));
+  app.use('/api/v1/settings', settingsRouter);
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
