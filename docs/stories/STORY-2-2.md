@@ -4,7 +4,7 @@
 **Sprint:** 2 — Profiles, Shell, & Plumbing
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -18,15 +18,15 @@
 
 ## Acceptance Criteria
 
-- [ ] `GET /api/v1/profiles` — returns list of profiles (no `pin_hash`)
-- [ ] `POST /api/v1/profiles` — creates a profile (admin PIN required)
-- [ ] `PATCH /api/v1/profiles/:id` — updates a profile (admin PIN required)
-- [ ] `DELETE /api/v1/profiles/:id` — deletes a profile (admin PIN required); cannot delete the last admin (returns 400 with `code: LAST_ADMIN`)
-- [ ] `POST /api/v1/profiles/:id/verify-pin` — accepts `{ pin }`; returns `{ valid: boolean }`; rate-limited to 5 requests per 15 minutes per IP
-- [ ] `GET /api/v1/profiles/:id/permissions` — returns the parsed `permissions_json` object
-- [ ] All inputs validated by Zod
-- [ ] All endpoints return JSON; errors follow `{ error, code, details? }`
-- [ ] Integration tests cover happy paths, permission denials, last-admin protection, and rate-limiting
+- [x] `GET /api/v1/profiles` — returns list of profiles (no `pin_hash`)
+- [x] `POST /api/v1/profiles` — creates a profile (admin PIN required)
+- [x] `PATCH /api/v1/profiles/:id` — updates a profile (admin PIN required)
+- [x] `DELETE /api/v1/profiles/:id` — deletes a profile (admin PIN required); cannot delete the last admin (returns 400 with `code: LAST_ADMIN`)
+- [x] `POST /api/v1/profiles/:id/verify-pin` — accepts `{ pin }`; returns `{ valid: boolean }`; rate-limited to 5 requests per 15 minutes per IP
+- [x] `GET /api/v1/profiles/:id/permissions` — returns the parsed `permissions_json` object
+- [x] All inputs validated by Zod
+- [x] All endpoints return JSON; errors follow `{ error, code, details? }`
+- [x] Integration tests cover happy paths, permission denials, last-admin protection, and rate-limiting
 
 ---
 
@@ -75,15 +75,15 @@
 
 ## Test Checklist
 
-- [ ] Integration: `GET /api/v1/profiles` returns array, no `pin_hash`
-- [ ] Integration: `POST /api/v1/profiles` with valid body creates profile, returns 201
-- [ ] Integration: `POST` with invalid colour returns 400 with details
-- [ ] Integration: `PATCH /api/v1/profiles/:id` updates fields
-- [ ] Integration: `DELETE` last admin returns 400 with `code: LAST_ADMIN`
-- [ ] Integration: `POST /api/v1/profiles/:id/verify-pin` with correct PIN returns `{ valid: true }`
-- [ ] Integration: with incorrect PIN returns `{ valid: false }`
-- [ ] Integration: 6th attempt within 15 min returns 429
-- [ ] Integration: `GET /api/v1/profiles/:id/permissions` returns parsed permissions object
+- [x] Integration: `GET /api/v1/profiles` returns array, no `pin_hash`
+- [x] Integration: `POST /api/v1/profiles` with valid body creates profile, returns 201
+- [x] Integration: `POST` with invalid colour returns 400 with details
+- [x] Integration: `PATCH /api/v1/profiles/:id` updates fields
+- [x] Integration: `DELETE` last admin returns 400 with `code: LAST_ADMIN`
+- [x] Integration: `POST /api/v1/profiles/:id/verify-pin` with correct PIN returns `{ valid: true }`
+- [x] Integration: with incorrect PIN returns `{ valid: false }`
+- [x] Integration: 6th attempt within 15 min returns 429
+- [x] Integration: `GET /api/v1/profiles/:id/permissions` returns parsed permissions object
 
 ---
 
