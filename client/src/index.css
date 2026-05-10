@@ -81,3 +81,30 @@
   --color-secondary: #d6d3d1;
   --color-muted: #78716c;
 }
+
+/* ─── App shell layout ───────────────────────────────────────────────────── */
+.app-shell {
+  display: grid;
+  min-block-size: 100vh;
+  background: var(--color-warm);
+}
+
+/* Portrait: filters strip (future) → main content → bottom navbar */
+.app-shell--portrait {
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'filters'
+    'main'
+    'navbar';
+}
+
+/* Landscape: 88px icon rail → filters → main content */
+.app-shell--landscape {
+  grid-template-columns: 88px auto 1fr;
+  grid-template-areas: 'rail filters main';
+}
+
+.app-shell > .navbar { grid-area: navbar; }
+.app-shell > .rail   { grid-area: rail; }
+.app-shell > .filters { grid-area: filters; }
+.app-shell > main    { grid-area: main; overflow: auto; }
