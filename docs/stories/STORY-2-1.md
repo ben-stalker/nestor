@@ -88,3 +88,9 @@
 
 - Avatars stored as filesystem paths to `~/.nestor/uploads/avatars/`; upload endpoint lands in STORY-17.2.
 - Profile-type permission DEFAULTS arrive in STORY-2.4; this story doesn't auto-fill them.
+
+## Post-implementation
+
+- `BaseRepository.get<T>` renamed to `queryOne<T>` to allow `ProfileRepository.get(id: number)` as a domain method without TypeScript override conflict.
+- All internal single-row queries in `ProfileRepository` (`get`, `delete`, `verifyPin`) use `this.queryOne()` consistently — no direct `this.db.prepare().get()` calls in subclass code.
+- `LastAdminError` lives in `server/src/errors/profile.ts` (default export) and is re-exported from `ProfileRepository` for consumer convenience.

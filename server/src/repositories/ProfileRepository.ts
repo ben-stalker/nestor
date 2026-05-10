@@ -69,12 +69,10 @@ class ProfileRepository extends BaseRepository {
   }
 
   get(id: number): Profile | undefined {
-    const row = this.db
-      .prepare<
-        [number],
-        Omit<ProfileRow, 'pin_hash'>
-      >(`SELECT ${PUBLIC_COLUMNS} FROM profiles WHERE id = ?`)
-      .get(id);
+    const row = this.queryOne<Omit<ProfileRow, 'pin_hash'>>(
+      `SELECT ${PUBLIC_COLUMNS} FROM profiles WHERE id = ?`,
+      [id],
+    );
     return row ? toProfile(row) : undefined;
   }
 
@@ -168,18 +166,14 @@ class ProfileRepository extends BaseRepository {
   }
 
   delete(id: number): void {
-    const target = this.db
-      .prepare<[number], TypeRow>('SELECT type FROM profiles WHERE id = ?')
-      .get(id);
+    const target = this.queryOne<TypeRow>('SELECT type FROM profiles WHERE id = ?', [id]);
     if (!target) return;
 
     if (target.type === 'admin') {
-      const row = this.db
-        .prepare<
-          [number],
-          CountRow
-        >(`SELECT COUNT(*) as count FROM profiles WHERE type = 'admin' AND id != ?`)
-        .get(id);
+      const row = this.queryOne<CountRow>(
+        `SELECT COUNT(*) as count FROM profiles WHERE type = 'admin' AND id != ?`,
+        [id],
+      );
       if ((row?.count ?? 0) === 0) {
         throw new LastAdminError();
       }
@@ -189,9 +183,7 @@ class ProfileRepository extends BaseRepository {
   }
 
   verifyPin(id: number, pin: string): boolean {
-    const row = this.db
-      .prepare<[number], PinRow>('SELECT pin_hash FROM profiles WHERE id = ?')
-      .get(id);
+    const row = this.queryOne<PinRow>('SELECT pin_hash FROM profiles WHERE id = ?', [id]);
     if (!row || !row.pin_hash) return false;
     return bcrypt.compareSync(pin, row.pin_hash);
   }
