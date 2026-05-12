@@ -61,6 +61,10 @@ phases:
           - STORY-2.10
           - STORY-2.11
           - STORY-2.12
+          - STORY-3.1
+          - STORY-3.2
+          - STORY-3.3
+          - STORY-3.4
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -205,3 +209,18 @@ notes: >
   profile click activates guest mode (with optional PIN gate) instead of switching.
   AppShell renders GuestOverlay. CSS guest-overlay layout. 5 new server tests
   (204 total), 19 new client tests (180 total). lint + typecheck clean.
+  STORY-3.1 complete (2026-05-12): Open-Meteo weather service + cache. WeatherService
+  fetches Open-Meteo (no key) caching {current,hourly,daily} for 7 days. Scheduler
+  weather-refresh job uses location from app_settings. GET /api/v1/weather serves cache.
+  Stale cache on failure; alert:new after 6h. 18 new server tests (225 total).
+  STORY-3.2 complete (2026-05-12): Home route layout. HomePage replaces placeholder at /
+  with HomeHeader (greeting, live clock, locale date, weather widget), AvatarStrip, and
+  placeholder sections. useWeather hook (25min stale). 9 new client tests (208 total).
+  STORY-3.3 complete (2026-05-12): Day carousel. DayCarousel renders yesterday+today
+  (focal ~50%)+4 days (thin, scroll-snap). DayCard: date/weather/events. Framer Motion
+  LayoutGroup+AnimatePresence. DayViewModal+QuickAddModal. Back to Today pill.
+  prefers-reduced-motion support. 9 new client tests (217 total).
+  STORY-3.4 complete (2026-05-12): Day-summary endpoint + badge strip.
+  GET /api/v1/home/day-summary?date= stub aggregation endpoint. DayCard badge strip:
+  WFH/office/nursery/school/vehicle/vet/bin icons, filter-gated. useDaySummary hook.
+  4 new server tests (229 total), 6 new client tests (223 total). lint+typecheck clean.
