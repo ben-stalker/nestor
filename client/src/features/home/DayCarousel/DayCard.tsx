@@ -1,8 +1,22 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Cloud, Sun, CloudRain, CloudSnow, Droplets } from 'lucide-react';
+import {
+  Cloud,
+  Sun,
+  CloudRain,
+  CloudSnow,
+  Droplets,
+  Briefcase,
+  Building2,
+  Baby,
+  School,
+  Truck,
+  Syringe,
+  Trash2,
+} from 'lucide-react';
 import clsx from 'clsx';
 import type { DayData } from './types';
+import type { DaySummary } from '../../../api/home';
 import useReducedMotion from '../../../hooks/useReducedMotion';
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -40,19 +54,98 @@ function isToday(date: Date): boolean {
   );
 }
 
+interface Badge {
+  id: string;
+  icon: React.ReactNode;
+  label: string;
+  colour?: string;
+}
+
+function buildBadges(summary: DaySummary, selectedProfiles: string[]): Badge[] {
+  const badges: Badge[] = [];
+
+  summary.wfhStatuses.forEach((w) => {
+    if (selectedProfiles.length > 0 && !selectedProfiles.includes(String(w.profileId))) return;
+    if (w.status === 'wfh') {
+      badges.push({
+        id: `wfh-${w.profileId}`,
+        icon: <Briefcase className="size-3.5" />,
+        label: `${w.profileName}: WFH`,
+      });
+    } else if (w.status === 'office') {
+      badges.push({
+        id: `office-${w.profileId}`,
+        icon: <Building2 className="size-3.5" />,
+        label: `${w.profileName}: Office`,
+      });
+    }
+  });
+
+  summary.nurseryDrops.forEach((n) => {
+    if (selectedProfiles.length > 0 && !selectedProfiles.includes(String(n.profileId))) return;
+    badges.push({
+      id: `nursery-${n.profileId}`,
+      icon: <Baby className="size-3.5" />,
+      label: `Nursery: ${n.profileName}`,
+    });
+  });
+
+  summary.schoolPickups.forEach((s) => {
+    if (selectedProfiles.length > 0 && !selectedProfiles.includes(String(s.profileId))) return;
+    badges.push({
+      id: `school-${s.profileId}`,
+      icon: <School className="size-3.5" />,
+      label: `School pickup: ${s.profileName}`,
+    });
+  });
+
+  summary.vehicleBookings.forEach((v) => {
+    badges.push({
+      id: `vehicle-${v.vehicleId}`,
+      icon: <Truck className="size-3.5" />,
+      label: v.vehicleName,
+    });
+  });
+
+  summary.vetAppointments.forEach((v) => {
+    badges.push({ id: `vet-${v.petId}`, icon: <Syringe className="size-3.5" />, label: v.petName });
+  });
+
+  summary.binCollections.forEach((b) => {
+    badges.push({
+      id: `bin-${b.type}`,
+      icon: <Trash2 className="size-3.5" />,
+      label: b.type,
+      colour: b.colour,
+    });
+  });
+
+  return badges;
+}
+
 interface DayCardProps {
   day: DayData;
   isFocal: boolean;
+  summary?: DaySummary;
+  selectedProfiles?: string[];
   onClick: () => void;
   onLongPress: () => void;
 }
 
 const LONG_PRESS_MS = 500;
 
-export default function DayCard({ day, isFocal, onClick, onLongPress }: DayCardProps) {
+export default function DayCard({
+  day,
+  isFocal,
+  summary,
+  selectedProfiles = [],
+  onClick,
+  onLongPress,
+}: DayCardProps) {
   const reducedMotion = useReducedMotion();
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const today = isToday(day.date);
+  const badges = summary ? buildBadges(summary, selectedProfiles) : [];
 
   function handlePointerDown() {
     longPressTimer.current = setTimeout(() => {
@@ -107,6 +200,23 @@ export default function DayCard({ day, isFocal, onClick, onLongPress }: DayCardP
           {!isFocal && day.tempMax !== undefined && (
             <span className="day-card__weather-temp">{Math.round(day.tempMax)}°</span>
           )}
+        </div>
+      )}
+
+      {badges.length > 0 && (
+        <div className="day-card__badges" aria-label="Day badges">
+          {badges.map((badge) => (
+            <span
+              key={badge.id}
+              className="day-card__badge"
+              title={badge.label}
+              aria-label={badge.label}
+              style={badge.colour ? { backgroundColor: badge.colour, color: '#fff' } : undefined}
+            >
+              {badge.icon}
+              {isFocal && <span className="day-card__badge-label">{badge.label}</span>}
+            </span>
+          ))}
         </div>
       )}
 
