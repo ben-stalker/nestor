@@ -3,6 +3,9 @@ import { LayoutGroup } from 'framer-motion';
 import { RotateCcw } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useWeather } from '../../../hooks/useWeather';
+import { useDaySummary } from '../../../hooks/useDaySummary';
+import useFiltersStore from '../../../store/filtersStore';
+import useAppStore from '../../../store/appStore';
 import type { DayData } from './types';
 import DayCard from './DayCard';
 import DayViewModal from './DayViewModal';
@@ -39,12 +42,27 @@ interface DayCarouselProps {
   end: Date;
 }
 
+function localDateStr(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 export default function DayCarousel({ start, end }: DayCarouselProps) {
   const { data: weather } = useWeather();
   const today = todayDate();
   const [focalDate, setFocalDate] = useState<Date>(today);
   const [dayViewDay, setDayViewDay] = useState<DayData | null>(null);
   const [quickAddDay, setQuickAddDay] = useState<DayData | null>(null);
+
+  const activeProfileId = useAppStore((s) => s.activeProfileId);
+  const getProfileFilters = useFiltersStore((s) => s.getProfileFilters);
+  const filters = activeProfileId ? getProfileFilters(activeProfileId) : null;
+  const selectedProfiles = filters?.selectedProfiles ?? [];
+
+  const focalDateStr = localDateStr(focalDate);
+  const { data: focalSummary } = useDaySummary(focalDateStr);
 
   const days = buildDays(start, end).map((day, idx) => {
     const weatherDay = weather?.daily;
@@ -90,6 +108,8 @@ export default function DayCarousel({ start, end }: DayCarouselProps) {
                 <DayCard
                   day={day}
                   isFocal={focal}
+                  summary={focal ? focalSummary : undefined}
+                  selectedProfiles={selectedProfiles}
                   onClick={() => handleCardClick(day)}
                   onLongPress={() => setQuickAddDay(day)}
                 />

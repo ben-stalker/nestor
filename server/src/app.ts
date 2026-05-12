@@ -15,6 +15,7 @@ import createProfilesRouter from './routes/profiles';
 import settingsRouter from './routes/settings';
 import createAdminRouter from './routes/admin';
 import createWeatherRouter from './routes/weather';
+import createHomeRouter from './routes/home';
 
 const CLIENT_DIST = path.resolve(__dirname, '../../client/dist');
 
@@ -41,6 +42,7 @@ export default function createApp(): Express {
   app.use('/api/v1/settings', settingsRouter);
   app.use('/api/v1/admin', createAdminRouter(settingsRepo, profileRepo));
   app.use(createWeatherRouter(settingsRepo));
+  app.use(createHomeRouter());
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
