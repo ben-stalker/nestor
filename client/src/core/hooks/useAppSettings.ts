@@ -13,6 +13,7 @@ export interface AppSettings {
   night_mode_start?: string;
   night_mode_end?: string;
   night_mode_dim_level?: number;
+  temperature_unit?: 'celsius' | 'fahrenheit';
   [key: string]: unknown;
 }
 

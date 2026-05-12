@@ -21,6 +21,7 @@ export interface WeatherDaily {
   temperature_2m_min: number[];
   precipitation_sum: number[];
   precipitation_probability_max: number[];
+  uv_index_max: number[];
 }
 
 export interface WeatherData {

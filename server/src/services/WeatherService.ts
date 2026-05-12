@@ -22,6 +22,7 @@ export interface WeatherDaily {
   temperature_2m_min: number[];
   precipitation_sum: number[];
   precipitation_probability_max: number[];
+  uv_index_max: number[];
 }
 
 export interface WeatherData {
@@ -35,7 +36,7 @@ const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast';
 const CURRENT_PARAMS = 'temperature_2m,weather_code,wind_speed_10m,precipitation';
 const HOURLY_PARAMS = 'temperature_2m,weather_code,precipitation_probability';
 const DAILY_PARAMS =
-  'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max';
+  'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,uv_index_max';
 const ALERT_THRESHOLD_MS = 6 * 60 * 60 * 1000; // 6 hours
 
 let cache: WeatherData | null = null;

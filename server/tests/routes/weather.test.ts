@@ -20,6 +20,7 @@ const mockWeatherData: WeatherService.WeatherData = {
     temperature_2m_min: [10],
     precipitation_sum: [0],
     precipitation_probability_max: [20],
+    uv_index_max: [4],
   },
   fetchedAt: 0,
 };
