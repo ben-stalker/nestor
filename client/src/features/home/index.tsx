@@ -3,6 +3,7 @@ import HomeHeader from './HomeHeader';
 import DayCarousel from './DayCarousel';
 import AlertsStrip from './AlertsStrip';
 import JourneyWidget from './JourneyWidget';
+import ComingUpWidget from './ComingUpWidget';
 import PluginWidgetStrip from './PluginWidgetStrip';
 
 function carouselRange(): { start: Date; end: Date } {
@@ -24,6 +25,7 @@ export default function HomePage() {
       <AlertsStrip />
       <DayCarousel start={start} end={end} />
       <JourneyWidget />
+      <ComingUpWidget />
       <PluginWidgetStrip />
     </main>
   );

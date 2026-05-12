@@ -69,6 +69,7 @@ phases:
           - STORY-3.6
           - STORY-3.7
           - STORY-3.8
+          - STORY-3.9
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -224,6 +225,10 @@ notes: >
   (focal ~50%)+4 days (thin, scroll-snap). DayCard: date/weather/events. Framer Motion
   LayoutGroup+AnimatePresence. DayViewModal+QuickAddModal. Back to Today pill.
   prefers-reduced-motion support. 9 new client tests (217 total).
+  STORY-3.9 complete (2026-05-12): "Coming Up" widget. GET /api/v1/home/coming-up
+  stub endpoint returning ComingUpItem[] (sorted by daysUntil, max 3). ComingUpWidget
+  renders up to 3 items with day-count chips; hides when empty; navigates on tap.
+  3 new server tests (264 total), 6 new client tests (263 total). lint+typecheck clean.
   STORY-3.4 complete (2026-05-12): Day-summary endpoint + badge strip.
   GET /api/v1/home/day-summary?date= stub aggregation endpoint. DayCard badge strip:
   WFH/office/nursery/school/vehicle/vet/bin icons, filter-gated. useDaySummary hook.
