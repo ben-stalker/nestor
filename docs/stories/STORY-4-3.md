@@ -4,7 +4,7 @@
 **Sprint:** 3 — Calendar Core + Home Skeleton
 **Estimate:** L (3d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,12 +18,12 @@
 
 ## Acceptance Criteria
 
-- [ ] Helper `expandRecurring(event, rangeStart, rangeEnd)` returns N event instances within the range
-- [ ] Supports `FREQ=DAILY|WEEKLY|MONTHLY|YEARLY` with `BYDAY`, `INTERVAL`, `COUNT`, `UNTIL`, `EXDATE`
-- [ ] `EventRepository.findInRange` calls expansion for each event whose `recurring_rule` is non-null
-- [ ] Times stored UTC; expansion respects DST transitions in the display tz (`app_settings.timezone`)
-- [ ] Each expanded instance keeps the master event's `id` plus an `occurrence_id` like `${id}::${startEpoch}`
-- [ ] Unit tests cover: weekly Mon/Wed/Fri series, monthly on the 31st (skip months without), DST spring-forward + fall-back boundaries, EXDATE, COUNT termination, UNTIL termination
+- [x] Helper `expandRecurring(event, rangeStart, rangeEnd)` returns N event instances within the range
+- [x] Supports `FREQ=DAILY|WEEKLY|MONTHLY|YEARLY` with `BYDAY`, `INTERVAL`, `COUNT`, `UNTIL`, `EXDATE`
+- [x] `EventRepository.findInRange` calls expansion for each event whose `recurring_rule` is non-null
+- [x] Times stored UTC; expansion respects DST transitions in the display tz (`app_settings.timezone`)
+- [x] Each expanded instance keeps the master event's `id` plus an `occurrence_id` like `${id}::${startEpoch}`
+- [x] Unit tests cover: weekly Mon/Wed/Fri series, monthly on the 31st (skip months without), DST spring-forward + fall-back boundaries, EXDATE, COUNT termination, UNTIL termination
 
 ---
 
