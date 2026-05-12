@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import HomePage from '../../../src/features/home';
+import type { Alert } from '../../../src/api/alerts';
 
 vi.mock('framer-motion', () => ({
   motion: {
@@ -37,10 +38,22 @@ vi.mock('../../../src/api/client', () => ({
 
 vi.mock('../../../src/api/profiles', () => ({ getProfiles: vi.fn() }));
 vi.mock('../../../src/api/weather', () => ({ getWeather: vi.fn() }));
+vi.mock('../../../src/api/alerts', () => ({ getAlerts: vi.fn(), dismissAlert: vi.fn() }));
+vi.mock('../../../src/api/journeys', () => ({ getJourneyEtas: vi.fn(), getJourneys: vi.fn() }));
 vi.mock('../../../src/core/applyProfileSettings', () => ({ applyProfileSettings: vi.fn() }));
+vi.mock('../../../src/hooks/useWebSocket', () => ({
+  useWebSocket: () => ({ lastMessage: null, readyState: 1, send: vi.fn() }),
+}));
 
-function renderPage() {
+const { getAlerts } = await import('../../../src/api/alerts');
+const { getJourneyEtas } = await import('../../../src/api/journeys');
+
+function renderPage(alerts: Alert[] = []) {
+  vi.mocked(getAlerts).mockResolvedValue(alerts);
+  vi.mocked(getJourneyEtas).mockResolvedValue([]);
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  qc.setQueryData(['alerts'], alerts);
+  qc.setQueryData(['journey-etas-none'], []);
   return render(
     <QueryClientProvider client={qc}>
       <MemoryRouter>
@@ -61,11 +74,31 @@ describe('HomePage', () => {
     expect(screen.getByTestId('home-header')).toBeInTheDocument();
   });
 
-  it('renders placeholder sections and day carousel', () => {
+  it('renders day carousel and journey widget', () => {
     renderPage();
-    expect(screen.getByTestId('placeholder-alerts')).toBeInTheDocument();
     expect(screen.getByTestId('day-carousel')).toBeInTheDocument();
-    expect(screen.getByTestId('placeholder-journey-widget')).toBeInTheDocument();
-    expect(screen.getByTestId('placeholder-plugin-strip')).toBeInTheDocument();
+    expect(screen.getByTestId('journey-widget')).toBeInTheDocument();
+    // PluginWidgetStrip hides itself when no plugins registered — that is the normal state in tests
+  });
+
+  it('shows alerts strip when there are active alerts', async () => {
+    const alert: Alert = {
+      id: 1,
+      type: 'test',
+      severity: 'info',
+      message: 'Test alert',
+      deep_link: null,
+      profile_id: null,
+      dismissed: false,
+      dismissed_at: null,
+      created_at: Date.now(),
+    };
+    renderPage([alert]);
+    expect(await screen.findByTestId('alerts-strip')).toBeInTheDocument();
+  });
+
+  it('hides alerts strip when no alerts', () => {
+    renderPage([]);
+    expect(screen.queryByTestId('alerts-strip')).toBeNull();
   });
 });
