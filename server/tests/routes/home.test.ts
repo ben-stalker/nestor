@@ -2,6 +2,7 @@ import express from 'express';
 import request from 'supertest';
 import errorHandler from '../../src/middleware/errorHandler';
 import createHomeRouter from '../../src/routes/home';
+import type { ComingUpResponse } from '../../src/routes/home';
 
 function makeApp() {
   const app = express();
@@ -25,6 +26,27 @@ interface DaySummaryBody {
 interface ErrorBody {
   error: string;
 }
+
+describe('GET /api/v1/home/coming-up', () => {
+  it('returns 200 with an items array', async () => {
+    const res = await request(makeApp()).get('/api/v1/home/coming-up');
+    expect(res.status).toBe(200);
+    const body = res.body as ComingUpResponse;
+    expect(Array.isArray(body.items)).toBe(true);
+  });
+
+  it('returns at most 3 items', async () => {
+    const res = await request(makeApp()).get('/api/v1/home/coming-up');
+    const body = res.body as ComingUpResponse;
+    expect(body.items.length).toBeLessThanOrEqual(3);
+  });
+
+  it('returns empty items list (stub — no source modules yet)', async () => {
+    const res = await request(makeApp()).get('/api/v1/home/coming-up');
+    expect(res.status).toBe(200);
+    expect((res.body as ComingUpResponse).items).toEqual([]);
+  });
+});
 
 describe('GET /api/v1/home/day-summary', () => {
   it('returns 400 when date is missing', async () => {

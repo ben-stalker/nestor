@@ -1,6 +1,20 @@
 import { Router } from 'express';
 import { z } from 'zod';
 
+export type ComingUpCategory = 'countdown' | 'finance' | 'vehicle' | 'birthday' | 'holiday';
+
+export interface ComingUpItem {
+  id: string;
+  title: string;
+  daysUntil: number;
+  category: ComingUpCategory;
+  deepLink?: string;
+}
+
+export interface ComingUpResponse {
+  items: ComingUpItem[];
+}
+
 export interface WfhStatus {
   profileId: number;
   profileName: string;
@@ -67,6 +81,11 @@ const DateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
 export default function createHomeRouter(): Router {
   const router = Router();
+
+  router.get('/api/v1/home/coming-up', (_req, res) => {
+    const response: ComingUpResponse = { items: [] };
+    res.json(response);
+  });
 
   router.get('/api/v1/home/day-summary', (req, res, next) => {
     try {
