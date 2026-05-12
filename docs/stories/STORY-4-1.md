@@ -4,7 +4,7 @@
 **Sprint:** 3 — Calendar Core + Home Skeleton
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,13 +18,13 @@
 
 ## Acceptance Criteria
 
-- [ ] Migration `server/migrations/004_calendar.sql` creates `calendar_accounts` per Architecture §"Data Model": `id INTEGER PRIMARY KEY`, `provider TEXT NOT NULL CHECK(provider IN ('google','apple','yahoo','custom'))`, `display_name TEXT NOT NULL`, `caldav_url TEXT`, `credentials_encrypted TEXT NOT NULL`, `sync_interval_mins INTEGER NOT NULL DEFAULT 15`, `last_sync_at INTEGER`, `last_sync_error TEXT`, `profile_id INTEGER REFERENCES profiles(id) ON DELETE CASCADE`, `active INTEGER NOT NULL DEFAULT 1`
-- [ ] Same migration creates `calendar_events`: `id INTEGER PRIMARY KEY`, `title TEXT NOT NULL`, `start_datetime INTEGER NOT NULL` (epoch ms UTC), `end_datetime INTEGER NOT NULL`, `all_day INTEGER NOT NULL DEFAULT 0`, `profile_id INTEGER REFERENCES profiles(id) ON DELETE SET NULL`, `source TEXT NOT NULL CHECK(source IN ('local','caldav','plugin'))`, `caldav_uid TEXT`, `caldav_etag TEXT`, `account_id INTEGER REFERENCES calendar_accounts(id) ON DELETE CASCADE`, `type TEXT NOT NULL DEFAULT 'default' CHECK(type IN ('default','wfh','shift','nursery_drop','vehicle_booking','vet','custody','school_term'))`, `recurring_rule TEXT`, `colour_override TEXT`, `notes TEXT`, `created_at INTEGER NOT NULL`
-- [ ] Indexes: `idx_events_profile_date`, `idx_events_account`, `idx_events_caldav_uid` (unique with account_id where source='caldav')
-- [ ] `CalendarAccountRepository` and `EventRepository` extend `BaseRepository` with full CRUD + `EventRepository.findInRange(start, end, profileIds[])`
-- [ ] `findInRange` returns events where `[start_datetime, end_datetime]` intersects the requested range; profile filter optional
-- [ ] CalDAV credentials encrypted via `encrypt()` from STORY-1.8 on write; decrypted on read
-- [ ] Unit tests cover all methods and the encryption round-trip
+- [x] Migration `server/migrations/005_calendar.sql` creates `calendar_accounts` per Architecture §"Data Model": `id INTEGER PRIMARY KEY`, `provider TEXT NOT NULL CHECK(provider IN ('google','apple','yahoo','custom'))`, `display_name TEXT NOT NULL`, `caldav_url TEXT`, `credentials_encrypted TEXT NOT NULL`, `sync_interval_mins INTEGER NOT NULL DEFAULT 15`, `last_sync_at INTEGER`, `last_sync_error TEXT`, `profile_id INTEGER REFERENCES profiles(id) ON DELETE CASCADE`, `active INTEGER NOT NULL DEFAULT 1`
+- [x] Same migration creates `calendar_events`: `id INTEGER PRIMARY KEY`, `title TEXT NOT NULL`, `start_datetime INTEGER NOT NULL` (epoch ms UTC), `end_datetime INTEGER NOT NULL`, `all_day INTEGER NOT NULL DEFAULT 0`, `profile_id INTEGER REFERENCES profiles(id) ON DELETE SET NULL`, `source TEXT NOT NULL CHECK(source IN ('local','caldav','plugin'))`, `caldav_uid TEXT`, `caldav_etag TEXT`, `account_id INTEGER REFERENCES calendar_accounts(id) ON DELETE CASCADE`, `type TEXT NOT NULL DEFAULT 'default' CHECK(type IN ('default','wfh','shift','nursery_drop','vehicle_booking','vet','custody','school_term'))`, `recurring_rule TEXT`, `colour_override TEXT`, `notes TEXT`, `created_at INTEGER NOT NULL`
+- [x] Indexes: `idx_events_profile_date`, `idx_events_account`, `idx_events_caldav_uid` (unique with account_id where source='caldav')
+- [x] `CalendarAccountRepository` and `EventRepository` extend `BaseRepository` with full CRUD + `EventRepository.findInRange(start, end, profileIds[])`
+- [x] `findInRange` returns events where `[start_datetime, end_datetime]` intersects the requested range; profile filter optional
+- [x] CalDAV credentials encrypted via `encrypt()` from STORY-1.8 on write; decrypted on read
+- [x] Unit tests cover all methods and the encryption round-trip
 
 ---
 
