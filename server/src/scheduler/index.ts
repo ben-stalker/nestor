@@ -4,6 +4,10 @@ import logger from '../utils/logger';
 import type AppSettingsRepository from '../repositories/AppSettingsRepository';
 import { LocationSchema } from '../db/settings-keys';
 import * as WeatherService from '../services/WeatherService';
+import CalendarAccountRepository from '../repositories/CalendarAccountRepository';
+import EventRepository from '../repositories/EventRepository';
+import CalendarService from '../services/CalendarService';
+import { getDb } from '../db/connection';
 
 export type JobHandler = () => void | Promise<void>;
 
@@ -97,8 +101,13 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
     await WeatherService.refresh(parsed.data.lat, parsed.data.lon);
   });
 
-  Scheduler.register('caldav-sync', '*/15 * * * *', () => {
-    logger.debug({ job: 'caldav-sync' }, 'placeholder — CalDAV sync not yet implemented');
+  Scheduler.register('caldav-sync', '*/15 * * * *', async () => {
+    const db = getDb();
+    const calendarService = new CalendarService(
+      new CalendarAccountRepository(db),
+      new EventRepository(db),
+    );
+    await calendarService.syncAllAccounts();
   });
 
   Scheduler.register('reminder-eval', '5 0 * * *', () => {
