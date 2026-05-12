@@ -1,19 +1,9 @@
 import AvatarStrip from '../../core/AvatarStrip';
 import HomeHeader from './HomeHeader';
 import DayCarousel from './DayCarousel';
-
-/** Placeholder section until the relevant story is implemented */
-function PlaceholderSection({ label }: { label: string }) {
-  return (
-    <section
-      className="home-placeholder-section"
-      aria-label={label}
-      data-testid={`placeholder-${label.toLowerCase().replace(/\s+/g, '-')}`}
-    >
-      <p className="home-placeholder-section__label">{label}</p>
-    </section>
-  );
-}
+import AlertsStrip from './AlertsStrip';
+import JourneyWidget from './JourneyWidget';
+import PluginWidgetStrip from './PluginWidgetStrip';
 
 function carouselRange(): { start: Date; end: Date } {
   const start = new Date();
@@ -31,10 +21,10 @@ export default function HomePage() {
     <main className="home-page" data-testid="home-page">
       <HomeHeader />
       <AvatarStrip />
-      <PlaceholderSection label="Alerts" />
+      <AlertsStrip />
       <DayCarousel start={start} end={end} />
-      <PlaceholderSection label="Journey Widget" />
-      <PlaceholderSection label="Plugin Strip" />
+      <JourneyWidget />
+      <PluginWidgetStrip />
     </main>
   );
 }

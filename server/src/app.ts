@@ -16,6 +16,10 @@ import settingsRouter from './routes/settings';
 import createAdminRouter from './routes/admin';
 import createWeatherRouter from './routes/weather';
 import createHomeRouter from './routes/home';
+import createAlertsRouter from './routes/alerts';
+import AlertRepository from './repositories/AlertRepository';
+import createJourneysRouter from './routes/journeys';
+import JourneyRepository from './repositories/JourneyRepository';
 
 const CLIENT_DIST = path.resolve(__dirname, '../../client/dist');
 
@@ -29,6 +33,8 @@ export default function createApp(): Express {
   const db = getDb();
   const profileRepo = new ProfileRepository(db);
   const settingsRepo = new AppSettingsRepository(db);
+  const alertRepo = new AlertRepository(db);
+  const journeyRepo = new JourneyRepository(db);
 
   const requireAdminPin = createRequireAdminPin(profileRepo);
   const kioskLock = createKioskLockMiddleware(settingsRepo);
@@ -43,6 +49,8 @@ export default function createApp(): Express {
   app.use('/api/v1/admin', createAdminRouter(settingsRepo, profileRepo));
   app.use(createWeatherRouter(settingsRepo));
   app.use(createHomeRouter());
+  app.use(createAlertsRouter(alertRepo));
+  app.use(createJourneysRouter(journeyRepo));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
