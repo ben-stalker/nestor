@@ -70,6 +70,10 @@ phases:
           - STORY-3.7
           - STORY-3.8
           - STORY-3.9
+          - STORY-4.1
+          - STORY-4.2
+          - STORY-4.3
+          - STORY-4.4
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -233,3 +237,24 @@ notes: >
   GET /api/v1/home/day-summary?date= stub aggregation endpoint. DayCard badge strip:
   WFH/office/nursery/school/vehicle/vet/bin icons, filter-gated. useDaySummary hook.
   4 new server tests (229 total), 6 new client tests (223 total). lint+typecheck clean.
+  STORY-4.1 complete (2026-05-12): Calendar accounts and events schema.
+  Migration 005_calendar.sql: calendar_accounts + calendar_events with all columns,
+  FKs, and 3 indexes (idx_events_profile_date, idx_events_account, idx_events_caldav_uid).
+  CalendarAccountRepository (CRUD + getCredentials encrypt/decrypt + markSynced + listActive).
+  EventRepository (CRUD + findInRange + upsertByCaldavUid + findRecurring). AccountInput
+  uses z.input<> for optional-with-default fields. 27 new tests (291 total).
+  STORY-4.2 complete (2026-05-12): Local event CRUD endpoints.
+  POST/PATCH/DELETE/GET /api/v1/calendar/events. requireProfile + requirePermission
+  (add/edit/delete_calendar_event). CalDAV-source events read-only (403) unless admin
+  + x-admin-pin header. Zod validation on all inputs. Router mounted in app.ts.
+  16 new route tests (307 total). lint + typecheck clean.
+  STORY-4.3 complete (2026-05-12): Recurring event expansion via ical.js.
+  expandRecurring() default export uses ical.js RFC-5545 iterator. Supports DAILY/
+  WEEKLY/MONTHLY/YEARLY with BYDAY, INTERVAL, COUNT, UNTIL. Invalid RRULEs return [].
+  EventRepository.findInRange partitions single + recurring, expands in-memory, merges
+  and sorts. occurrence_id = id::epochMs. ical.js installed. 11 new tests (318 total).
+  STORY-4.4 complete (2026-05-12): CalendarService skeleton + sync interface.
+  CalendarProvider interface (pull/push/testCredentials). LocalProvider no-op object.
+  providerRegistry. CalendarService.syncAccount: pull + upsertByCaldavUid + markSynced
+  + emit calendar:synced. syncAllAccounts uses Promise.allSettled. caldav-sync scheduler
+  job wired to syncAllAccounts (replaces placeholder). 9 new tests (327 total).
