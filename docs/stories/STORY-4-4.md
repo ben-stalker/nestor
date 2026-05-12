@@ -4,7 +4,7 @@
 **Sprint:** 4 — Home Carousel + Calendar Views + CalDAV Sync
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,8 +18,8 @@
 
 ## Acceptance Criteria
 
-- [ ] `CalendarService.syncAccount(accountId)` looks up account, picks provider adapter, runs `pull(account)`, upserts events by `caldav_uid`
-- [ ] Provider adapter interface declared:
+- [x] `CalendarService.syncAccount(accountId)` looks up account, picks provider adapter, runs `pull(account)`, upserts events by `caldav_uid`
+- [x] Provider adapter interface declared:
 ```ts
 interface CalendarProvider {
   pull(account: CalendarAccount): Promise<RawEvent[]>;
@@ -27,11 +27,11 @@ interface CalendarProvider {
   testCredentials(account: CalendarAccount): Promise<boolean>;
 }
 ```
-- [ ] Default `LocalProvider` no-ops (used as fallback for `provider='custom'` accounts not configured)
-- [ ] `last_sync_at` updated on success; `last_sync_error` populated on failure
-- [ ] Scheduler job triggers `syncAllAccounts` at interval from `app_settings.calendar_sync_interval_mins` (default 15)
-- [ ] Emits `calendar:synced` event on success
-- [ ] Unit tests with mock provider
+- [x] Default `LocalProvider` no-ops (used as fallback for `provider='custom'` accounts not configured)
+- [x] `last_sync_at` updated on success; `last_sync_error` populated on failure
+- [x] Scheduler job triggers `syncAllAccounts` at interval from `app_settings.calendar_sync_interval_mins` (default 15)
+- [x] Emits `calendar:synced` event on success
+- [x] Unit tests with mock provider
 
 ---
 
