@@ -1,6 +1,9 @@
 import { schedule, validate } from 'node-cron';
 import type { ScheduledTask } from 'node-cron';
 import logger from '../utils/logger';
+import type AppSettingsRepository from '../repositories/AppSettingsRepository';
+import { LocationSchema } from '../db/settings-keys';
+import * as WeatherService from '../services/WeatherService';
 
 export type JobHandler = () => void | Promise<void>;
 
@@ -76,9 +79,22 @@ export class Scheduler {
   }
 }
 
-export function registerBuiltinJobs(): void {
-  Scheduler.register('weather-refresh', '*/30 * * * *', () => {
-    logger.debug({ job: 'weather-refresh' }, 'placeholder — weather refresh not yet implemented');
+export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void {
+  Scheduler.register('weather-refresh', '*/30 * * * *', async () => {
+    const raw = settingsRepo?.get('location');
+    if (!raw) {
+      logger.debug({ job: 'weather-refresh' }, 'No location configured — skipping weather refresh');
+      return;
+    }
+    const parsed = LocationSchema.safeParse(raw);
+    if (!parsed.success) {
+      logger.warn(
+        { job: 'weather-refresh' },
+        'Invalid location setting — skipping weather refresh',
+      );
+      return;
+    }
+    await WeatherService.refresh(parsed.data.lat, parsed.data.lon);
   });
 
   Scheduler.register('caldav-sync', '*/15 * * * *', () => {

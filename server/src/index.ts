@@ -2,6 +2,7 @@ import createApp from './app';
 import { closeDb, getDb } from './db/connection';
 import { runMigrations } from './db/migrationRunner';
 import { Scheduler, registerBuiltinJobs } from './scheduler';
+import AppSettingsRepository from './repositories/AppSettingsRepository';
 import logger from './utils/logger';
 import { createWsServer } from './ws/server';
 
@@ -27,7 +28,8 @@ const server = app.listen(PORT, () => {
 
 const wsServer = createWsServer(server);
 
-registerBuiltinJobs();
+const settingsRepo = new AppSettingsRepository(db);
+registerBuiltinJobs(settingsRepo);
 logger.info({ jobs: Scheduler.list().map((j) => j.name) }, 'Scheduler started');
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
