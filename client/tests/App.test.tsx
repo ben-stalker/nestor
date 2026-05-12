@@ -40,8 +40,8 @@ describe('App', () => {
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument();
   });
 
-  it('renders home route placeholder content', () => {
+  it('renders home route content', () => {
     renderApp();
-    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+    expect(screen.getByTestId('home-page')).toBeInTheDocument();
   });
 });

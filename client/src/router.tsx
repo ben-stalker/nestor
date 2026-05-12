@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AppShell from './core/AppShell';
-import AvatarStrip from './core/AvatarStrip';
+import HomePage from './features/home';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
 
@@ -11,20 +11,6 @@ function Placeholder({ name }: { name: string }) {
       <div className="text-center">
         <h1 className="text-h1 font-bold tracking-tight">{name}</h1>
         <p className="mt-2 text-body text-secondary">Coming soon</p>
-      </div>
-    </main>
-  );
-}
-
-function HomePage() {
-  return (
-    <main className="bg-warm text-primary">
-      <AvatarStrip />
-      <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-h1 font-bold tracking-tight">Home</h1>
-          <p className="mt-2 text-body text-secondary">Coming soon</p>
-        </div>
       </div>
     </main>
   );
