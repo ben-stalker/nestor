@@ -4,7 +4,7 @@
 **Sprint:** 3 — Calendar Core + Home Skeleton
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,16 +18,16 @@
 
 ## Acceptance Criteria
 
-- [ ] `POST /api/v1/calendar/events` creates a `source='local'` event
-- [ ] `PATCH /api/v1/calendar/events/:id` updates a local event
-- [ ] `DELETE /api/v1/calendar/events/:id` deletes a local event
-- [ ] `GET /api/v1/calendar/events?start=&end=&profileIds=` returns events in range (defers expansion to STORY-4.3)
-- [ ] All-day toggle persists to `all_day` column
-- [ ] Recurrence stored as `recurring_rule` (RRULE string per RFC 5545)
-- [ ] CalDAV-synced events (`source='caldav'`) are read-only — PATCH/DELETE returns 403 unless caller is admin
-- [ ] Permission middleware: only profiles with `calendar.event.create` allowed (admin/teen by default)
-- [ ] All inputs validated by Zod (`EventInput` schema)
-- [ ] Unit tests + Supertest integration tests cover happy path + each permission denial
+- [x] `POST /api/v1/calendar/events` creates a `source='local'` event
+- [x] `PATCH /api/v1/calendar/events/:id` updates a local event
+- [x] `DELETE /api/v1/calendar/events/:id` deletes a local event
+- [x] `GET /api/v1/calendar/events?start=&end=&profileIds=` returns events in range (defers expansion to STORY-4.3)
+- [x] All-day toggle persists to `all_day` column
+- [x] Recurrence stored as `recurring_rule` (RRULE string per RFC 5545)
+- [x] CalDAV-synced events (`source='caldav'`) are read-only — PATCH/DELETE returns 403 unless caller is admin
+- [x] Permission middleware: only profiles with `calendar.event.create` allowed (admin/teen by default)
+- [x] All inputs validated by Zod (`EventInput` schema)
+- [x] Unit tests + Supertest integration tests cover happy path + each permission denial
 
 ---
 

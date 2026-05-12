@@ -85,7 +85,7 @@ export const EventInputSchema = z.object({
   source: EventSourceSchema.optional().default('local'),
   caldav_uid: z.string().optional(),
   caldav_etag: z.string().optional(),
-  account_id: z.number().int().positive().optional(),
+  account_id: z.number().int().positive().nullable().optional(),
 });
 export type EventInput = z.infer<typeof EventInputSchema>;
 

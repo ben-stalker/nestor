@@ -20,6 +20,8 @@ import createAlertsRouter from './routes/alerts';
 import AlertRepository from './repositories/AlertRepository';
 import createJourneysRouter from './routes/journeys';
 import JourneyRepository from './repositories/JourneyRepository';
+import createCalendarRouter from './routes/calendar';
+import EventRepository from './repositories/EventRepository';
 
 const CLIENT_DIST = path.resolve(__dirname, '../../client/dist');
 
@@ -35,6 +37,7 @@ export default function createApp(): Express {
   const settingsRepo = new AppSettingsRepository(db);
   const alertRepo = new AlertRepository(db);
   const journeyRepo = new JourneyRepository(db);
+  const eventRepo = new EventRepository(db);
 
   const requireAdminPin = createRequireAdminPin(profileRepo);
   const kioskLock = createKioskLockMiddleware(settingsRepo);
@@ -51,6 +54,7 @@ export default function createApp(): Express {
   app.use(createHomeRouter());
   app.use(createAlertsRouter(alertRepo));
   app.use(createJourneysRouter(journeyRepo));
+  app.use(createCalendarRouter(eventRepo, profileRepo));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
