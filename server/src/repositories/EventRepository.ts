@@ -1,4 +1,5 @@
 import BaseRepository from './BaseRepository';
+import expandRecurring from '../services/recurrenceExpander';
 import {
   EventInputSchema,
   EventUpdateSchema,
@@ -189,20 +190,36 @@ export default class EventRepository extends BaseRepository {
   }
 
   findInRange(start: number, end: number, profileIds?: number[]): CalendarEvent[] {
-    let sql = `
+    // Fetch single-occurrence events that overlap [start, end] directly.
+    let singleSql = `
       SELECT * FROM calendar_events
-      WHERE start_datetime <= ? AND end_datetime >= ?
+      WHERE recurring_rule IS NULL
+        AND start_datetime <= ? AND end_datetime >= ?
     `;
-    const params: unknown[] = [end, start];
+    const singleParams: unknown[] = [end, start];
+
+    // Fetch all recurring events for the applicable profiles (expand in-memory).
+    let recurringSql = `
+      SELECT * FROM calendar_events
+      WHERE recurring_rule IS NOT NULL
+    `;
+    const recurringParams: unknown[] = [];
 
     if (profileIds && profileIds.length > 0) {
       const placeholders = profileIds.map(() => '?').join(', ');
-      sql += ` AND (profile_id IS NULL OR profile_id IN (${placeholders}))`;
-      params.push(...profileIds);
+      const profileFilter = ` AND (profile_id IS NULL OR profile_id IN (${placeholders}))`;
+      singleSql += profileFilter;
+      singleParams.push(...profileIds);
+      recurringSql += profileFilter;
+      recurringParams.push(...profileIds);
     }
 
-    sql += ' ORDER BY start_datetime ASC';
-    return this.all<EventRow>(sql, params).map(toEvent);
+    const singles = this.all<EventRow>(singleSql, singleParams).map(toEvent);
+    const recurring = this.all<EventRow>(recurringSql, recurringParams).map(toEvent);
+
+    const expanded = recurring.flatMap((e) => expandRecurring(e, start, end));
+
+    return [...singles, ...expanded].sort((a, b) => a.start_datetime - b.start_datetime);
   }
 
   findRecurring(): CalendarEvent[] {
