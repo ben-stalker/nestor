@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import HomeHeader from '../../../src/features/home/HomeHeader';
 import type { WeatherData } from '../../../src/api/weather';
@@ -36,7 +37,8 @@ const MOCK_WEATHER: WeatherData = {
     temperature_2m_max: [22],
     temperature_2m_min: [12],
     precipitation_sum: [0],
-    precipitation_probability_max: [5],
+    precipitation_probability_max: [15],
+    uv_index_max: [5],
   },
   fetchedAt: Date.now(),
 };
@@ -91,7 +93,37 @@ describe('HomeHeader', () => {
     qc.setQueryData(['weather'], MOCK_WEATHER);
 
     renderHeader(qc);
-    expect(await screen.findByText(/18°/)).toBeInTheDocument();
+    expect(await screen.findByText(/18°C/)).toBeInTheDocument();
+  });
+
+  it('shows precipitation percentage', async () => {
+    vi.mocked(getWeather).mockResolvedValue(MOCK_WEATHER);
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    qc.setQueryData(['weather'], MOCK_WEATHER);
+
+    renderHeader(qc);
+    expect(await screen.findByTestId('weather-precip')).toHaveTextContent('15%');
+  });
+
+  it('shows UV index', async () => {
+    vi.mocked(getWeather).mockResolvedValue(MOCK_WEATHER);
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    qc.setQueryData(['weather'], MOCK_WEATHER);
+
+    renderHeader(qc);
+    expect(await screen.findByTestId('weather-uv')).toHaveTextContent('UV 5');
+  });
+
+  it('opens forecast modal on weather button click', async () => {
+    const user = userEvent.setup();
+    vi.mocked(getWeather).mockResolvedValue(MOCK_WEATHER);
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    qc.setQueryData(['weather'], MOCK_WEATHER);
+
+    renderHeader(qc);
+    const btn = await screen.findByRole('button', { name: /open weather forecast/i });
+    await user.click(btn);
+    expect(await screen.findByTestId('weather-forecast')).toBeInTheDocument();
   });
 
   it('shows skeleton while weather is loading', () => {

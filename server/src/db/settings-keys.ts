@@ -62,6 +62,8 @@ export const NightModeStartSchema = z.string().regex(/^\d{2}:\d{2}$/);
 export const NightModeEndSchema = z.string().regex(/^\d{2}:\d{2}$/);
 export const NightModeDimLevelSchema = z.number().min(0).max(1);
 
+export const TemperatureUnitSchema = z.enum(['celsius', 'fahrenheit']);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -89,6 +91,7 @@ export const SETTING_SCHEMAS = {
   night_mode_start: NightModeStartSchema,
   night_mode_end: NightModeEndSchema,
   night_mode_dim_level: NightModeDimLevelSchema,
+  temperature_unit: TemperatureUnitSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;
