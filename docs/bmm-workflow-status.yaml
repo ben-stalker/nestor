@@ -65,6 +65,10 @@ phases:
           - STORY-3.2
           - STORY-3.3
           - STORY-3.4
+          - STORY-3.5
+          - STORY-3.6
+          - STORY-3.7
+          - STORY-3.8
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
