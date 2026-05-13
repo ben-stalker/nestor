@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import DayView from './DayView';
+import WeekView from './WeekView';
+
+type ViewMode = 'day' | 'week';
 
 function startOfDay(d: Date): Date {
   const result = new Date(d);
@@ -10,11 +13,12 @@ function startOfDay(d: Date): Date {
 
 export default function CalendarPage() {
   const [date, setDate] = useState<Date>(() => startOfDay(new Date()));
+  const [view, setView] = useState<ViewMode>('day');
 
   function prevDay() {
     setDate((d) => {
       const next = new Date(d);
-      next.setDate(next.getDate() - 1);
+      next.setDate(next.getDate() - (view === 'week' ? 7 : 1));
       return next;
     });
   }
@@ -22,7 +26,7 @@ export default function CalendarPage() {
   function nextDay() {
     setDate((d) => {
       const next = new Date(d);
-      next.setDate(next.getDate() + 1);
+      next.setDate(next.getDate() + (view === 'week' ? 7 : 1));
       return next;
     });
   }
@@ -47,7 +51,7 @@ export default function CalendarPage() {
           type="button"
           className="calendar-page__nav-btn"
           onClick={prevDay}
-          aria-label="Previous day"
+          aria-label={view === 'week' ? 'Previous week' : 'Previous day'}
         >
           <ChevronLeft className="size-5" />
         </button>
@@ -68,13 +72,34 @@ export default function CalendarPage() {
           type="button"
           className="calendar-page__nav-btn"
           onClick={nextDay}
-          aria-label="Next day"
+          aria-label={view === 'week' ? 'Next week' : 'Next day'}
         >
           <ChevronRight className="size-5" />
         </button>
       </div>
 
-      <DayView date={date} />
+      <div className="calendar-page__view-tabs" role="tablist" aria-label="Calendar view">
+        <button
+          type="button"
+          role="tab"
+          className={`calendar-page__view-tab${view === 'day' ? ' calendar-page__view-tab--active' : ''}`}
+          aria-selected={view === 'day'}
+          onClick={() => setView('day')}
+        >
+          Day
+        </button>
+        <button
+          type="button"
+          role="tab"
+          className={`calendar-page__view-tab${view === 'week' ? ' calendar-page__view-tab--active' : ''}`}
+          aria-selected={view === 'week'}
+          onClick={() => setView('week')}
+        >
+          Week
+        </button>
+      </div>
+
+      {view === 'day' ? <DayView date={date} /> : <WeekView date={date} />}
     </main>
   );
 }
