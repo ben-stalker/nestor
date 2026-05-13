@@ -22,10 +22,16 @@ import createJourneysRouter from './routes/journeys';
 import JourneyRepository from './repositories/JourneyRepository';
 import createCalendarRouter from './routes/calendar';
 import createGoogleCalendarRouter from './routes/googleCalendar';
+import createBasicCalendarRouter from './routes/basicCalendar';
 import EventRepository from './repositories/EventRepository';
 import CalendarAccountRepository from './repositories/CalendarAccountRepository';
 import CalendarService from './services/CalendarService';
 import { GoogleCalDAVProvider } from './services/calendar/GoogleCalDAVProvider';
+import {
+  BasicAuthCalDAVProvider,
+  APPLE_CALDAV_URL,
+  YAHOO_CALDAV_URL,
+} from './services/calendar/BasicAuthCalDAVProvider';
 import { registerProvider } from './services/calendar/providerRegistry';
 
 const CLIENT_DIST = path.resolve(__dirname, '../../client/dist');
@@ -49,6 +55,12 @@ export default function createApp(): Express {
   const googleProvider = new GoogleCalDAVProvider(calendarAccountRepo);
   registerProvider('google', googleProvider);
 
+  const appleProvider = new BasicAuthCalDAVProvider(calendarAccountRepo, APPLE_CALDAV_URL);
+  registerProvider('apple', appleProvider);
+
+  const yahooProvider = new BasicAuthCalDAVProvider(calendarAccountRepo, YAHOO_CALDAV_URL);
+  registerProvider('yahoo', yahooProvider);
+
   const requireAdminPin = createRequireAdminPin(profileRepo);
   const kioskLock = createKioskLockMiddleware(settingsRepo);
 
@@ -66,6 +78,7 @@ export default function createApp(): Express {
   app.use(createJourneysRouter(journeyRepo));
   app.use(createCalendarRouter(eventRepo, profileRepo));
   app.use(createGoogleCalendarRouter(calendarAccountRepo, settingsRepo, calendarService));
+  app.use(createBasicCalendarRouter(calendarAccountRepo, calendarService));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
