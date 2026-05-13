@@ -33,7 +33,7 @@ function fmtTemp(celsius: number, unit: 'celsius' | 'fahrenheit'): string {
 
 export default function HomeHeader() {
   const profile = useActiveProfile();
-  const { data: weather, isLoading: weatherLoading } = useWeather();
+  const { data: weather, isLoading: weatherLoading, isError: weatherError } = useWeather();
   const { data: settings } = useAppSettings();
   const unit = settings?.temperature_unit ?? 'celsius';
 
@@ -127,6 +127,11 @@ export default function HomeHeader() {
               {weatherDescription(weather.current.weather_code)}
             </span>
           </>
+        )}
+        {!weatherLoading && weatherError && !weather && (
+          <span className="home-header__weather-error" data-testid="weather-error">
+            Weather unavailable
+          </span>
         )}
       </button>
 
