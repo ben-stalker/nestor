@@ -903,3 +903,286 @@
   color: var(--color-mode-calendar);
   white-space: nowrap;
 }
+
+/* ─── Calendar page ──────────────────────────────────────────────────────── */
+.calendar-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-warm);
+}
+
+.calendar-page__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-elev);
+  flex-shrink: 0;
+}
+
+.calendar-page__date-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.calendar-page__date {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-page__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--color-secondary);
+  cursor: pointer;
+  transition: background 120ms ease;
+  flex-shrink: 0;
+}
+
+.calendar-page__nav-btn:hover {
+  background: var(--color-surface-elev);
+}
+
+.calendar-page__today-btn {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-mode-calendar);
+  background: color-mix(in srgb, var(--color-mode-calendar) 12%, transparent);
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.2rem 0.625rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 120ms ease;
+}
+
+.calendar-page__today-btn:hover {
+  background: color-mix(in srgb, var(--color-mode-calendar) 20%, transparent);
+}
+
+/* ─── Day view ───────────────────────────────────────────────────────────── */
+.day-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.day-view__allday {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border-bottom: 1px solid var(--color-surface-elev);
+  background: var(--color-surface);
+  flex-shrink: 0;
+}
+
+.allday-event {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.day-view__timeline {
+  display: flex;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ─── Hour gutter ────────────────────────────────────────────────────────── */
+.hour-gutter {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 3.5rem;
+  border-right: 1px solid var(--color-surface-elev);
+  background: var(--color-surface);
+}
+
+.hour-gutter__label {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0.125rem 0.375rem 0 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-surface-elev);
+}
+
+/* ─── Event grid ─────────────────────────────────────────────────────────── */
+.event-grid {
+  position: relative;
+  flex: 1;
+  cursor: pointer;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 63px,
+    var(--color-surface-elev) 63px,
+    var(--color-surface-elev) 64px
+  );
+}
+
+/* ─── Event block ────────────────────────────────────────────────────────── */
+.event-block {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+  transition: opacity 120ms ease;
+  box-sizing: border-box;
+}
+
+.event-block:hover {
+  opacity: 0.85;
+}
+
+.event-block__time {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgb(255 255 255 / 0.85);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.event-block__title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-block--compact {
+  padding: 0.0625rem 0.25rem;
+}
+
+.event-block--compact .event-block__title {
+  font-size: 0.7rem;
+}
+
+/* ─── Event detail modal ─────────────────────────────────────────────────── */
+.event-detail-modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 51;
+  background: var(--color-surface);
+  border-radius: 1.5rem 1.5rem 0 0;
+  padding: 1.25rem 1.25rem 2rem;
+  box-shadow: 0 -4px 24px rgb(0 0 0 / 0.15);
+}
+
+.event-detail-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.event-detail-modal__title {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: var(--color-primary);
+  flex: 1;
+}
+
+.event-detail-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-surface-elev);
+  color: var(--color-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.event-detail-modal__notes {
+  font-size: var(--text-body);
+  color: var(--color-secondary);
+  line-height: 1.5;
+}
+
+/* ─── Quick-add sheet ────────────────────────────────────────────────────── */
+.quick-add-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 51;
+  background: var(--color-surface);
+  border-radius: 1.5rem 1.5rem 0 0;
+  padding: 1.25rem 1.25rem 2rem;
+  box-shadow: 0 -4px 24px rgb(0 0 0 / 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quick-add-sheet__label {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.quick-add-sheet__placeholder {
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+}
+
+.quick-add-sheet__close {
+  align-self: flex-end;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-mode-calendar);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}

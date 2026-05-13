@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AppShell from './core/AppShell';
 import HomePage from './features/home';
+import CalendarPage from './calendar';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
 
@@ -31,7 +32,7 @@ export default function Router() {
       )}
       <Route element={<AppShell />}>
         <Route index element={<HomePage />} />
-        <Route path="/calendar" element={<Placeholder name="Calendar" />} />
+        <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/food" element={<Placeholder name="Food" />} />
         <Route path="/vehicles" element={<Placeholder name="Travel" />} />
         <Route path="/family" element={<Placeholder name="Family" />} />
