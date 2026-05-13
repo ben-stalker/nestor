@@ -67,6 +67,8 @@ export const TemperatureUnitSchema = z.enum(['celsius', 'fahrenheit']);
 export const GoogleOauthClientIdSchema = z.string().min(1);
 export const GoogleOauthClientSecretSchema = z.string().min(1);
 
+export const CustodyLabelSchema = z.string().min(1).max(50);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -97,6 +99,7 @@ export const SETTING_SCHEMAS = {
   temperature_unit: TemperatureUnitSchema,
   google_oauth_client_id: GoogleOauthClientIdSchema,
   google_oauth_client_secret: GoogleOauthClientSecretSchema,
+  custody_label: CustodyLabelSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;

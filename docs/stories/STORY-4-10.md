@@ -4,7 +4,7 @@
 **Sprint:** 3 — Calendar Core + Home Skeleton
 **Estimate:** L (3d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -73,11 +73,11 @@ const create = useMutation({ mutationFn: (input) => api.post('/calendar/events',
 
 ## Test Checklist
 
-- [ ] RTL: open in create mode, submit minimal valid event, mutation called
-- [ ] RTL: open in view mode for CalDAV event as child profile, fields are disabled
+- [x] RTL: open in create mode, submit minimal valid event, mutation called
+- [x] RTL: open in view mode for CalDAV event as child profile, fields are disabled
 - [ ] RTL: recurrence picker emits a valid RRULE string
-- [ ] RTL: delete confirmation reveals on click; second click invokes mutation
-- [ ] RTL: validation error shows under the offending field
+- [x] RTL: delete confirmation reveals on click; second click invokes mutation
+- [x] RTL: validation error shows under the offending field
 - [ ] Manual: works on 1080p portrait and landscape
 - [ ] Manual: triggers `onboard` keyboard on touchscreen
 

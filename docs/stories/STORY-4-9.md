@@ -4,7 +4,7 @@
 **Sprint:** 5 — Calendar Polish + House Foundation + Vehicles
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -72,11 +72,11 @@ function buildMonthGrid(month: string, firstDayOfWeek: 0|1) {
 
 ## Test Checklist
 
-- [ ] RTL: 42 cells rendered
-- [ ] RTL: out-of-month cells dimmed
-- [ ] RTL: 5 events on one day → 3 dots + "+2 more"
-- [ ] RTL: tap day → navigates to /calendar/day/<date>
-- [ ] RTL: arrow forward → next month renders
+- [x] RTL: 42 cells rendered
+- [x] RTL: out-of-month cells dimmed
+- [x] RTL: 5 events on one day → 3 dots + "+2 more"
+- [x] RTL: tap day → navigates to /calendar/day/<date>
+- [x] RTL: arrow forward → next month renders
 - [ ] RTL: locale fr-FR starts Monday, weekdays in French
 
 ---

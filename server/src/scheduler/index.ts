@@ -6,7 +6,10 @@ import { LocationSchema } from '../db/settings-keys';
 import * as WeatherService from '../services/WeatherService';
 import CalendarAccountRepository from '../repositories/CalendarAccountRepository';
 import EventRepository from '../repositories/EventRepository';
+import ProfileRepository from '../repositories/ProfileRepository';
+import AlertRepository from '../repositories/AlertRepository';
 import CalendarService from '../services/CalendarService';
+import { TermDatesService } from '../services/TermDatesService';
 import { getDb } from '../db/connection';
 
 export type JobHandler = () => void | Promise<void>;
@@ -123,5 +126,15 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
 
   Scheduler.register('vacuum-db', '0 3 * * 0', () => {
     logger.debug({ job: 'vacuum-db' }, 'placeholder — weekly VACUUM not yet implemented');
+  });
+
+  Scheduler.register('term-dates-sync', '0 2 * * *', async () => {
+    const db = getDb();
+    const termDatesService = new TermDatesService(
+      new ProfileRepository(db),
+      new EventRepository(db),
+      new AlertRepository(db),
+    );
+    await termDatesService.syncAll();
   });
 }

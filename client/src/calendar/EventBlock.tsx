@@ -31,10 +31,18 @@ export default function EventBlock({
   const leftPct = column * widthPct;
   const compact = height < 32;
 
+  const isCustody = event.type === 'custody';
+
   return (
     <button
       type="button"
-      className={`event-block${compact ? ' event-block--compact' : ''}`}
+      className={[
+        'event-block',
+        compact && 'event-block--compact',
+        isCustody && 'event-block--custody',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       style={{
         top,
         height: Math.max(height, 20),

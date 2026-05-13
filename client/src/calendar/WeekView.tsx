@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { X } from 'lucide-react';
 import { getEvents, type CalendarEventRaw } from '../api/calendar';
 import { useProfiles } from '../core/hooks/useProfiles';
 import WeekHeader from './WeekHeader';
 import WeekGrid, { dayKey } from './WeekGrid';
+import EventModal from './EventModal';
 
 const FALLBACK_COLOUR = '#4a90d9';
 
@@ -27,75 +27,6 @@ function weekBounds(weekDays: Date[]): { start: number; end: number } {
   const end = new Date(weekDays[6]);
   end.setHours(23, 59, 59, 999);
   return { start: start.getTime(), end: end.getTime() };
-}
-
-interface EventDetailModalProps {
-  event: CalendarEventRaw;
-  onClose: () => void;
-}
-
-function EventDetailModal({ event, onClose }: EventDetailModalProps) {
-  return (
-    <>
-      <div
-        className="fixed inset-0 z-50 bg-black/50"
-        onClick={onClose}
-        role="presentation"
-        aria-hidden="true"
-      />
-      <div role="dialog" aria-modal="true" aria-label={event.title} className="event-detail-modal">
-        <div className="event-detail-modal__header">
-          <h2 className="event-detail-modal__title">{event.title}</h2>
-          <button
-            type="button"
-            className="event-detail-modal__close"
-            onClick={onClose}
-            aria-label="Close event"
-          >
-            <X className="size-5" />
-          </button>
-        </div>
-        {event.notes && <p className="event-detail-modal__notes">{event.notes}</p>}
-      </div>
-    </>
-  );
-}
-
-interface QuickAddSheetProps {
-  start: Date;
-  onClose: () => void;
-}
-
-function QuickAddSheet({ start, onClose }: QuickAddSheetProps) {
-  const timeStr = new Intl.DateTimeFormat(navigator.language, {
-    weekday: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(start);
-
-  return (
-    <>
-      <div
-        className="fixed inset-0 z-50 bg-black/50"
-        onClick={onClose}
-        role="presentation"
-        aria-hidden="true"
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={`Add event at ${timeStr}`}
-        className="quick-add-sheet"
-      >
-        <p className="quick-add-sheet__label">Add event at {timeStr}</p>
-        <p className="quick-add-sheet__placeholder">Event creation coming soon.</p>
-        <button type="button" className="quick-add-sheet__close" onClick={onClose}>
-          Close
-        </button>
-      </div>
-    </>
-  );
 }
 
 interface WeekViewProps {
@@ -142,10 +73,14 @@ export default function WeekView({ date }: WeekViewProps) {
       </div>
 
       {selectedEvent !== null && (
-        <EventDetailModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+        <EventModal mode="view" event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}
       {quickAddStart !== null && (
-        <QuickAddSheet start={quickAddStart} onClose={() => setQuickAddStart(null)} />
+        <EventModal
+          mode="create"
+          defaultDate={quickAddStart}
+          onClose={() => setQuickAddStart(null)}
+        />
       )}
     </div>
   );

@@ -134,7 +134,7 @@ describe('DayView — timed events', () => {
     const event = makeEvent({ id: 1, title: 'Closeable' });
     renderWithQC([event]);
     fireEvent.click(screen.getByRole('button', { name: 'Closeable' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Close event' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -170,12 +170,12 @@ describe('DayView — all-day events', () => {
 });
 
 describe('DayView — slot click quick-add', () => {
-  it('clicking the event grid directly opens quick-add sheet', () => {
+  it('clicking the event grid directly opens quick-add modal', () => {
     renderWithQC([]);
     const grid = screen.getByTestId('event-grid');
     fireEvent.click(grid);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByRole('dialog').getAttribute('aria-label')).toMatch(/Add event at/);
+    expect(screen.getByRole('dialog').getAttribute('aria-label')).toBe('New event');
   });
 
   it('quick-add sheet can be closed', () => {

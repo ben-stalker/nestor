@@ -227,4 +227,11 @@ export default class EventRepository extends BaseRepository {
       toEvent,
     );
   }
+
+  findByCaldavUid(caldavUid: string): CalendarEvent | undefined {
+    const row = this.queryOne<EventRow>('SELECT * FROM calendar_events WHERE caldav_uid = ?', [
+      caldavUid,
+    ]);
+    return row ? toEvent(row) : undefined;
+  }
 }

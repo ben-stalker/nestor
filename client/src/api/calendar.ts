@@ -11,6 +11,7 @@ export interface CalendarEventRaw {
   notes: string | null;
   source: string;
   type: string;
+  recurring_rule: string | null;
 }
 
 export async function getEvents(
