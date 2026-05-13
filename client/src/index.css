@@ -921,6 +921,65 @@
   line-height: 1;
 }
 
+/* ─── Journey time widget ───────────────────────────────────────────────── */
+.journey-widget {
+  margin: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+}
+
+.journey-widget__row {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+.journey-widget__row:last-child {
+  border-bottom: none;
+}
+
+.journey-widget__mode-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-secondary);
+  flex-shrink: 0;
+}
+
+.journey-widget__route {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.journey-widget__label {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.journey-widget__stops {
+  font-size: var(--text-caption);
+  color: var(--color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.journey-widget__eta {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* ─── Coming Up widget ───────────────────────────────────────────────────── */
 .coming-up {
   margin: 0.75rem 1rem;
