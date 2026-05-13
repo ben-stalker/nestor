@@ -1,4 +1,5 @@
 import ICAL from 'ical.js';
+import type { Recur as ICALRecur } from 'ical.js';
 import type { CalendarEvent } from '../types/calendar';
 
 /**
@@ -14,7 +15,7 @@ export default function expandRecurring(
 
   const durationMs = event.end_datetime - event.start_datetime;
 
-  let iter: ReturnType<ICAL.Recur['iterator']>;
+  let iter: ReturnType<ICALRecur['iterator']>;
   try {
     const rule = ICAL.Recur.fromString(event.recurring_rule);
     const dtstart = ICAL.Time.fromJSDate(new Date(event.start_datetime), true);

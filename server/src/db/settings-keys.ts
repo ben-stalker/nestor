@@ -64,6 +64,9 @@ export const NightModeDimLevelSchema = z.number().min(0).max(1);
 
 export const TemperatureUnitSchema = z.enum(['celsius', 'fahrenheit']);
 
+export const GoogleOauthClientIdSchema = z.string().min(1);
+export const GoogleOauthClientSecretSchema = z.string().min(1);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -92,6 +95,8 @@ export const SETTING_SCHEMAS = {
   night_mode_end: NightModeEndSchema,
   night_mode_dim_level: NightModeDimLevelSchema,
   temperature_unit: TemperatureUnitSchema,
+  google_oauth_client_id: GoogleOauthClientIdSchema,
+  google_oauth_client_secret: GoogleOauthClientSecretSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;

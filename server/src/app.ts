@@ -21,7 +21,12 @@ import AlertRepository from './repositories/AlertRepository';
 import createJourneysRouter from './routes/journeys';
 import JourneyRepository from './repositories/JourneyRepository';
 import createCalendarRouter from './routes/calendar';
+import createGoogleCalendarRouter from './routes/googleCalendar';
 import EventRepository from './repositories/EventRepository';
+import CalendarAccountRepository from './repositories/CalendarAccountRepository';
+import CalendarService from './services/CalendarService';
+import { GoogleCalDAVProvider } from './services/calendar/GoogleCalDAVProvider';
+import { registerProvider } from './services/calendar/providerRegistry';
 
 const CLIENT_DIST = path.resolve(__dirname, '../../client/dist');
 
@@ -38,6 +43,11 @@ export default function createApp(): Express {
   const alertRepo = new AlertRepository(db);
   const journeyRepo = new JourneyRepository(db);
   const eventRepo = new EventRepository(db);
+  const calendarAccountRepo = new CalendarAccountRepository(db);
+  const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
+
+  const googleProvider = new GoogleCalDAVProvider(calendarAccountRepo);
+  registerProvider('google', googleProvider);
 
   const requireAdminPin = createRequireAdminPin(profileRepo);
   const kioskLock = createKioskLockMiddleware(settingsRepo);
@@ -55,6 +65,7 @@ export default function createApp(): Express {
   app.use(createAlertsRouter(alertRepo));
   app.use(createJourneysRouter(journeyRepo));
   app.use(createCalendarRouter(eventRepo, profileRepo));
+  app.use(createGoogleCalendarRouter(calendarAccountRepo, settingsRepo, calendarService));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
