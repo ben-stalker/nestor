@@ -133,4 +133,15 @@ describe('HomeHeader', () => {
     const { container } = renderHeader(qc);
     expect(container.querySelector('.animate-pulse')).not.toBeNull();
   });
+
+  it('shows weather unavailable error state when fetch fails and no cache', async () => {
+    vi.mocked(getWeather).mockRejectedValue(new Error('network error'));
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    // useWeather has inline retry:1 which overrides the QueryClient default, so
+    // allow up to 3s for the one retry to exhaust before the error state appears.
+    renderHeader(qc);
+    expect(await screen.findByTestId('weather-error', {}, { timeout: 3000 })).toHaveTextContent(
+      'Weather unavailable',
+    );
+  });
 });

@@ -482,6 +482,88 @@
   color: var(--color-secondary);
 }
 
+.home-header__weather-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+}
+
+.home-header__weather-precip,
+.home-header__weather-uv {
+  font-size: var(--text-caption);
+  color: var(--color-secondary);
+  line-height: 1.2;
+}
+
+.home-header__weather-error {
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+}
+
+/* ─── Weather forecast modal ─────────────────────────────────────────────── */
+.weather-modal__forecast {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.weather-modal__day {
+  display: grid;
+  grid-template-columns: 5rem 1.5rem 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+.weather-modal__day:last-child {
+  border-bottom: none;
+}
+
+.weather-modal__day-label {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.weather-modal__day-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-secondary);
+}
+
+.weather-modal__day-temps {
+  display: flex;
+  gap: 0.375rem;
+  align-items: baseline;
+}
+
+.weather-modal__day-high {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.weather-modal__day-low {
+  font-size: var(--text-caption);
+  color: var(--color-secondary);
+}
+
+.weather-modal__day-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+}
+
+.weather-modal__day-precip,
+.weather-modal__day-uv {
+  font-size: var(--text-caption);
+  color: var(--color-secondary);
+  line-height: 1.2;
+}
+
 .home-placeholder-section {
   margin: 0.75rem 1rem;
   padding: 1rem;

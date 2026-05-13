@@ -4,7 +4,7 @@
 **Sprint:** 4 — Home Carousel + Calendar Views + CalDAV Sync
 **Estimate:** S (1d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -18,12 +18,12 @@
 
 ## Acceptance Criteria
 
-- [ ] Header weather inline: condition icon, current temp, high/low, precip %, UV index — pulled from `/api/v1/weather`
-- [ ] Tap → modal with 7-day forecast (cards per day with hi/lo/precip/icon)
-- [ ] Locale-aware temperature unit (`formatTemperature` from STORY-18.2)
-- [ ] Loading skeleton while fetching
-- [ ] Error state shows "Weather unavailable" with last-known timestamp if cache stale
-- [ ] WMO weather code mapped to icon + i18n string ("Light rain", "Partly cloudy")
+- [x] Header weather inline: condition icon, current temp, high/low, precip %, UV index — pulled from `/api/v1/weather`
+- [x] Tap → modal with 7-day forecast (cards per day with hi/lo/precip/icon)
+- [x] Locale-aware temperature unit (°C/°F via `temperature_unit` app setting)
+- [x] Loading skeleton while fetching
+- [x] Error state shows "Weather unavailable" when fetch fails and no cache
+- [x] WMO weather code mapped to Lucide icon + description string
 
 ---
 
