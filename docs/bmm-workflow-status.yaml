@@ -74,6 +74,10 @@ phases:
           - STORY-4.2
           - STORY-4.3
           - STORY-4.4
+          - STORY-4.5
+          - STORY-4.6
+          - STORY-4.7
+          - STORY-4.8
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -258,3 +262,21 @@ notes: >
   providerRegistry. CalendarService.syncAccount: pull + upsertByCaldavUid + markSynced
   + emit calendar:synced. syncAllAccounts uses Promise.allSettled. caldav-sync scheduler
   job wired to syncAllAccounts (replaces placeholder). 9 new tests (327 total).
+  STORY-4.5 complete (2026-05-13): Google Calendar OAuth2 + QR pairing. Device code
+  flow (google_oauth_client_id/secret from settings or env). QR PNG via qrcode.
+  deviceCodeStore (in-memory TTL Map). Routes: POST /google/start + GET /google/poll/:code.
+  GoogleCalDAVProvider (Bearer auth via tsdav, token refresh, ICAL parsing). ical.d.ts
+  ambient module declaration fixes ESM/CJS interop for ical.js in TypeScript Node16.
+  21 new server tests (348 total).
+  STORY-4.6 complete (2026-05-13): Apple iCloud + Yahoo CalDAV adapters. BasicAuthCalDAVProvider
+  with fetchBasicAuthCalDAV/testBasicAuthCalDAV helpers. Routes: POST /basic/test + POST /basic.
+  Default URLs: caldav.icloud.com (Apple), caldav.calendar.yahoo.com (Yahoo). Credentials
+  encrypted at rest. 12 new server tests (348 total). lint + typecheck clean.
+  STORY-4.7 complete (2026-05-13): Calendar Day view. layoutOverlaps greedy interval-graph
+  colouring. HourGutter (06–22, 64px/hr). EventBlock absolutely-positioned. DayView with
+  TanStack Query, all-day strip, profile colour, slot quick-add. CalendarPage date navigation.
+  /calendar route wired. 18 new client tests (281 total). lint + typecheck clean.
+  STORY-4.8 complete (2026-05-13): Calendar Week view. WeekHeader Mon-anchored 7-column,
+  today aria-current. WeekGrid 7 WeekColumn components reusing layoutOverlaps/EventBlock.
+  WeekView week-range query, eventsByDay Map. CalendarPage Day/Week tab strip (tablist).
+  9 new client tests (290 total). lint + typecheck clean.
