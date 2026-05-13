@@ -26,6 +26,7 @@ export interface Profile {
   permissions_json: Permissions;
   text_size: TextSize;
   simplified_nav: number;
+  term_dates_ical_url: string | null;
   created_at: number;
 }
 
@@ -55,5 +56,6 @@ export const UpdateProfileSchema = z.object({
   permissions_json: z.record(z.string(), z.boolean()).optional(),
   text_size: TextSizeSchema.optional(),
   simplified_nav: z.number().int().min(0).max(1).optional(),
+  term_dates_ical_url: z.string().url().nullable().optional(),
 });
 export type UpdateProfileInput = z.input<typeof UpdateProfileSchema>;

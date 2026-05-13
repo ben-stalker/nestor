@@ -131,7 +131,7 @@ describe('WeekView — events', () => {
     const event = makeEvent({ id: 1, title: 'Closeable' });
     renderWeek([event]);
     fireEvent.click(screen.getByRole('button', { name: 'Closeable' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Close event' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -145,12 +145,12 @@ describe('WeekView — events', () => {
 });
 
 describe('WeekView — quick-add', () => {
-  it('clicking a day column directly opens quick-add sheet', () => {
+  it('clicking a day column directly opens quick-add modal', () => {
     renderWeek([]);
     const columns = document.querySelectorAll('.week-column');
     fireEvent.click(columns[0]);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByRole('dialog').getAttribute('aria-label')).toMatch(/Add event at/);
+    expect(screen.getByRole('dialog').getAttribute('aria-label')).toBe('New event');
   });
 
   it('quick-add sheet can be closed', () => {

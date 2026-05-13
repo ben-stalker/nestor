@@ -23,6 +23,7 @@ interface ProfileRow {
   permissions_json: string;
   text_size: string;
   simplified_nav: number;
+  term_dates_ical_url: string | null;
   created_at: number;
 }
 
@@ -42,7 +43,7 @@ const PUBLIC_COLUMNS = `
   id, name, type, colour,
   CASE WHEN pin_hash IS NOT NULL THEN 1 ELSE 0 END as pin_set,
   avatar_path, accessibility_json,
-  permissions_json, text_size, simplified_nav, created_at
+  permissions_json, text_size, simplified_nav, term_dates_ical_url, created_at
 `;
 
 function toProfile(row: ProfileRow): Profile {
@@ -59,6 +60,7 @@ function toProfile(row: ProfileRow): Profile {
     permissions_json: JSON.parse(row.permissions_json) as Permissions,
     text_size: row.text_size as Profile['text_size'],
     simplified_nav: row.simplified_nav,
+    term_dates_ical_url: row.term_dates_ical_url,
     created_at: row.created_at,
   };
 }
@@ -155,6 +157,10 @@ class ProfileRepository extends BaseRepository {
     if (data.simplified_nav !== undefined) {
       sets.push('simplified_nav = ?');
       params.push(data.simplified_nav);
+    }
+    if ('term_dates_ical_url' in data && data.term_dates_ical_url !== undefined) {
+      sets.push('term_dates_ical_url = ?');
+      params.push(data.term_dates_ical_url);
     }
 
     if (sets.length > 0) {

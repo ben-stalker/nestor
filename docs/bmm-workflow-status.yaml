@@ -78,6 +78,10 @@ phases:
           - STORY-4.6
           - STORY-4.7
           - STORY-4.8
+          - STORY-4.9
+          - STORY-4.10
+          - STORY-4.11
+          - STORY-4.12
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -280,3 +284,22 @@ notes: >
   today aria-current. WeekGrid 7 WeekColumn components reusing layoutOverlaps/EventBlock.
   WeekView week-range query, eventsByDay Map. CalendarPage Day/Week tab strip (tablist).
   9 new client tests (290 total). lint + typecheck clean.
+  STORY-4.9 complete (2026-05-13): Calendar Month view. buildMonthGrid 6×7 42-cell grid
+  (Mon-first). MonthCell with date number, up to 3 colour dots (custody stripe variant),
+  +N overflow. Today ring highlight. Tap cell → onDayClick → CalendarPage switches to day.
+  Prev/Next month navigation. CalendarPage gains Month tab. 14 new client tests (304 total).
+  STORY-4.10 complete (2026-05-13): Event detail modal + quick-add modal. EventModal with
+  create/edit/view modes replaces inline EventDetailModal/QuickAddSheet in DayView and
+  WeekView. RecurrencePicker (daily/weekly/monthly/yearly presets + weekday chip row).
+  calendar/api.ts with createEvent/updateEvent/deleteEvent mutations. Delete confirmation
+  inline. CalDAV read-only banner for non-admin. Form validation with field-level errors.
+  11 new client tests (311 total). Prettier + lint + typecheck clean.
+  STORY-4.11 complete (2026-05-13): Term dates iCal subscription. Migration 006 adds
+  term_dates_ical_url TEXT to profiles. ProfileRepository + UpdateProfileSchema updated.
+  TermDatesService: fetches iCal per child profile, parses with ical.js ICAL.Event API,
+  upserts school_term events via findByCaldavUid+create/update. Inset day detection creates
+  alerts (deduped). Scheduler nightly job (0 2 * * *) registered. 6 new server tests.
+  STORY-4.12 complete (2026-05-13): Custody schedule entry type. Server route filters
+  custody events from non-admin profile responses. CSS diagonal stripe for event-block--custody
+  and month-cell__dot--custody. EventBlock applies custody class. custody_label added to
+  SETTING_SCHEMAS. 3 new server tests (357 total). Prettier clean.

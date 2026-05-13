@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { X } from 'lucide-react';
 import { getEvents, type CalendarEventRaw } from '../api/calendar';
 import { useProfiles } from '../core/hooks/useProfiles';
 import { layoutOverlaps } from './layoutOverlaps';
 import EventBlock from './EventBlock';
 import HourGutter, { PX_PER_HOUR, DAY_START_HOUR, DAY_END_HOUR } from './HourGutter';
+import EventModal from './EventModal';
 
 const FALLBACK_COLOUR = '#4a90d9';
 const PX_PER_MIN = PX_PER_HOUR / 60;
@@ -35,74 +35,6 @@ function eventHeightPx(event: CalendarEventRaw, date: Date): number {
   const visibleStart = Math.max(event.start_datetime, dayStart.getTime());
   const visibleEnd = Math.min(event.end_datetime, dayEnd.getTime());
   return Math.max(20, ((visibleEnd - visibleStart) / 3_600_000) * PX_PER_HOUR);
-}
-
-interface EventDetailModalProps {
-  event: CalendarEventRaw;
-  onClose: () => void;
-}
-
-function EventDetailModal({ event, onClose }: EventDetailModalProps) {
-  return (
-    <>
-      <div
-        className="fixed inset-0 z-50 bg-black/50"
-        onClick={onClose}
-        role="presentation"
-        aria-hidden="true"
-      />
-      <div role="dialog" aria-modal="true" aria-label={event.title} className="event-detail-modal">
-        <div className="event-detail-modal__header">
-          <h2 className="event-detail-modal__title">{event.title}</h2>
-          <button
-            type="button"
-            className="event-detail-modal__close"
-            onClick={onClose}
-            aria-label="Close event"
-          >
-            <X className="size-5" />
-          </button>
-        </div>
-        {event.notes && <p className="event-detail-modal__notes">{event.notes}</p>}
-      </div>
-    </>
-  );
-}
-
-interface QuickAddSheetProps {
-  start: Date;
-  onClose: () => void;
-}
-
-function QuickAddSheet({ start, onClose }: QuickAddSheetProps) {
-  const timeStr = new Intl.DateTimeFormat(navigator.language, {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(start);
-
-  return (
-    <>
-      <div
-        className="fixed inset-0 z-50 bg-black/50"
-        onClick={onClose}
-        role="presentation"
-        aria-hidden="true"
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={`Add event at ${timeStr}`}
-        className="quick-add-sheet"
-      >
-        <p className="quick-add-sheet__label">Add event at {timeStr}</p>
-        <p className="quick-add-sheet__placeholder">Event creation coming soon.</p>
-        <button type="button" className="quick-add-sheet__close" onClick={onClose}>
-          Close
-        </button>
-      </div>
-    </>
-  );
 }
 
 interface DayViewProps {
@@ -189,10 +121,14 @@ export default function DayView({ date }: DayViewProps) {
       </div>
 
       {selectedEvent !== null && (
-        <EventDetailModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+        <EventModal mode="view" event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}
       {quickAddStart !== null && (
-        <QuickAddSheet start={quickAddStart} onClose={() => setQuickAddStart(null)} />
+        <EventModal
+          mode="create"
+          defaultDate={quickAddStart}
+          onClose={() => setQuickAddStart(null)}
+        />
       )}
     </div>
   );

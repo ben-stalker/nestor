@@ -19,13 +19,11 @@ export default function createCalendarRouter(
       const endRaw = Number(req.query.end);
 
       if (!Number.isFinite(startRaw) || !Number.isFinite(endRaw)) {
-        res
-          .status(400)
-          .json({
-            error: 'validation',
-            code: 'INVALID_INPUT',
-            details: ['start and end query params required as epoch ms'],
-          });
+        res.status(400).json({
+          error: 'validation',
+          code: 'INVALID_INPUT',
+          details: ['start and end query params required as epoch ms'],
+        });
         return;
       }
 
@@ -38,7 +36,10 @@ export default function createCalendarRouter(
           .filter((n) => Number.isFinite(n) && n > 0);
       }
 
-      const events = eventRepo.findInRange(startRaw, endRaw, profileIds);
+      const allEvents = eventRepo.findInRange(startRaw, endRaw, profileIds);
+      // Custody events are only visible to admin profiles
+      const isAdmin = req.profile?.type === 'admin';
+      const events = isAdmin ? allEvents : allEvents.filter((e) => e.type !== 'custody');
       res.json(events);
     } catch (err) {
       next(err);
