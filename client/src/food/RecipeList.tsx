@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import RecipeCard from './RecipeCard';
 import RecipeFormModal from './RecipeFormModal';
 import { useRecipes } from './useRecipes';
+import { getMealPlan } from './api';
 import type { Recipe } from './types';
 
 interface RecipeListProps {
@@ -30,6 +32,23 @@ export default function RecipeList({ onSelect }: RecipeListProps) {
   const { data: recipes = [] } = useRecipes(
     search || undefined,
     selectedTags.length > 0 ? selectedTags : undefined,
+  );
+
+  // Fetch meal plan for last 14 days to determine recently cooked recipes
+  const today = new Date();
+  const fourteenDaysAgo = new Date(today);
+  fourteenDaysAgo.setDate(today.getDate() - 14);
+  const startStr = fourteenDaysAgo.toISOString().slice(0, 10);
+  const endStr = today.toISOString().slice(0, 10);
+
+  const { data: recentMealPlan = [] } = useQuery({
+    queryKey: ['meal-plan-recent', startStr, endStr],
+    queryFn: () => getMealPlan(startStr, endStr),
+    staleTime: 5 * 60_000,
+  });
+
+  const recentlyCooked = new Set(
+    recentMealPlan.filter((e) => e.recipe_id != null).map((e) => e.recipe_id as number),
   );
 
   // Collect unique tags from current recipe list
@@ -131,7 +150,12 @@ export default function RecipeList({ onSelect }: RecipeListProps) {
           data-testid="recipe-grid"
         >
           {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} onSelect={onSelect} />
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onSelect={onSelect}
+              recentlyCooked={recentlyCooked.has(recipe.id)}
+            />
           ))}
         </div>
       )}

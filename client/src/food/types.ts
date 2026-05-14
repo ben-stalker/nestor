@@ -44,3 +44,15 @@ export const DEFAULT_SLOTS: MealSlot[] = [
   { id: 'lunch', label: 'Lunch', time: '12:00' },
   { id: 'dinner', label: 'Dinner', time: '18:00' },
 ];
+
+export interface ShoppingItem {
+  id: number;
+  name: string;
+  quantity: number | null;
+  unit: string | null;
+  category: string | null;
+  ticked: number;
+  added_by_profile_id: number | null;
+  pending_approval: number;
+  created_at: number;
+}

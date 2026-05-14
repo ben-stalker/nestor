@@ -18,4 +18,5 @@ export interface EventMap {
   'plugin:error': { pluginId: string; error: Error };
   'voice:status': { status: 'idle' | 'listening' | 'processing' | 'speaking' };
   'settings:updated': { keys: string[] };
+  'shopping:updated': Record<string, never>;
 }

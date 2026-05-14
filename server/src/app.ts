@@ -25,6 +25,8 @@ import createGoogleCalendarRouter from './routes/googleCalendar';
 import createBasicCalendarRouter from './routes/basicCalendar';
 import createRecipesRouter from './routes/recipes';
 import createMealPlanRouter from './routes/mealPlan';
+import createShoppingItemsRouter from './routes/shoppingItems';
+import ShoppingItemRepository from './repositories/ShoppingItemRepository';
 import EventRepository from './repositories/EventRepository';
 import RecipeRepository from './repositories/RecipeRepository';
 import MealPlanRepository from './repositories/MealPlanRepository';
@@ -55,6 +57,7 @@ export default function createApp(): Express {
   const eventRepo = new EventRepository(db);
   const recipeRepo = new RecipeRepository(db);
   const mealPlanRepo = new MealPlanRepository(db);
+  const shoppingRepo = new ShoppingItemRepository(db);
   const calendarAccountRepo = new CalendarAccountRepository(db);
   const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
 
@@ -85,6 +88,7 @@ export default function createApp(): Express {
   app.use(createCalendarRouter(eventRepo, profileRepo));
   app.use(createRecipesRouter(recipeRepo, settingsRepo, profileRepo, requireAdminPin));
   app.use(createMealPlanRouter(mealPlanRepo, recipeRepo, profileRepo));
+  app.use(createShoppingItemsRouter(shoppingRepo, recipeRepo, profileRepo));
   app.use(createGoogleCalendarRouter(calendarAccountRepo, settingsRepo, calendarService));
   app.use(createBasicCalendarRouter(calendarAccountRepo, calendarService));
 

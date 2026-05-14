@@ -3,9 +3,10 @@ import type { Recipe } from './types';
 interface RecipeCardProps {
   recipe: Recipe;
   onSelect?: (recipe: Recipe) => void;
+  recentlyCooked?: boolean;
 }
 
-export default function RecipeCard({ recipe, onSelect }: RecipeCardProps) {
+export default function RecipeCard({ recipe, onSelect, recentlyCooked = false }: RecipeCardProps) {
   const totalTime = recipe.prep_mins + recipe.cook_mins;
   const visibleTags = recipe.tags.slice(0, 2);
   const extraTagCount = recipe.tags.length - visibleTags.length;
@@ -19,7 +20,7 @@ export default function RecipeCard({ recipe, onSelect }: RecipeCardProps) {
       data-testid={`recipe-card-${recipe.id}`}
     >
       {/* Photo / placeholder */}
-      <div className="w-full aspect-video bg-surface-elev flex items-center justify-center overflow-hidden">
+      <div className="relative w-full aspect-video bg-surface-elev flex items-center justify-center overflow-hidden">
         {recipe.photo_path ? (
           <img
             src={`/api/v1/recipes/${recipe.id}/photo`}
@@ -29,6 +30,14 @@ export default function RecipeCard({ recipe, onSelect }: RecipeCardProps) {
         ) : (
           <span className="text-4xl" aria-hidden="true">
             🍽️
+          </span>
+        )}
+        {recentlyCooked && (
+          <span
+            className="absolute top-2 right-2 inline-flex items-center rounded-full bg-accent px-2 py-0.5 text-caption font-medium text-white"
+            data-testid="recently-cooked-badge"
+          >
+            Recent
           </span>
         )}
       </div>

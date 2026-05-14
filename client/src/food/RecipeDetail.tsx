@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { X } from 'lucide-react';
 import ServingsScaler from './ServingsScaler';
 import type { Recipe } from './types';
 import { useActiveProfile } from '../core/hooks/useActiveProfile';
+import { addIngredientsFromRecipe } from './api';
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -21,8 +23,29 @@ export default function RecipeDetail({
 }: RecipeDetailProps) {
   const [servings, setServings] = useState(recipe.servings);
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
+  const [addToast, setAddToast] = useState<string | null>(null);
   const activeProfile = useActiveProfile();
   const isAdmin = activeProfile?.type === 'admin';
+  const qc = useQueryClient();
+
+  const addToShoppingMutation = useMutation({
+    mutationFn: () => {
+      const scale = recipe.servings > 0 ? servings / recipe.servings : 1;
+      const ids =
+        checkedIngredients.size > 0 ? [...checkedIngredients] : recipe.ingredients.map((i) => i.id);
+      return addIngredientsFromRecipe(recipe.id, ids, scale);
+    },
+    onSuccess: (result) => {
+      void qc.invalidateQueries({ queryKey: ['shopping'] });
+      const total = result.added.length + result.merged.length;
+      setAddToast(
+        result.merged.length > 0
+          ? `Added ${result.added.length}, merged ${result.merged.length} (${total} total)`
+          : `Added ${total} item${total !== 1 ? 's' : ''} to shopping list`,
+      );
+      setTimeout(() => setAddToast(null), 3000);
+    },
+  });
 
   const scaleFactor = recipe.servings > 0 ? servings / recipe.servings : 1;
 
@@ -48,6 +71,13 @@ export default function RecipeDetail({
   const methodSteps = recipe.description
     ? recipe.description.split('\n').filter((s) => s.trim().length > 0)
     : [];
+
+  let addShoppingLabel = 'Add all to shopping list';
+  if (addToShoppingMutation.isPending) {
+    addShoppingLabel = 'Adding…';
+  } else if (checkedIngredients.size > 0) {
+    addShoppingLabel = `Add ${checkedIngredients.size} item${checkedIngredients.size !== 1 ? 's' : ''} to shopping`;
+  }
 
   return (
     <article className="flex flex-col gap-0 bg-surface overflow-y-auto" data-testid="recipe-detail">
@@ -185,6 +215,20 @@ export default function RecipeDetail({
             >
               Add to meal plan
             </button>
+          )}
+          <button
+            type="button"
+            onClick={() => addToShoppingMutation.mutate()}
+            disabled={addToShoppingMutation.isPending}
+            data-testid="add-to-shopping-btn"
+            className="rounded-card border border-accent px-4 py-2 text-body font-medium text-accent hover:bg-accent/10 disabled:opacity-50 transition-colors"
+          >
+            {addShoppingLabel}
+          </button>
+          {addToast && (
+            <span className="self-center text-caption text-accent" role="status">
+              {addToast}
+            </span>
           )}
           {isAdmin && onEdit && (
             <button

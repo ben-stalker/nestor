@@ -2830,6 +2830,32 @@ Plugin manifest, capability registry, plugin manager, official plugins (Tesla, E
 
 ---
 
+#### STORY-16.13: YouTube player plugin
+**As a** household member
+**I want** to watch YouTube videos on the kiosk display without leaving kiosk mode
+**So that** the screen stays locked down while still being a useful media player
+
+**Acceptance Criteria:**
+- [ ] Plugin manifest (`plugins/youtube-player/manifest.json`) declares `nav_mode`, `home_screen_widget`, `settings_panel` capabilities
+- [ ] `YouTubePlayerModal` — full-screen modal overlay embedding `youtube-nocookie.com` with `sandbox` attribute that excludes `allow-top-navigation` (kiosk window cannot navigate away)
+- [ ] Large touch-friendly close button (min 64×64 px) always visible; also dismissible via Escape / swipe-down
+- [ ] `YouTubeBrowsePage` nav mode with three modes: open search (requires YouTube Data API key in plugin settings), channel allow-list, or curated shortcut grid
+- [ ] Profile permission gate — `allowed_profiles` list in plugin settings; excluded profiles see a locked state
+- [ ] Server CSP header updated: `frame-src https://www.youtube-nocookie.com`
+- [ ] Optional search proxy `POST /api/v1/plugins/youtube/search` (API key encrypted at rest)
+- [ ] Admin settings panel to configure search, API key, allowed profiles, and curated tiles
+
+**Technical Notes:**
+- `youtube-nocookie.com` avoids cookies for child profiles
+- `allowed_channel_ids` + `search_enabled: false` is the recommended parental-control mode
+- See `docs/story-16.13.md` for full task breakdown
+
+**Dependencies:** STORY-16.2, STORY-16.3
+**Estimate:** L
+**Priority:** P2
+
+---
+
 ### EPIC-17: Admin & Settings
 
 All admin panels — profiles, localisation, calendar, display, navigation, food, household, vehicles, finance, energy, voice, accessibility, plugins, system.
@@ -3331,6 +3357,33 @@ Bash install script, systemd services, kiosk launcher, first-boot wizard, in-app
 **Dependencies:** STORY-1.5
 **Estimate:** L
 **Priority:** P1
+
+---
+
+#### STORY-19.10: Robust screen rotation for kiosk displays
+**As a** contributor or end-user setting up Nestor
+**I want** screen rotation to work reliably across different hardware without editing config files
+**So that** portrait or landscape kiosk displays (with or without touch) can be configured easily
+
+**Acceptance Criteria:**
+- [ ] `install/scripts/rotate-display.sh` detects X11 vs Wayland and applies rotation for any of the four orientations (`normal`/`right`/`inverted`/`left`)
+- [ ] X11: auto-detects connected display name from `xrandr`; applies pre-computed Coordinate Transformation Matrix for any paired touchscreen via `xinput`
+- [ ] Wayland: uses `wlr-randr` or `kscreen-doctor` with a graceful fallback message
+- [ ] `install/scripts/gen-xorg-rotation.sh` generates `10-display-rotation.conf` and `90-touch-rotation.conf` from detected hardware rather than hardcoded device names
+- [ ] `app_settings.display_rotation` setting (`normal`/`right`/`inverted`/`left`); Admin → Display settings page has a four-button rotation picker
+- [ ] `POST /api/v1/admin/display/rotate` endpoint shells out to `rotate-display.sh` and persists the setting
+- [ ] `kiosk-init.sh` reads `app_settings.display_rotation` at boot and applies it dynamically (no hardcoded rotation)
+- [ ] `install/DISPLAY-ROTATION.md` covers tested hardware, how to add a new display/touch device, Wayland notes, and troubleshooting
+- [ ] Unit tests for all four CTM matrix values; CI dry-run test for `rotate-display.sh`
+
+**Technical Notes:**
+- Pre-computed CTMs: normal `1 0 0 0 1 0 0 0 1` · right `0 1 0 -1 0 1 0 0 1` · inverted `-1 0 1 0 -1 1 0 0 1` · left `0 -1 1 1 0 0 0 0 1`
+- Device-specific CTM overrides map in `rotate-display.sh` for edge-case hardware
+- See `docs/story-19.10.md` for full task breakdown
+
+**Dependencies:** STORY-19.6, STORY-19.7, STORY-19.4
+**Estimate:** L
+**Priority:** P2
 
 ---
 
