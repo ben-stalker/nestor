@@ -23,7 +23,11 @@ import JourneyRepository from './repositories/JourneyRepository';
 import createCalendarRouter from './routes/calendar';
 import createGoogleCalendarRouter from './routes/googleCalendar';
 import createBasicCalendarRouter from './routes/basicCalendar';
+import createRecipesRouter from './routes/recipes';
+import createMealPlanRouter from './routes/mealPlan';
 import EventRepository from './repositories/EventRepository';
+import RecipeRepository from './repositories/RecipeRepository';
+import MealPlanRepository from './repositories/MealPlanRepository';
 import CalendarAccountRepository from './repositories/CalendarAccountRepository';
 import CalendarService from './services/CalendarService';
 import { GoogleCalDAVProvider } from './services/calendar/GoogleCalDAVProvider';
@@ -49,6 +53,8 @@ export default function createApp(): Express {
   const alertRepo = new AlertRepository(db);
   const journeyRepo = new JourneyRepository(db);
   const eventRepo = new EventRepository(db);
+  const recipeRepo = new RecipeRepository(db);
+  const mealPlanRepo = new MealPlanRepository(db);
   const calendarAccountRepo = new CalendarAccountRepository(db);
   const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
 
@@ -77,6 +83,8 @@ export default function createApp(): Express {
   app.use(createAlertsRouter(alertRepo));
   app.use(createJourneysRouter(journeyRepo));
   app.use(createCalendarRouter(eventRepo, profileRepo));
+  app.use(createRecipesRouter(recipeRepo, settingsRepo, profileRepo, requireAdminPin));
+  app.use(createMealPlanRouter(mealPlanRepo, recipeRepo, profileRepo));
   app.use(createGoogleCalendarRouter(calendarAccountRepo, settingsRepo, calendarService));
   app.use(createBasicCalendarRouter(calendarAccountRepo, calendarService));
 

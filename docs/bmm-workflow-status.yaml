@@ -84,6 +84,11 @@ phases:
           - STORY-4.12
           - STORY-3.5
           - STORY-3.7
+          - STORY-5.1
+          - STORY-5.2
+          - STORY-5.3
+          - STORY-5.4
+          - STORY-5.5
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
@@ -305,3 +310,33 @@ notes: >
   custody events from non-admin profile responses. CSS diagonal stripe for event-block--custody
   and month-cell__dot--custody. EventBlock applies custody class. custody_label added to
   SETTING_SCHEMAS. 3 new server tests (357 total). Prettier clean.
+  STORY-5.1 complete (2026-05-14): Food schema + repos. Migration 007_food.sql creates
+  recipes, recipe_ingredients, meal_plan, shopping_items tables with FK constraints and indexes
+  (idx_meal_plan_date, idx_ingredients_recipe, idx_shopping_ticked). server/src/types/food.ts
+  with Zod schemas. RecipeRepository (CRUD + search by title/tags + ingredient management),
+  MealPlanRepository (listForRange with LEFT JOIN recipe, upsert by date+slot),
+  ShoppingItemRepository (CRUD + clearTicked). 33 new server tests (390 total).
+  STORY-5.2 complete (2026-05-14): Recipe API + photo upload. multer + sharp installed.
+  createRecipesRouter factory: GET/POST/PATCH/DELETE /api/v1/recipes, GET /api/v1/recipes/:id,
+  POST /api/v1/recipes/:id/photo (10MB limit, sharp resize 1200px → webp, stored at
+  ~/.nestor/uploads/recipes/<uuid>.webp), GET /api/v1/recipes/:id/photo (file streaming),
+  POST /api/v1/recipes/import-url stub. Router mounted in app.ts. 18 new tests (408 total).
+  STORY-5.3 complete (2026-05-14): Recipe URL import via Schema.org JSON-LD. cheerio installed.
+  recipeScraper.ts: fetches URL with 10s timeout, parses JSON-LD @type:Recipe (including
+  @graph), extracts title/description/ingredients/method/prep/cook/servings/calories/photo.
+  ISO 8601 duration parser (PT1H30M → 90). Ingredient regex tokeniser with fraction support.
+  Partial fallback when no JSON-LD. url_import_warned setting for one-time warning.
+  import-url route wired to real scraper. 9 new scraper tests (455 total server; 37 suites).
+  STORY-5.4 complete (2026-05-14): Meal planner 7-day grid. Server: createMealPlanRouter with
+  GET/POST/DELETE /api/v1/meal-plan; upsert by plan_date+slot_name; inline recipe via LEFT JOIN.
+  Client: client/src/food/ module — types.ts, api.ts, useMealPlan.ts (TanStack Query),
+  MealPlanner.tsx (7-column Mon-Sun grid, today highlight, week navigation, slot editor with
+  recipe picker or free text), RecipePickerModal.tsx, FoodPage with Planner/Recipes tabs.
+  /food route in router.tsx replaced. 15 new server tests + 8 client tests (455 server / 354 client).
+  STORY-5.5 complete (2026-05-14): Recipe library list + detail views. RecipeList.tsx (debounced
+  search, tag filter pills, card grid), RecipeCard.tsx (photo/placeholder, time chips, tags),
+  RecipeDetail.tsx (hero photo, checkable ingredients scaled by servings, numbered steps, admin
+  gate for edit/delete), ServingsScaler.tsx (stepper 1-99, scales ingredient quantities),
+  RecipeFormModal.tsx (create/edit with dynamic ingredients, import-URL pre-fill, photo upload),
+  useRecipes.ts hook. Two-column landscape layout in FoodPage. 29 new client tests (354 total;
+  40 suites). lint + typecheck clean.
