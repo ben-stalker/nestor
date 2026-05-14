@@ -4,11 +4,12 @@ import MealPlanner from './MealPlanner';
 import RecipeList from './RecipeList';
 import RecipeDetail from './RecipeDetail';
 import RecipeFormModal from './RecipeFormModal';
+import ShoppingList from './ShoppingList';
 import { deleteRecipe } from './api';
 import type { Recipe } from './types';
 import { useActiveProfile } from '../core/hooks/useActiveProfile';
 
-type FoodTab = 'planner' | 'recipes';
+type FoodTab = 'planner' | 'recipes' | 'shopping' | 'pantry';
 
 export default function FoodPage() {
   const [tab, setTab] = useState<FoodTab>('planner');
@@ -72,6 +73,32 @@ export default function FoodPage() {
         >
           Recipes
         </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'shopping'}
+          onClick={() => setTab('shopping')}
+          className={`px-4 py-3 text-body font-medium transition-colors border-b-2 -mb-px ${
+            tab === 'shopping'
+              ? 'border-accent text-accent'
+              : 'border-transparent text-secondary hover:text-primary'
+          }`}
+        >
+          Shopping
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'pantry'}
+          onClick={() => setTab('pantry')}
+          className={`px-4 py-3 text-body font-medium transition-colors border-b-2 -mb-px ${
+            tab === 'pantry'
+              ? 'border-accent text-accent'
+              : 'border-transparent text-secondary hover:text-primary'
+          }`}
+        >
+          Pantry
+        </button>
       </div>
 
       {/* Content */}
@@ -105,6 +132,21 @@ export default function FoodPage() {
               />
             </div>
           )}
+        </div>
+      )}
+
+      {tab === 'shopping' && (
+        <div className="flex-1 overflow-y-auto p-4">
+          <ShoppingList />
+        </div>
+      )}
+
+      {tab === 'pantry' && (
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center p-4">
+          <span className="text-5xl" aria-hidden="true">
+            🥫
+          </span>
+          <p className="text-body text-secondary">Pantry tracking coming soon</p>
         </div>
       )}
 

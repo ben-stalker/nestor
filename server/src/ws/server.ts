@@ -78,6 +78,7 @@ export class NestorWsServer {
     eventBus.on('voice:status', forward('voice:status'));
     eventBus.on('calendar:synced', forward('calendar:synced'));
     eventBus.on('settings:updated', forward('settings:updated'));
+    eventBus.on('shopping:updated', forward('shopping:updated'));
   }
 
   broadcast(msg: WsFrame): void {

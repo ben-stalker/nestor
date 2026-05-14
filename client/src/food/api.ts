@@ -1,5 +1,5 @@
 import apiFetch from '../api/client';
-import type { Recipe, MealPlanEntry } from './types';
+import type { Recipe, MealPlanEntry, ShoppingItem } from './types';
 
 // ─── Recipes ────────────────────────────────────────────────────────────────
 
@@ -47,4 +47,47 @@ export function setMealPlanEntry(input: MealPlanEntryInput): Promise<MealPlanEnt
 
 export function deleteMealPlanEntry(id: number): Promise<void> {
   return apiFetch<void>(`/api/v1/meal-plan/${id}`, { method: 'DELETE' });
+}
+
+// ─── Shopping List ───────────────────────────────────────────────────────────
+
+export function getShoppingItems(): Promise<ShoppingItem[]> {
+  return apiFetch<ShoppingItem[]>('/api/v1/shopping');
+}
+
+export function createShoppingItem(input: {
+  name: string;
+  quantity?: number | null;
+  unit?: string | null;
+  category?: string | null;
+}): Promise<ShoppingItem> {
+  return apiFetch<ShoppingItem>('/api/v1/shopping', { method: 'POST', body: input });
+}
+
+export function updateShoppingItem(
+  id: number,
+  input: Partial<
+    Pick<ShoppingItem, 'ticked' | 'pending_approval' | 'name' | 'quantity' | 'unit' | 'category'>
+  >,
+): Promise<ShoppingItem> {
+  return apiFetch<ShoppingItem>(`/api/v1/shopping/${id}`, { method: 'PATCH', body: input });
+}
+
+export function deleteShoppingItem(id: number): Promise<void> {
+  return apiFetch<void>(`/api/v1/shopping/${id}`, { method: 'DELETE' });
+}
+
+export function clearTickedItems(): Promise<{ deleted: number }> {
+  return apiFetch<{ deleted: number }>('/api/v1/shopping', { method: 'DELETE' });
+}
+
+export function addIngredientsFromRecipe(
+  recipeId: number,
+  ingredientIds: number[],
+  scale: number,
+): Promise<{ added: ShoppingItem[]; merged: ShoppingItem[] }> {
+  return apiFetch<{ added: ShoppingItem[]; merged: ShoppingItem[] }>(
+    '/api/v1/shopping/from-recipe',
+    { method: 'POST', body: { recipe_id: recipeId, ingredient_ids: ingredientIds, scale } },
+  );
 }

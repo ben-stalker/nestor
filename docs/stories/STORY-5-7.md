@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** L (3d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
