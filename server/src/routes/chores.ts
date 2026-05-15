@@ -76,13 +76,11 @@ export default function createChoresRouter(
         const id = Number(req.params.id);
         const parsedPatch = ChoreUpdateSchema.safeParse(req.body);
         if (!parsedPatch.success) {
-          res
-            .status(400)
-            .json({
-              error: 'validation',
-              code: 'INVALID_INPUT',
-              details: parsedPatch.error.issues,
-            });
+          res.status(400).json({
+            error: 'validation',
+            code: 'INVALID_INPUT',
+            details: parsedPatch.error.issues,
+          });
           return;
         }
         const chore = choreRepo.update(id, parsedPatch.data);
