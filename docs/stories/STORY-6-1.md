@@ -4,7 +4,7 @@
 **Sprint:** 5 — Calendar Polish + House Foundation + Vehicles
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -110,3 +110,12 @@ findConflicts(vehicleId: number, start: number, end: number, exclude?: number) {
 
 - `current_mileage` updated when fuel log added (future enhancement).
 - `service_due_mileage` allows mileage-based reminders alongside date-based.
+
+## Implementation Notes
+
+- Migration 008_vehicles.sql: vehicles, vehicle_bookings (with range index), fuel_logs tables.
+- VehicleRepository, VehicleBookingRepository, FuelLogRepository extend BaseRepository.
+- ConflictError moved to types/vehicles.ts to satisfy max-classes-per-file ESLint rule.
+- VehicleBookingService uses Promise.resolve/reject (no async) since better-sqlite3 is sync.
+- 20 repository tests covering CRUD, conflict edge cases, cascade deletes.
+- Lint + typecheck clean. 606 server tests passing.
