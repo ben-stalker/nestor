@@ -165,13 +165,11 @@ export default function createVehiclesRouter(
       upload.single('photo')(req, res, (err: unknown) => {
         if (err) {
           if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-            res
-              .status(400)
-              .json({
-                error: 'validation',
-                code: 'FILE_TOO_LARGE',
-                details: ['Photo must be ≤ 10 MB'],
-              });
+            res.status(400).json({
+              error: 'validation',
+              code: 'FILE_TOO_LARGE',
+              details: ['Photo must be ≤ 10 MB'],
+            });
             return;
           }
           next(err);
@@ -297,13 +295,11 @@ export default function createVehiclesRouter(
         return;
       }
       if (parsed.data.start_datetime >= parsed.data.end_datetime) {
-        res
-          .status(400)
-          .json({
-            error: 'validation',
-            code: 'INVALID_INPUT',
-            details: ['end must be after start'],
-          });
+        res.status(400).json({
+          error: 'validation',
+          code: 'INVALID_INPUT',
+          details: ['end must be after start'],
+        });
         return;
       }
 
