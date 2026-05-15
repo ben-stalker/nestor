@@ -1,3 +1,11 @@
+export type JourneyStatus = 'ok' | 'disrupted' | 'unknown';
+
+export interface Disruption {
+  id: string;
+  severity: 'minor' | 'major' | 'severe';
+  description: string;
+}
+
 export interface JourneyEta {
   journeyId: number;
   label: string;
@@ -5,11 +13,15 @@ export interface JourneyEta {
   destination: string;
   transportMode: string;
   etaMinutes: number | null;
+  status: JourneyStatus;
+  disruptions: Disruption[];
   updatedAt: number;
 }
 
 export interface TransportAdapter {
   readonly providerId: string;
+  /** Whether this adapter is a stub (returns mocked data). Shown in admin UI. */
+  readonly isStub?: boolean;
   getEta(journey: {
     id: number;
     label: string;
@@ -22,6 +34,8 @@ export interface TransportAdapter {
 /** Default no-op stub — returns a fixed mock travel time until a real adapter is configured. */
 export class UkNoOpAdapter implements TransportAdapter {
   readonly providerId = 'uk-no-op';
+
+  readonly isStub = true;
 
   // eslint-disable-next-line class-methods-use-this
   getEta(journey: {
@@ -38,6 +52,8 @@ export class UkNoOpAdapter implements TransportAdapter {
       destination: journey.destination,
       transportMode: journey.transport_mode,
       etaMinutes: 30,
+      status: 'ok' as JourneyStatus,
+      disruptions: [],
       updatedAt: Date.now(),
     });
   }

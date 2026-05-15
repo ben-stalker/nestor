@@ -9,6 +9,7 @@ import type { RequestHandler } from 'express';
 import createRequireProfile from '../middleware/requireProfile';
 import requirePermission from '../middleware/requirePermission';
 import type ProfileRepository from '../repositories/ProfileRepository';
+import type AppSettingsRepository from '../repositories/AppSettingsRepository';
 import VehicleRepository from '../repositories/VehicleRepository';
 import VehicleBookingRepository from '../repositories/VehicleBookingRepository';
 import FuelLogRepository from '../repositories/FuelLogRepository';
@@ -39,6 +40,7 @@ export default function createVehiclesRouter(
   fuelRepo: FuelLogRepository,
   profileRepo: ProfileRepository,
   requireAdminPin: RequestHandler,
+  settingsRepo?: AppSettingsRepository,
 ): Router {
   const router = Router();
   const requireProfile = createRequireProfile(profileRepo);
@@ -558,6 +560,42 @@ export default function createVehiclesRouter(
         }
         fuelRepo.delete(entryId);
         res.status(204).end();
+      } catch (err) {
+        next(err);
+      }
+    },
+  );
+
+  // ─── Business Mileage (freelancer feature) ──────────────────────────────────
+
+  router.get(
+    '/api/v1/vehicles/:id/business-mileage',
+    requireProfile,
+    requirePermission('view_vehicles'),
+    (req, res, next) => {
+      try {
+        const freelancerEnabled = settingsRepo?.get('freelancer_features');
+        if (!freelancerEnabled) {
+          res.status(404).json({ error: 'NOT_FOUND' });
+          return;
+        }
+
+        const vehicleId = Number(req.params.id);
+        if (!Number.isInteger(vehicleId) || vehicleId <= 0) {
+          res
+            .status(400)
+            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+          return;
+        }
+        if (!vehicleRepo.get(vehicleId)) {
+          res.status(404).json({ error: 'NOT_FOUND' });
+          return;
+        }
+
+        const from = req.query.from ? Number(req.query.from) : undefined;
+        const to = req.query.to ? Number(req.query.to) : undefined;
+
+        res.json(bookingRepo.businessMileageSummary(vehicleId, from, to));
       } catch (err) {
         next(err);
       }

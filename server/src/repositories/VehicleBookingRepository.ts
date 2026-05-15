@@ -98,4 +98,25 @@ export default class VehicleBookingRepository extends BaseRepository {
   delete(id: number): void {
     this.run('DELETE FROM vehicle_bookings WHERE id = ?', [id]);
   }
+
+  /** Sum miles from business-flagged bookings within the optional date range. */
+  businessMileageSummary(
+    vehicleId: number,
+    from?: number,
+    to?: number,
+  ): { totalMiles: number; tripCount: number } {
+    let sql =
+      'SELECT COALESCE(SUM(miles), 0) AS totalMiles, COUNT(*) AS tripCount FROM vehicle_bookings WHERE vehicle_id = ? AND business = 1 AND miles IS NOT NULL';
+    const params: unknown[] = [vehicleId];
+    if (from !== undefined) {
+      sql += ' AND start_datetime >= ?';
+      params.push(from);
+    }
+    if (to !== undefined) {
+      sql += ' AND start_datetime < ?';
+      params.push(to);
+    }
+    const row = this.queryOne<{ totalMiles: number; tripCount: number }>(sql, params);
+    return row ?? { totalMiles: 0, tripCount: 0 };
+  }
 }

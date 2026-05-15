@@ -7,6 +7,7 @@ import AppSettingsRepository from '../repositories/AppSettingsRepository';
 import ProfileRepository from '../repositories/ProfileRepository';
 import { getDb } from '../db/connection';
 import logger from '../utils/logger';
+import { listAdapters } from '../services/transport/adapterRegistry';
 
 const ActivateKioskSchema = z.object({ profileId: z.string().min(1) });
 const PinSchema = z.object({ pin: z.string().min(1) });
@@ -110,6 +111,17 @@ export default function createAdminRouter(
     );
 
     res.status(200).json({ valid });
+  });
+
+  // GET /api/v1/admin/transport-adapter — list registered adapters, flagging stubs.
+  router.get('/transport-adapter', (_req, res) => {
+    const adapters = listAdapters();
+    res.json(
+      adapters.map((a) => ({
+        providerId: a.providerId,
+        isStub: a.isStub ?? false,
+      })),
+    );
   });
 
   return router;

@@ -8,6 +8,8 @@ import errorHandler from '../../src/middleware/errorHandler';
 import AppSettingsRepository from '../../src/repositories/AppSettingsRepository';
 import ProfileRepository from '../../src/repositories/ProfileRepository';
 import createAdminRouter from '../../src/routes/admin';
+import { registerAdapter, unregisterAdapter } from '../../src/services/transport/adapterRegistry';
+import type { TransportAdapter } from '../../src/services/TransportAdapter';
 
 jest.mock('child_process', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -303,5 +305,45 @@ describe('kiosk-lock is not blocked by its own middleware', () => {
     expect(settingsRepo.get('kiosk_lock')).toBeUndefined();
 
     db.close();
+  });
+});
+
+describe('GET /api/v1/admin/transport-adapter', () => {
+  let db: Database.Database;
+  let app: ReturnType<typeof makeApp>;
+
+  beforeEach(() => {
+    db = makeDb();
+    app = makeApp(new AppSettingsRepository(db), new ProfileRepository(db));
+  });
+
+  afterEach(() => {
+    db.close();
+    unregisterAdapter('test-plugin-adapter');
+  });
+
+  it('returns the built-in stub when no plugin adapters registered', async () => {
+    const res = await request(app).get('/api/v1/admin/transport-adapter');
+    expect(res.status).toBe(200);
+    const body = res.body as Array<{ providerId: string; isStub: boolean }>;
+    expect(body).toHaveLength(1);
+    expect(body[0].providerId).toBe('uk-no-op');
+    expect(body[0].isStub).toBe(true);
+  });
+
+  it('lists a registered plugin adapter', async () => {
+    const pluginAdapter: TransportAdapter = {
+      providerId: 'test-plugin-adapter',
+      isStub: false,
+      getEta: jest.fn(),
+    };
+    registerAdapter(pluginAdapter);
+
+    const res = await request(app).get('/api/v1/admin/transport-adapter');
+    expect(res.status).toBe(200);
+    const body = res.body as Array<{ providerId: string; isStub: boolean }>;
+    const entry = body.find((a) => a.providerId === 'test-plugin-adapter');
+    expect(entry).toBeDefined();
+    expect(entry?.isStub).toBe(false);
   });
 });

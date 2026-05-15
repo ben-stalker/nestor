@@ -97,7 +97,14 @@ export default function createApp(): Express {
   app.use(createMealPlanRouter(mealPlanRepo, recipeRepo, profileRepo));
   app.use(createShoppingItemsRouter(shoppingRepo, recipeRepo, profileRepo));
   app.use(
-    createVehiclesRouter(vehicleRepo, vehicleBookingRepo, fuelRepo, profileRepo, requireAdminPin),
+    createVehiclesRouter(
+      vehicleRepo,
+      vehicleBookingRepo,
+      fuelRepo,
+      profileRepo,
+      requireAdminPin,
+      settingsRepo,
+    ),
   );
   app.use(createGoogleCalendarRouter(calendarAccountRepo, settingsRepo, calendarService));
   app.use(createBasicCalendarRouter(calendarAccountRepo, calendarService));
