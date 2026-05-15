@@ -4,7 +4,7 @@
 **Sprint:** 9 — MVP cut
 **Estimate:** M (2d)
 **Priority:** P2
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,11 +18,11 @@
 
 ## Acceptance Criteria
 
-- [ ] `POST /api/v1/vehicles/:id/fuel-log` with `{ date, litres, cost_minor, mileage }`
-- [ ] List of fill-ups with computed MPG / L per 100km (locale-aware)
-- [ ] Hidden for EV (refers user to EV plugin / charging log STORY-13.2)
-- [ ] Simple line chart (last 12 fill-ups)
-- [ ] Permission: any profile can log; admin/owner can edit/delete
+- [x] `POST /api/v1/vehicles/:id/fuel-log` with `{ date, litres, cost_minor, mileage }`
+- [x] List of fill-ups with computed MPG / L per 100km (locale-aware)
+- [x] Hidden for EV (refers user to EV plugin / charging log STORY-13.2)
+- [x] Simple line chart (last 12 fill-ups)
+- [x] Permission: any profile can log; admin/owner can edit/delete
 
 ---
 

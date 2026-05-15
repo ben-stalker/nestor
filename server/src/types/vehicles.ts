@@ -20,6 +20,7 @@ export interface Vehicle {
   service_due_mileage: number | null;
   current_mileage: number | null;
   active: boolean;
+  reminder_overrides_json: Record<string, number[]> | null;
 }
 
 export const VehicleInputSchema = z.object({
@@ -42,6 +43,7 @@ export type VehicleInput = z.infer<typeof VehicleInputSchema>;
 export const VehicleUpdateSchema = VehicleInputSchema.partial().extend({
   active: z.boolean().optional(),
   photo_path: z.string().max(500).nullable().optional(),
+  reminder_overrides_json: z.record(z.string(), z.array(z.number().int())).nullable().optional(),
 });
 export type VehicleUpdate = z.infer<typeof VehicleUpdateSchema>;
 
@@ -90,6 +92,9 @@ export const FuelLogInputSchema = z.object({
   mileage: z.number().int().nullable().optional(),
 });
 export type FuelLogInput = z.infer<typeof FuelLogInputSchema>;
+
+export const FuelLogUpdateSchema = FuelLogInputSchema.partial();
+export type FuelLogUpdate = z.infer<typeof FuelLogUpdateSchema>;
 
 // ─── Errors ──────────────────────────────────────────────────────────────────
 

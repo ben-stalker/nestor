@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getBookings, createBooking, updateBooking } from './api';
 import BookingList from './BookingList';
 import BookingModal, { type BookingFormValues } from './BookingModal';
+import FuelLog from './FuelLog';
 import type { Vehicle, VehicleBooking } from './types';
 import { useActiveProfile } from '../core/hooks/useActiveProfile';
 
@@ -185,6 +186,9 @@ export default function VehicleDetail({ vehicle, onBack, onEdit }: Props) {
             onEdit={handleEditBooking}
           />
         </div>
+
+        {/* Fuel log */}
+        <FuelLog vehicle={vehicle} />
       </div>
 
       {showBookingModal && (

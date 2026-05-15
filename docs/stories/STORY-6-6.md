@@ -4,7 +4,7 @@
 **Sprint:** 6 — Vehicles, Food, Family Foundations
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,13 +18,13 @@
 
 ## Acceptance Criteria
 
-- [ ] Reminder evaluator (STORY-14.3) calls `vehicles.evaluateReminders(now)` hook
-- [ ] Hook reads each vehicle's renewal dates against `app_settings.reminder_windows.vehicles`
-- [ ] Default windows: MOT 30/14/7/1d, insurance 28/14/3d, tax 14/3/1d, service when within 7d or 500mi of mileage
-- [ ] Per-vehicle override possible (add `reminder_overrides_json` column to vehicles)
-- [ ] Pushes alerts via AlertEngine with `nav_mode_badge='vehicles'`
-- [ ] Dedup per day per vehicle per category
-- [ ] Mileage-based service reminder: if `current_mileage >= service_due_mileage - 500`, push
+- [x] Reminder evaluator (STORY-14.3) calls `vehicles.evaluateReminders(now)` hook
+- [x] Hook reads each vehicle's renewal dates against `app_settings.reminder_windows.vehicles`
+- [x] Default windows: MOT 30/14/7/1d, insurance 28/14/3d, tax 14/3/1d, service when within 7d or 500mi of mileage
+- [x] Per-vehicle override possible (add `reminder_overrides_json` column to vehicles)
+- [x] Pushes alerts via AlertEngine with `nav_mode_badge='vehicles'`
+- [x] Dedup per day per vehicle per category
+- [x] Mileage-based service reminder: if `current_mileage >= service_due_mileage - 500`, push
 
 ---
 

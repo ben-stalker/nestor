@@ -10,6 +10,8 @@ import ProfileRepository from '../repositories/ProfileRepository';
 import AlertRepository from '../repositories/AlertRepository';
 import CalendarService from '../services/CalendarService';
 import { TermDatesService } from '../services/TermDatesService';
+import VehicleRepository from '../repositories/VehicleRepository';
+import evaluateReminders from '../services/vehicles/reminders';
 import { getDb } from '../db/connection';
 
 export type JobHandler = () => void | Promise<void>;
@@ -113,8 +115,9 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
     await calendarService.syncAllAccounts();
   });
 
-  Scheduler.register('reminder-eval', '5 0 * * *', () => {
-    logger.debug({ job: 'reminder-eval' }, 'placeholder — reminder evaluation not yet implemented');
+  Scheduler.register('reminder-eval', '5 0 * * *', async () => {
+    const db = getDb();
+    await evaluateReminders(new VehicleRepository(db), new AlertRepository(db));
   });
 
   Scheduler.register('github-update-poll', '0 3 * * *', () => {

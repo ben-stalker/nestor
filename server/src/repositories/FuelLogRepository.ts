@@ -20,6 +20,15 @@ export default class FuelLogRepository extends BaseRepository {
     return this.get(result.lastInsertRowid as number)!;
   }
 
+  update(id: number, patch: Partial<FuelLogInput>): FuelLog | undefined {
+    const fields = Object.keys(patch) as (keyof FuelLogInput)[];
+    if (fields.length === 0) return this.get(id);
+    const setClauses = fields.map((f) => `${f} = ?`).join(', ');
+    const values = fields.map((f) => patch[f] ?? null);
+    this.run(`UPDATE fuel_logs SET ${setClauses} WHERE id = ?`, [...values, id]);
+    return this.get(id);
+  }
+
   delete(id: number): void {
     this.run('DELETE FROM fuel_logs WHERE id = ?', [id]);
   }

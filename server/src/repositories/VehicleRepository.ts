@@ -18,6 +18,7 @@ interface VehicleRow {
   service_due_mileage: number | null;
   current_mileage: number | null;
   active: number;
+  reminder_overrides_json: string | null;
 }
 
 function fromRow(row: VehicleRow): Vehicle {
@@ -25,6 +26,9 @@ function fromRow(row: VehicleRow): Vehicle {
     ...row,
     type: row.type as Vehicle['type'],
     active: row.active === 1,
+    reminder_overrides_json: row.reminder_overrides_json
+      ? (JSON.parse(row.reminder_overrides_json) as Record<string, number[]>)
+      : null,
   };
 }
 
@@ -44,8 +48,9 @@ export default class VehicleRepository extends BaseRepository {
   create(input: VehicleInput): Vehicle {
     const result = this.run(
       `INSERT INTO vehicles (nickname, type, make, model, year, registration, colour,
-        mot_due, tax_due, insurance_due, service_due, service_due_mileage, current_mileage, active)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+        mot_due, tax_due, insurance_due, service_due, service_due_mileage, current_mileage, active,
+        reminder_overrides_json)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`,
       [
         input.nickname,
         input.type,
@@ -60,6 +65,7 @@ export default class VehicleRepository extends BaseRepository {
         input.service_due ?? null,
         input.service_due_mileage ?? null,
         input.current_mileage ?? null,
+        null,
       ],
     );
     return this.get(result.lastInsertRowid as number)!;
@@ -72,6 +78,8 @@ export default class VehicleRepository extends BaseRepository {
     const values = fields.map((f) => {
       const v = patch[f];
       if (f === 'active') return v ? 1 : 0;
+      if (f === 'reminder_overrides_json')
+        return v !== null && v !== undefined ? JSON.stringify(v) : null;
       return v ?? null;
     });
     this.run(`UPDATE vehicles SET ${setClauses} WHERE id = ?`, [...values, id]);

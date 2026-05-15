@@ -17,6 +17,7 @@ export interface Vehicle {
   service_due_mileage: number | null;
   current_mileage: number | null;
   active: boolean;
+  reminder_overrides_json: Record<string, number[]> | null;
 }
 
 export interface VehicleBooking {
@@ -36,4 +37,13 @@ export interface BookingConflict {
   start_datetime: number;
   end_datetime: number;
   profile_id: number | null;
+}
+
+export interface FuelLog {
+  id: number;
+  vehicle_id: number;
+  date: number;
+  litres: number;
+  cost_minor: number;
+  mileage: number | null;
 }

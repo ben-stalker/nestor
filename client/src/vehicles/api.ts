@@ -1,5 +1,5 @@
 import apiFetch from '../api/client';
-import type { Vehicle, VehicleBooking } from './types';
+import type { Vehicle, VehicleBooking, FuelLog } from './types';
 
 // ─── Vehicles ────────────────────────────────────────────────────────────────
 
@@ -59,4 +59,28 @@ export function deleteBooking(vehicleId: number, bookingId: number): Promise<voi
   return apiFetch<void>(`/api/v1/vehicles/${vehicleId}/bookings/${bookingId}`, {
     method: 'DELETE',
   });
+}
+
+// ─── Fuel Logs ────────────────────────────────────────────────────────────────
+
+export function getFuelLogs(vehicleId: number): Promise<FuelLog[]> {
+  return apiFetch<FuelLog[]>(`/api/v1/vehicles/${vehicleId}/fuel-log`);
+}
+
+export function createFuelLog(vehicleId: number, input: object): Promise<FuelLog> {
+  return apiFetch<FuelLog>(`/api/v1/vehicles/${vehicleId}/fuel-log`, {
+    method: 'POST',
+    body: input,
+  });
+}
+
+export function updateFuelLog(vehicleId: number, entryId: number, input: object): Promise<FuelLog> {
+  return apiFetch<FuelLog>(`/api/v1/vehicles/${vehicleId}/fuel-log/${entryId}`, {
+    method: 'PATCH',
+    body: input,
+  });
+}
+
+export function deleteFuelLog(vehicleId: number, entryId: number): Promise<void> {
+  return apiFetch<void>(`/api/v1/vehicles/${vehicleId}/fuel-log/${entryId}`, { method: 'DELETE' });
 }

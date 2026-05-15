@@ -98,6 +98,8 @@ phases:
           - STORY-6.2
           - STORY-6.3
           - STORY-6.4
+          - STORY-6.5
+          - STORY-6.6
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories

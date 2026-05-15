@@ -19,6 +19,7 @@ import {
   BookingInputSchema,
   BookingUpdateSchema,
   FuelLogInputSchema,
+  FuelLogUpdateSchema,
 } from '../types/vehicles';
 
 const UPLOAD_DIR = path.join(os.homedir(), '.nestor', 'uploads', 'vehicles');
@@ -479,6 +480,84 @@ export default function createVehiclesRouter(
         }
         const entry = fuelRepo.create(vehicleId, parsed.data);
         res.status(201).json(entry);
+      } catch (err) {
+        next(err);
+      }
+    },
+  );
+
+  router.patch(
+    '/api/v1/vehicles/:id/fuel-log/:entryId',
+    requireProfile,
+    requirePermission('manage_vehicles'),
+    (req, res, next) => {
+      try {
+        const vehicleId = Number(req.params.id);
+        const entryId = Number(req.params.entryId);
+        if (
+          !Number.isInteger(vehicleId) ||
+          vehicleId <= 0 ||
+          !Number.isInteger(entryId) ||
+          entryId <= 0
+        ) {
+          res
+            .status(400)
+            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+          return;
+        }
+        if (!vehicleRepo.get(vehicleId)) {
+          res.status(404).json({ error: 'NOT_FOUND' });
+          return;
+        }
+        const entry = fuelRepo.get(entryId);
+        if (!entry || entry.vehicle_id !== vehicleId) {
+          res.status(404).json({ error: 'NOT_FOUND' });
+          return;
+        }
+        const parsed = FuelLogUpdateSchema.safeParse(req.body);
+        if (!parsed.success) {
+          res
+            .status(400)
+            .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+          return;
+        }
+        res.json(fuelRepo.update(entryId, parsed.data));
+      } catch (err) {
+        next(err);
+      }
+    },
+  );
+
+  router.delete(
+    '/api/v1/vehicles/:id/fuel-log/:entryId',
+    requireProfile,
+    requirePermission('manage_vehicles'),
+    (req, res, next) => {
+      try {
+        const vehicleId = Number(req.params.id);
+        const entryId = Number(req.params.entryId);
+        if (
+          !Number.isInteger(vehicleId) ||
+          vehicleId <= 0 ||
+          !Number.isInteger(entryId) ||
+          entryId <= 0
+        ) {
+          res
+            .status(400)
+            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+          return;
+        }
+        if (!vehicleRepo.get(vehicleId)) {
+          res.status(404).json({ error: 'NOT_FOUND' });
+          return;
+        }
+        const entry = fuelRepo.get(entryId);
+        if (!entry || entry.vehicle_id !== vehicleId) {
+          res.status(404).json({ error: 'NOT_FOUND' });
+          return;
+        }
+        fuelRepo.delete(entryId);
+        res.status(204).end();
       } catch (err) {
         next(err);
       }
