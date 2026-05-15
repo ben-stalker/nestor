@@ -4,7 +4,7 @@
 **Sprint:** 6 — Vehicles, Food, Family Foundations
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -83,3 +83,11 @@ const dryRun = useMutation({ mutationFn: (input) => api.post(`/vehicles/${id}/bo
 
 - The booking list fetches next-30-days; older bookings visible via "Show all".
 - Future: drag-to-extend on a timeline UI (Phase 2).
+
+## Implementation Notes
+
+- VehicleDetail: hero card, renewals panel, upcoming bookings list (next 30d), Book button.
+- BookingModal: datetime-local inputs, client-side conflict check against existing bookings.
+- Conflict banner shown inline; Save disabled when conflict or invalid range.
+- BookingList: edit/cancel actions gated to booking owner or admin.
+- 389 client tests passing. Lint + typecheck clean.

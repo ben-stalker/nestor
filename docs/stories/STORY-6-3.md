@@ -4,7 +4,7 @@
 **Sprint:** 6 — Vehicles, Food, Family Foundations
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -93,3 +93,13 @@ export class VehicleBookingService {
 
 - A future enhancement is a calendar-events mirror — for MVP, the calendar's vehicle-filter overlay renders bookings via a dedicated query.
 - `business` flag set true means it counts toward freelancer mileage report (STORY-6.8 P3).
+
+## Implementation Notes
+
+- VehicleBookingService.create/update: findConflicts → throw ConflictError → 409.
+- Half-open interval semantics: `start < end_other AND end > start_other`.
+- excludeBookingId excludes self on update (prevents self-conflict).
+- Routes: GET/POST /vehicles/:id/bookings, PATCH/DELETE /vehicles/:id/bookings/:bookingId.
+- ConflictError re-exported from service to maintain backward-compatible import paths.
+- 8 booking route tests, 8 conflict edge-case tests in repository suite.
+- 606 server tests passing. Lint + typecheck clean.

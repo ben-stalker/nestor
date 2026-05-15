@@ -4,6 +4,7 @@ import AppShell from './core/AppShell';
 import HomePage from './features/home';
 import CalendarPage from './calendar';
 import FoodPage from './food';
+import VehiclePage from './vehicles';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
 
@@ -35,7 +36,7 @@ export default function Router() {
         <Route index element={<HomePage />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/food" element={<FoodPage />} />
-        <Route path="/vehicles" element={<Placeholder name="Travel" />} />
+        <Route path="/vehicles" element={<VehiclePage />} />
         <Route path="/family" element={<Placeholder name="Family" />} />
         <Route path="/house" element={<Placeholder name="House" />} />
         <Route path="/finance" element={<Placeholder name="Finance" />} />

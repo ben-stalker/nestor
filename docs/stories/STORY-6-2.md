@@ -4,7 +4,7 @@
 **Sprint:** 5 — Calendar Polish + House Foundation + Vehicles
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -92,3 +92,14 @@ router.post('/:id/photo', requireAdmin, multerUpload.single('photo'), async (req
 
 - The countdown chips are also rendered on the home day cards (STORY-3.4) for vehicles with imminent renewals.
 - Bicycles intentionally include `service_due` so the chore stays trackable.
+
+## Implementation Notes
+
+- createVehiclesRouter: GET/POST/PATCH/DELETE /api/v1/vehicles, photo upload/serve endpoints.
+- VehicleCard with type icon, renewal countdown chips (red <7d, amber <30d, blue).
+- VehicleForm with type-conditional MOT field (hidden for bicycle/ev).
+- VehicleList with empty state, admin-only add/edit/delete, delete confirmation modal.
+- VehiclePage (index.tsx) manages list/detail navigation.
+- /vehicles route wired in router.tsx.
+- Nested ternaries extracted to helper functions; handleCloseModal hoisted before mutations.
+- 389 client tests + 606 server tests passing. Lint + typecheck clean.

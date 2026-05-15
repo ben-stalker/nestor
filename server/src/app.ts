@@ -26,7 +26,11 @@ import createBasicCalendarRouter from './routes/basicCalendar';
 import createRecipesRouter from './routes/recipes';
 import createMealPlanRouter from './routes/mealPlan';
 import createShoppingItemsRouter from './routes/shoppingItems';
+import createVehiclesRouter from './routes/vehicles';
 import ShoppingItemRepository from './repositories/ShoppingItemRepository';
+import VehicleRepository from './repositories/VehicleRepository';
+import VehicleBookingRepository from './repositories/VehicleBookingRepository';
+import FuelLogRepository from './repositories/FuelLogRepository';
 import EventRepository from './repositories/EventRepository';
 import RecipeRepository from './repositories/RecipeRepository';
 import MealPlanRepository from './repositories/MealPlanRepository';
@@ -58,6 +62,9 @@ export default function createApp(): Express {
   const recipeRepo = new RecipeRepository(db);
   const mealPlanRepo = new MealPlanRepository(db);
   const shoppingRepo = new ShoppingItemRepository(db);
+  const vehicleRepo = new VehicleRepository(db);
+  const vehicleBookingRepo = new VehicleBookingRepository(db);
+  const fuelRepo = new FuelLogRepository(db);
   const calendarAccountRepo = new CalendarAccountRepository(db);
   const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
 
@@ -89,6 +96,9 @@ export default function createApp(): Express {
   app.use(createRecipesRouter(recipeRepo, settingsRepo, profileRepo, requireAdminPin));
   app.use(createMealPlanRouter(mealPlanRepo, recipeRepo, profileRepo));
   app.use(createShoppingItemsRouter(shoppingRepo, recipeRepo, profileRepo));
+  app.use(
+    createVehiclesRouter(vehicleRepo, vehicleBookingRepo, fuelRepo, profileRepo, requireAdminPin),
+  );
   app.use(createGoogleCalendarRouter(calendarAccountRepo, settingsRepo, calendarService));
   app.use(createBasicCalendarRouter(calendarAccountRepo, calendarService));
 
