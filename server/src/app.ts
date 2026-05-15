@@ -27,6 +27,10 @@ import createRecipesRouter from './routes/recipes';
 import createMealPlanRouter from './routes/mealPlan';
 import createShoppingItemsRouter from './routes/shoppingItems';
 import createVehiclesRouter from './routes/vehicles';
+import createChoresRouter from './routes/chores';
+import createRewardsRouter from './routes/rewards';
+import createFamilyRouter from './routes/family';
+import createHealthLogRouter from './routes/healthLog';
 import ShoppingItemRepository from './repositories/ShoppingItemRepository';
 import VehicleRepository from './repositories/VehicleRepository';
 import VehicleBookingRepository from './repositories/VehicleBookingRepository';
@@ -35,6 +39,10 @@ import EventRepository from './repositories/EventRepository';
 import RecipeRepository from './repositories/RecipeRepository';
 import MealPlanRepository from './repositories/MealPlanRepository';
 import CalendarAccountRepository from './repositories/CalendarAccountRepository';
+import ChoreRepository from './repositories/ChoreRepository';
+import ChoreCompletionRepository from './repositories/ChoreCompletionRepository';
+import RewardRedemptionRepository from './repositories/RewardRedemptionRepository';
+import HealthLogRepository from './repositories/HealthLogRepository';
 import CalendarService from './services/CalendarService';
 import { GoogleCalDAVProvider } from './services/calendar/GoogleCalDAVProvider';
 import {
@@ -66,6 +74,10 @@ export default function createApp(): Express {
   const vehicleBookingRepo = new VehicleBookingRepository(db);
   const fuelRepo = new FuelLogRepository(db);
   const calendarAccountRepo = new CalendarAccountRepository(db);
+  const choreRepo = new ChoreRepository(db);
+  const completionRepo = new ChoreCompletionRepository(db);
+  const redemptionRepo = new RewardRedemptionRepository(db);
+  const healthRepo = new HealthLogRepository(db);
   const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
 
   const googleProvider = new GoogleCalDAVProvider(calendarAccountRepo);
@@ -108,6 +120,12 @@ export default function createApp(): Express {
   );
   app.use(createGoogleCalendarRouter(calendarAccountRepo, settingsRepo, calendarService));
   app.use(createBasicCalendarRouter(calendarAccountRepo, calendarService));
+  app.use(createChoresRouter(choreRepo, completionRepo, profileRepo, requireAdminPin));
+  app.use(
+    createRewardsRouter(completionRepo, redemptionRepo, profileRepo, requireAdminPin, settingsRepo),
+  );
+  app.use(createFamilyRouter(profileRepo, choreRepo, completionRepo, redemptionRepo, eventRepo));
+  app.use(createHealthLogRouter(healthRepo, profileRepo));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -107,3 +107,11 @@ router.post('/:profileId/redeem', requireAdmin, async (req, res) => {
 
 - Streak tracking (consecutive days with at least one completion) is computed in STORY-7.5.
 - Allowance/points-to-money conversion (STORY-7.12) is layered on top of redemptions.
+
+---
+
+## Progress
+
+**Completed:** 2026-05-15
+
+Delivered `ChoreService` with completion guard for daily chores, `routes/chores.ts` (CRUD + `/complete` endpoint), and `routes/rewards.ts` (balance/history + admin redeem). Permission middleware enforces `chore.complete` per profile type. `chores.test.ts` and `rewards.test.ts` cover 15 tests including 403/400 error paths and insufficient-points guard.

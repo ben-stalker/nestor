@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** L (3d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -93,3 +93,11 @@ function HomeRedirect() {
 
 - Big colourful UI is intentional — kid-friendly. Avoid emojis in source per project rules; use SVG iconography.
 - The "My Day" card pulls from the same calendar events query as the carousel, but profile-scoped.
+
+---
+
+## Progress
+
+**Completed:** 2026-05-15
+
+Delivered `MePage.tsx` with large avatar header, `MyDayCard.tsx` (profile-scoped events), `ChoreTile.tsx` (tappable with Framer Motion confetti on completion), and `ToddlerView.tsx` (single-screen star tap with PIN-locked exit). `HomeRedirect` and `MeRoute` added to `router.tsx` to redirect child/toddler profiles to `/me`. `MePage.test.tsx` covers 3 RTL tests for render, chore completion mutation, and toddler variant.

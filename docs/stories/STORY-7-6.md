@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** L (3d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -106,3 +106,11 @@ router.get('/:profileId/export.pdf', requireAdmin, async (req, res) => {
 
 - The same table (`health_logs`) is used by baby tracking (`feed`/`nappy`/`sleep` log_types) and vaccinations.
 - A future "share with GP" QR code is nice-to-have; out of scope.
+
+---
+
+## Progress
+
+**Completed:** 2026-05-15
+
+Implemented `routes/healthLog.ts` (GET/POST/PATCH/DELETE) with `requireSelfOrAdmin` permission guard, `services/healthPdf.ts` using pdf-lib for 30-day PDF export, and `types/healthLog.ts` Zod discriminated union covering all log types. Built `HealthLog.tsx` (timeline with type-filter chips) and `HealthLogAddModal.tsx` (type-specific dynamic form fields). `healthLog.test.ts` covers 9 server tests (validation per type, permission checks, PDF export); `HealthLog.test.tsx` covers 4 client RTL tests for modal fields and timeline filtering.
