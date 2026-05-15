@@ -102,11 +102,24 @@ phases:
           - STORY-6.6
           - STORY-6.7
           - STORY-6.8
+          - STORY-7.1
+          - STORY-7.2
+          - STORY-7.3
+          - STORY-7.4
+          - STORY-7.5
+          - STORY-7.6
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-7.1–7.6 complete (2026-05-15): Family module — migration 010_family.sql
+  (chores/completions/redemptions/health_logs), four repositories, ChoreService,
+  chores + rewards + family + health-log routes, pdf-lib export, FamilyHub +
+  ChildCard + ChildDetail + HealthLog + HealthLogAddModal client components,
+  MePage + ChoreTile + RewardStarGrid + ToddlerView child views, router updated
+  with HomeRedirect/MeRoute. 36 new server tests (701 total), 30 new client tests
+  (404 total). Lint + typecheck clean.
   Sprint plan generated 2026-05-08 — 178 stories across 20 epics, 14 sprints,
   112 stories in MVP (Sprints 1–10, ~20 weeks single-developer).
   STORY-1.1 complete (2026-05-09): monorepo scaffold, npm workspaces, TypeScript 6,

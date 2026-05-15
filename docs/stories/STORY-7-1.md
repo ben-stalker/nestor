@@ -4,7 +4,7 @@
 **Sprint:** 6 — Vehicles, Food, Family Foundations
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -118,3 +118,11 @@ balance(profileId: number) {
 
 - The `health_logs` table is shared by baby tracking, mood log, vaccination log — `log_type` discriminates.
 - Chore frequency `recurring_rule` is optional advanced config; basic `daily`/`weekly` covers MVP.
+
+---
+
+## Progress
+
+**Completed:** 2026-05-15
+
+Implemented migration `010_family.sql` creating all four tables (`chores`, `chore_completions`, `reward_redemptions`, `health_logs`) with the specified indexes. Delivered `ChoreRepository`, `ChoreCompletionRepository`, `RewardRedemptionRepository`, and `HealthLogRepository` with full CRUD and computed reward balance. `FamilyRepositories.test.ts` covers 20 unit tests including cascade-delete and timezone-aware `todayCount`.

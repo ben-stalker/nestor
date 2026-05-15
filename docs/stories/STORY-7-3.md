@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -93,3 +93,11 @@ return <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">{data.map(c => <Ch
 
 - Hub is intentionally read-only — completion happens on each child's `/me` view (STORY-7.4) or admin can mark complete from detail.
 - Health log preview uses sparkline of recent symptoms (admin only) — keep simple for MVP.
+
+---
+
+## Progress
+
+**Completed:** 2026-05-15
+
+Implemented `GET /api/v1/family/summary` aggregating per-child chore counts, points balances, and next events in a single request. Built `FamilyHub.tsx` with responsive grid, `ChildCard.tsx` (avatar, chore progress, points, next-event chip), `ChildDetail.tsx` (tabbed view), and `StarBalanceChip.tsx`. `FamilyHub.test.tsx` and `ChildCard.test.tsx` provide 6 client-side RTL tests covering render, navigation, and empty state.

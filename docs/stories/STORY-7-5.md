@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 
@@ -94,3 +94,11 @@ return <div className="grid grid-cols-5 gap-2">
 
 - After hitting target, stars wrap (next reward starts) — no auto-redeem; admin redeems manually.
 - A future "next reward" state showing the upcoming reward image is nice-to-have.
+
+---
+
+## Progress
+
+**Completed:** 2026-05-15
+
+Extended `rewards.ts` with `GET /:profileId/grid` returning `{ filled, total, totalEarned, streak }`. Implemented `computeStreak` walking back day-by-day in user timezone. Built `RewardStarGrid.tsx` with SVG stars, streak chip, and burst animation triggered on target completion; `StarBalanceChip.tsx` provides the compact hub variant. `RewardStarGrid.test.tsx` covers 2 RTL tests for filled-count rendering and streak display.

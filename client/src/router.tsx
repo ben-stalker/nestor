@@ -1,12 +1,29 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import AppShell from './core/AppShell';
 import HomePage from './features/home';
 import CalendarPage from './calendar';
 import FoodPage from './food';
 import VehiclePage from './vehicles';
+import FamilyHub from './family/FamilyHub';
+import MePage from './me/MePage';
+import { useActiveProfile } from './core/hooks/useActiveProfile';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
+
+function HomeRedirect() {
+  const profile = useActiveProfile();
+  if (profile?.type === 'child' || profile?.type === 'toddler') {
+    return <Navigate to="/me" replace />;
+  }
+  return <HomePage />;
+}
+
+function MeRoute() {
+  const profile = useActiveProfile();
+  if (!profile) return <HomePage />;
+  return <MePage profile={profile} />;
+}
 
 function Placeholder({ name }: { name: string }) {
   return (
@@ -33,11 +50,12 @@ export default function Router() {
         />
       )}
       <Route element={<AppShell />}>
-        <Route index element={<HomePage />} />
+        <Route index element={<HomeRedirect />} />
+        <Route path="/me" element={<MeRoute />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/food" element={<FoodPage />} />
         <Route path="/vehicles" element={<VehiclePage />} />
-        <Route path="/family" element={<Placeholder name="Family" />} />
+        <Route path="/family" element={<FamilyHub />} />
         <Route path="/house" element={<Placeholder name="House" />} />
         <Route path="/finance" element={<Placeholder name="Finance" />} />
         <Route path="/pets" element={<Placeholder name="Pets" />} />
