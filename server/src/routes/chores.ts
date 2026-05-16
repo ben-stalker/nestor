@@ -25,11 +25,14 @@ export default function createChoresRouter(
     requirePermission('view_chores'),
     (req, res, next) => {
       try {
-        const filter: { assigned_profile_id?: number } = {};
+        const filter: { assigned_profile_id?: number; adultOnly?: boolean } = {};
         if (req.query.profileId) {
           filter.assigned_profile_id = Number(req.query.profileId);
         } else if (req.profile!.type !== 'admin') {
           filter.assigned_profile_id = req.profile!.id;
+        }
+        if (req.query.profileType === 'adult') {
+          filter.adultOnly = true;
         }
         res.json(choreRepo.list(filter));
       } catch (err) {

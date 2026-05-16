@@ -23,21 +23,32 @@ function fromRow(row: ChoreRow): Chore {
 }
 
 export default class ChoreRepository extends BaseRepository {
-  list(filter: { assigned_profile_id?: number; includeInactive?: boolean } = {}): Chore[] {
+  list(
+    filter: {
+      assigned_profile_id?: number;
+      includeInactive?: boolean;
+      adultOnly?: boolean;
+    } = {},
+  ): Chore[] {
     const conditions: string[] = [];
     const params: unknown[] = [];
 
     if (!filter.includeInactive) {
-      conditions.push('active = 1');
+      conditions.push('c.active = 1');
     }
     if (filter.assigned_profile_id !== undefined) {
-      conditions.push('assigned_profile_id = ?');
+      conditions.push('c.assigned_profile_id = ?');
       params.push(filter.assigned_profile_id);
+    }
+
+    const join = filter.adultOnly ? `LEFT JOIN profiles p ON c.assigned_profile_id = p.id` : '';
+    if (filter.adultOnly) {
+      conditions.push(`(c.assigned_profile_id IS NULL OR p.type IN ('adult','admin'))`);
     }
 
     const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
     const rows = this.all<ChoreRow>(
-      `SELECT * FROM chores ${where} ORDER BY sort_order, id`,
+      `SELECT c.* FROM chores c ${join} ${where} ORDER BY c.sort_order, c.id`,
       params,
     );
     return rows.map(fromRow);

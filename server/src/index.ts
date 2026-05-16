@@ -3,6 +3,7 @@ import { closeDb, getDb } from './db/connection';
 import { runMigrations } from './db/migrationRunner';
 import { Scheduler, registerBuiltinJobs } from './scheduler';
 import AppSettingsRepository from './repositories/AppSettingsRepository';
+import ChecklistRepository from './repositories/ChecklistRepository';
 import logger from './utils/logger';
 import { createWsServer } from './ws/server';
 
@@ -20,6 +21,7 @@ process.on('unhandledRejection', (reason) => {
 
 const db = getDb();
 runMigrations(db);
+new ChecklistRepository(db).seedTemplates();
 
 const app = createApp();
 const server = app.listen(PORT, () => {

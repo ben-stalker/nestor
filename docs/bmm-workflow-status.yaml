@@ -108,11 +108,31 @@ phases:
           - STORY-7.4
           - STORY-7.5
           - STORY-7.6
+          - STORY-8.1
+          - STORY-8.2
+          - STORY-8.3
+          - STORY-8.4
+          - STORY-8.5
+          - STORY-8.6
+          - STORY-8.7
+          - STORY-8.8
+          - STORY-8.9
+          - STORY-8.10
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-8.1–8.10 complete (2026-05-16): House module — migration 011_house.sql
+  (bin_schedules/subscriptions/home_maintenance/meter_readings/budget_categories/
+  budget_expenses/checklists/checklist_items), seven repositories (BinSchedule,
+  Subscription, HomeMaintenance, MeterReading, Budget, Checklist; ChoreRepository
+  updated with adultOnly filter), binSchedule service (nextCollections with UK BH
+  shift 2024-2027), binAlertService, bins/subscriptions/maintenance/meterReadings/
+  budget/checklists routes, HousePage with 7 tabs (Bins/Subscriptions/Maintenance/
+  Meter/Budget/Checklists/Chores), 7 seeded checklist templates, checklist-reset
+  scheduler job. 92 new server tests (793 total), 23 new client tests (427 total).
+  Lint + typecheck clean.
   STORY-7.1–7.6 complete (2026-05-15): Family module — migration 010_family.sql
   (chores/completions/redemptions/health_logs), four repositories, ChoreService,
   chores + rewards + family + health-log routes, pdf-lib export, FamilyHub +

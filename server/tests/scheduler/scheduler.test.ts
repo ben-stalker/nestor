@@ -250,9 +250,9 @@ describe('Scheduler.list()', () => {
 // registerBuiltinJobs()
 // -------------------------------------------------------------------
 describe('registerBuiltinJobs()', () => {
-  it('registers exactly 6 built-in jobs', () => {
+  it('registers exactly 8 built-in jobs', () => {
     registerBuiltinJobs();
-    expect(Scheduler.list()).toHaveLength(6);
+    expect(Scheduler.list()).toHaveLength(8);
   });
 
   it('registers the expected job names', () => {
@@ -264,5 +264,7 @@ describe('registerBuiltinJobs()', () => {
     expect(names).toContain('github-update-poll');
     expect(names).toContain('vacuum-db');
     expect(names).toContain('term-dates-sync');
+    expect(names).toContain('bin-alert-eval');
+    expect(names).toContain('checklist-reset');
   });
 });
