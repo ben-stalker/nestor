@@ -42,12 +42,10 @@ const mockChecklist = {
 vi.mock('../../src/house/api', () => ({
   getChecklist: vi.fn().mockResolvedValue(mockChecklist),
   updateChecklistItem: vi.fn().mockResolvedValue({ id: 10, ticked: true }),
-  resetChecklist: vi
-    .fn()
-    .mockResolvedValue({
-      ...mockChecklist,
-      items: mockChecklist.items.map((i) => ({ ...i, ticked: false })),
-    }),
+  resetChecklist: vi.fn().mockResolvedValue({
+    ...mockChecklist,
+    items: mockChecklist.items.map((i) => ({ ...i, ticked: false })),
+  }),
 }));
 
 vi.mock('../../src/store/appStore', () => ({
