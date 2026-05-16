@@ -75,11 +75,16 @@ export default function createRewardsRouter(
       const byDay = completionRepo.byDay(profileId, 30);
       const streak = computeStreak(byDay);
 
+      const targetProfile = profileRepo.get(profileId);
+      const conversionRate = targetProfile?.conversion_rate ?? 0;
+
       res.json({
         filled: balance % target,
         total: target,
         totalEarned: balance,
         streak,
+        conversionRate,
+        moneyEquivalent: conversionRate > 0 ? +(balance * conversionRate).toFixed(2) : null,
       });
     } catch (err) {
       next(err);

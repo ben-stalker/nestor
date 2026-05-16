@@ -3,18 +3,42 @@ import { useQuery } from '@tanstack/react-query';
 import { getChores, getRewardGrid, getHealthLog } from './api';
 import type { HealthLogType } from './types';
 import HealthLog from './HealthLog';
+import GrowthChart from './GrowthChart';
+import VaccinationSchedule from './VaccinationSchedule';
+import RoutinesPanel from './RoutinesPanel';
+import MoodCheckin from './MoodCheckin';
+import MoodTrend from './MoodTrend';
 
 interface Props {
   profileId: number;
   profileName: string;
+  profileType?: string;
+  isAdmin?: boolean;
   onClose: () => void;
 }
 
-type Tab = 'chores' | 'health' | 'rewards';
+type Tab = 'chores' | 'health' | 'rewards' | 'growth' | 'vaccinations' | 'routines' | 'mood';
 
-export default function ChildDetail({ profileId, profileName, onClose }: Props) {
+export default function ChildDetail({
+  profileId,
+  profileName,
+  profileType,
+  isAdmin = false,
+  onClose,
+}: Props) {
   const [tab, setTab] = useState<Tab>('chores');
   const [healthFilter, setHealthFilter] = useState<HealthLogType | undefined>(undefined);
+
+  const isBaby = profileType === 'baby';
+  const isTeen = profileType === 'teen';
+  const availableTabs: Tab[] = [
+    'chores',
+    'rewards',
+    'health',
+    ...(isBaby ? (['growth', 'vaccinations'] as Tab[]) : []),
+    'routines',
+    ...(isTeen ? (['mood'] as Tab[]) : []),
+  ];
 
   const { data: chores = [] } = useQuery({
     queryKey: ['chores', profileId],
@@ -44,7 +68,7 @@ export default function ChildDetail({ profileId, profileName, onClose }: Props) 
       </div>
 
       <div className="child-detail__tabs" role="tablist">
-        {(['chores', 'rewards', 'health'] as Tab[]).map((t) => (
+        {availableTabs.map((t) => (
           <button
             key={t}
             role="tab"
@@ -88,7 +112,21 @@ export default function ChildDetail({ profileId, profileName, onClose }: Props) 
             entries={healthEntries}
             filter={healthFilter}
             onFilterChange={setHealthFilter}
+            isAdmin={isAdmin}
           />
+        )}
+
+        {tab === 'growth' && <GrowthChart profileId={profileId} />}
+
+        {tab === 'vaccinations' && <VaccinationSchedule profileId={profileId} isAdmin={isAdmin} />}
+
+        {tab === 'routines' && <RoutinesPanel profileName={profileName} />}
+
+        {tab === 'mood' && (
+          <div className="child-detail__mood">
+            <MoodCheckin profileId={profileId} />
+            <MoodTrend profileId={profileId} />
+          </div>
         )}
       </div>
     </div>

@@ -58,6 +58,7 @@ export default function FamilyHub() {
           <ChildDetail
             profileId={selected.profile.id}
             profileName={selected.profile.name}
+            profileType={selected.profile.type}
             onClose={() => setSelected(null)}
           />
         </div>

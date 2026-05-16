@@ -94,6 +94,14 @@ export default function RewardStarGrid({ profileId }: Props) {
         </div>
       )}
 
+      {data.moneyEquivalent != null && (
+        <div className="reward-star-grid__allowance" aria-label="Points money value">
+          <span className="reward-star-grid__points-label">
+            {data.totalEarned} pts = <strong>£{data.moneyEquivalent.toFixed(2)}</strong>
+          </span>
+        </div>
+      )}
+
       <AnimatePresence>
         {targetJustHit && (
           <RewardBurst

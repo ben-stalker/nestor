@@ -5,6 +5,7 @@ import MyDayCard from './MyDayCard';
 import ChoreTile from './ChoreTile';
 import RewardStarGrid from './RewardStarGrid';
 import ToddlerView from './ToddlerView';
+import BabyView from '../family/BabyView';
 
 interface Props {
   profile: Profile;
@@ -16,6 +17,10 @@ export default function MePage({ profile }: Props) {
     queryFn: () => getChores(profile.id),
     staleTime: 30_000,
   });
+
+  if (profile.type === 'baby') {
+    return <BabyView profile={profile} />;
+  }
 
   if (profile.type === 'toddler') {
     return <ToddlerView profile={profile} />;

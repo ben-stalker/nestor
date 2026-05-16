@@ -18,6 +18,9 @@ import { getDb } from '../db/connection';
 import BinScheduleRepository from '../repositories/BinScheduleRepository';
 import ChecklistRepository from '../repositories/ChecklistRepository';
 import evaluateBinAlerts from '../services/binAlertService';
+import HealthLogRepository from '../repositories/HealthLogRepository';
+import evalFeedAlerts from '../services/babyAlertService';
+import { evalVaccinationAlerts } from '../services/VaccinationService';
 
 export type JobHandler = () => void | Promise<void>;
 
@@ -123,8 +126,11 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
   Scheduler.register('reminder-eval', '5 0 * * *', async () => {
     const db = getDb();
     const alertRepo = new AlertRepository(db);
+    const profileRepo = new ProfileRepository(db);
     await evaluateReminders(new VehicleRepository(db), alertRepo);
     await evaluateFinanceReminders(new FinanceRepository(db), alertRepo);
+    evalFeedAlerts(profileRepo, new HealthLogRepository(db), alertRepo);
+    evalVaccinationAlerts(profileRepo, new HealthLogRepository(db), alertRepo);
   });
 
   Scheduler.register('github-update-poll', '0 3 * * *', () => {

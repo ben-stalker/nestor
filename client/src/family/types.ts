@@ -39,6 +39,8 @@ export interface RewardGrid {
   total: number;
   totalEarned: number;
   streak: number;
+  conversionRate: number;
+  moneyEquivalent: number | null;
 }
 
 export interface ChildSummary {

@@ -6,6 +6,7 @@ import type HealthLogRepository from '../repositories/HealthLogRepository';
 import { HealthLogInput, HealthLogUpdateSchema } from '../types/healthLog';
 import type { HealthLogType } from '../types/family';
 import { renderHealthPdf } from '../services/healthPdf';
+import { getScheduleForBaby } from '../services/VaccinationService';
 
 export default function createHealthLogRouter(
   healthRepo: HealthLogRepository,
@@ -158,6 +159,140 @@ export default function createHealthLogRouter(
       }
     },
   );
+
+  // GET /api/v1/health-log/:profileId/baby-summary
+  router.get('/api/v1/health-log/:profileId/baby-summary', requireProfile, (req, res, next) => {
+    try {
+      const profileId = Number(req.params.profileId);
+      if (req.profile!.type !== 'admin' && req.profile!.id !== profileId) {
+        res.status(403).json({ error: 'Permission denied', code: 'PERMISSION_DENIED' });
+        return;
+      }
+
+      const dayStart = new Date();
+      dayStart.setHours(0, 0, 0, 0);
+
+      const todayFeeds = healthRepo.listForProfile(profileId, {
+        logType: 'feed',
+        from: dayStart.getTime(),
+        limit: 200,
+      });
+      const todayNappies = healthRepo.listForProfile(profileId, {
+        logType: 'nappy',
+        from: dayStart.getTime(),
+        limit: 200,
+      });
+      const lastFeed = healthRepo.listForProfile(profileId, { logType: 'feed', limit: 1 });
+      const lastSleep = healthRepo.listForProfile(profileId, { logType: 'sleep', limit: 1 });
+      const recentAll = healthRepo.listForProfile(profileId, { limit: 20 });
+
+      res.json({
+        todayFeedCount: todayFeeds.length,
+        todayNappyCount: todayNappies.length,
+        lastFeedMs: lastFeed[0]?.logged_at ?? null,
+        lastSleepEntry: lastSleep[0] ?? null,
+        recentEntries: recentAll,
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // GET /api/v1/health-log/:profileId/mood-trend
+  router.get('/api/v1/health-log/:profileId/mood-trend', requireProfile, (req, res, next) => {
+    try {
+      const profileId = Number(req.params.profileId);
+      if (req.profile!.type !== 'admin' && req.profile!.id !== profileId) {
+        res.status(403).json({ error: 'Permission denied', code: 'PERMISSION_DENIED' });
+        return;
+      }
+
+      const thirtyDaysAgo = Date.now() - 30 * 86_400_000;
+      const entries = healthRepo.listForProfile(profileId, {
+        logType: 'mood',
+        from: thirtyDaysAgo,
+        limit: 200,
+      });
+
+      // Group by ISO date (most recent per day wins)
+      const byDay = entries.reduce<Map<string, { date: string; score: number }>>((acc, entry) => {
+        const date = new Date(entry.logged_at).toISOString().slice(0, 10);
+        if (!acc.has(date)) {
+          acc.set(date, { date, score: Number(entry.data_json.score ?? 0) });
+        }
+        return acc;
+      }, new Map());
+
+      res.json(Array.from(byDay.values()).sort((a, b) => a.date.localeCompare(b.date)));
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // GET /api/v1/health-log/:profileId/vaccinations
+  router.get('/api/v1/health-log/:profileId/vaccinations', requireProfile, (req, res, next) => {
+    try {
+      const profileId = Number(req.params.profileId);
+      if (req.profile!.type !== 'admin' && req.profile!.id !== profileId) {
+        res.status(403).json({ error: 'Permission denied', code: 'PERMISSION_DENIED' });
+        return;
+      }
+
+      const profile = profileRepo.get(profileId);
+      if (!profile?.dob) {
+        res.json([]);
+        return;
+      }
+
+      const vaccinationLogs = healthRepo.listForProfile(profileId, {
+        logType: 'vaccination',
+        limit: 200,
+      });
+      const completedNames = vaccinationLogs.map((e) => String(e.data_json.name ?? ''));
+      const schedule = getScheduleForBaby(profile.dob, completedNames);
+      res.json(schedule);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // GET /api/v1/health-log/:profileId/growth-data
+  router.get('/api/v1/health-log/:profileId/growth-data', requireProfile, (req, res, next) => {
+    try {
+      const profileId = Number(req.params.profileId);
+      if (req.profile!.type !== 'admin' && req.profile!.id !== profileId) {
+        res.status(403).json({ error: 'Permission denied', code: 'PERMISSION_DENIED' });
+        return;
+      }
+
+      const growthEntries = healthRepo.listForProfile(profileId, {
+        logType: 'growth',
+        limit: 500,
+      });
+      const weightEntries = healthRepo.listForProfile(profileId, {
+        logType: 'weight',
+        limit: 500,
+      });
+
+      const profile = profileRepo.get(profileId);
+      const dobMs = profile?.dob ?? null;
+
+      const points = [...growthEntries, ...weightEntries]
+        .sort((a, b) => a.logged_at - b.logged_at)
+        .map((e) => ({
+          logged_at: e.logged_at,
+          age_weeks: dobMs ? Math.floor((e.logged_at - dobMs) / (7 * 86_400_000)) : null,
+          weight_kg: (e.data_json.weight_kg as number | undefined) ?? null,
+          height_cm: (e.data_json.height_cm as number | undefined) ?? null,
+          head_cm: (e.data_json.head_cm as number | undefined) ?? null,
+          value_kg: (e.data_json.value_kg as number | undefined) ?? null,
+        }));
+
+      res.json({ dobMs, points });
+    } catch (err) {
+      next(err);
+    }
+  });
 
   return router;
 }

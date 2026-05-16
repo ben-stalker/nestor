@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-16"
+last_updated: "2026-05-16-epic7"
 
 phases:
   phase_1_analysis:
@@ -125,11 +125,26 @@ phases:
           - STORY-9.5
           - STORY-9.6
           - STORY-9.7
+          - STORY-7.7
+          - STORY-7.8
+          - STORY-7.9
+          - STORY-7.10
+          - STORY-7.11
+          - STORY-7.12
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-7.7–7.12 complete (2026-05-16): Epic 7 finished — migration 014
+  (profiles.dob/feed_alert_hours/conversion_rate), baby tracking (BabyView quick-log
+  buttons + baby-summary endpoint + feed-overdue alert service), growth chart (WHO
+  percentile SVG + growth-data endpoint), NHS vaccination schedule (17 vaccines,
+  VaccinationService + vaccinations endpoint + scheduler alerts), children's routines
+  (RoutinesPanel reuses checklist system), mood log (MoodCheckin 5-emoji + MoodTrend SVG
+  bar chart + mood-trend endpoint), allowance tracker (conversion_rate per profile,
+  moneyEquivalent in rewards grid). Jest moduleNameMapper added for .js → .ts resolution.
+  16 new server tests (878 total), 11 new client tests (465 total). Lint + typecheck clean.
   STORY-9.5–9.7 complete (2026-05-16): Finance module extended — end-date alerts
   (finance reminders service, scheduler extension, admin run-reminder-eval endpoint),
   regular commitments (migration 013, CRUD API + client UI with in/out direction,

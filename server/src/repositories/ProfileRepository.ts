@@ -24,6 +24,9 @@ interface ProfileRow {
   text_size: string;
   simplified_nav: number;
   term_dates_ical_url: string | null;
+  dob: number | null;
+  feed_alert_hours: number;
+  conversion_rate: number;
   created_at: number;
 }
 
@@ -43,7 +46,8 @@ const PUBLIC_COLUMNS = `
   id, name, type, colour,
   CASE WHEN pin_hash IS NOT NULL THEN 1 ELSE 0 END as pin_set,
   avatar_path, accessibility_json,
-  permissions_json, text_size, simplified_nav, term_dates_ical_url, created_at
+  permissions_json, text_size, simplified_nav, term_dates_ical_url,
+  dob, feed_alert_hours, conversion_rate, created_at
 `;
 
 function toProfile(row: ProfileRow): Profile {
@@ -61,6 +65,9 @@ function toProfile(row: ProfileRow): Profile {
     text_size: row.text_size as Profile['text_size'],
     simplified_nav: row.simplified_nav,
     term_dates_ical_url: row.term_dates_ical_url,
+    dob: row.dob ?? null,
+    feed_alert_hours: row.feed_alert_hours ?? 4,
+    conversion_rate: row.conversion_rate ?? 0,
     created_at: row.created_at,
   };
 }
@@ -90,8 +97,9 @@ class ProfileRepository extends BaseRepository {
     const result = this.run(
       `INSERT INTO profiles
          (name, type, colour, pin_hash, avatar_path, accessibility_json,
-          permissions_json, text_size, simplified_nav, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          permissions_json, text_size, simplified_nav,
+          dob, feed_alert_hours, conversion_rate, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         data.name,
         data.type,
@@ -102,6 +110,9 @@ class ProfileRepository extends BaseRepository {
         permissionsStr,
         data.text_size,
         data.simplified_nav,
+        data.dob ?? null,
+        data.feed_alert_hours,
+        data.conversion_rate,
         now,
       ],
     );
@@ -161,6 +172,18 @@ class ProfileRepository extends BaseRepository {
     if ('term_dates_ical_url' in data && data.term_dates_ical_url !== undefined) {
       sets.push('term_dates_ical_url = ?');
       params.push(data.term_dates_ical_url);
+    }
+    if ('dob' in data && data.dob !== undefined) {
+      sets.push('dob = ?');
+      params.push(data.dob);
+    }
+    if (data.feed_alert_hours !== undefined) {
+      sets.push('feed_alert_hours = ?');
+      params.push(data.feed_alert_hours);
+    }
+    if (data.conversion_rate !== undefined) {
+      sets.push('conversion_rate = ?');
+      params.push(data.conversion_rate);
     }
 
     if (sets.length > 0) {

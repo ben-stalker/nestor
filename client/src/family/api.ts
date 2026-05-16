@@ -74,3 +74,64 @@ export function deleteHealthLog(id: number): Promise<void> {
 export function exportHealthLogPdf(profileId: number): string {
   return `/api/v1/health-log/${profileId}/export.pdf`;
 }
+
+// ─── Baby tracking ────────────────────────────────────────────────────────────
+
+export interface BabySummary {
+  todayFeedCount: number;
+  todayNappyCount: number;
+  lastFeedMs: number | null;
+  lastSleepEntry: HealthLog | null;
+  recentEntries: HealthLog[];
+}
+
+export function getBabySummary(profileId: number): Promise<BabySummary> {
+  return apiFetch<BabySummary>(`/api/v1/health-log/${profileId}/baby-summary`);
+}
+
+// ─── Growth data ──────────────────────────────────────────────────────────────
+
+export interface GrowthPoint {
+  logged_at: number;
+  age_weeks: number | null;
+  weight_kg: number | null;
+  height_cm: number | null;
+  head_cm: number | null;
+  value_kg: number | null;
+}
+
+export interface GrowthData {
+  dobMs: number | null;
+  points: GrowthPoint[];
+}
+
+export function getGrowthData(profileId: number): Promise<GrowthData> {
+  return apiFetch<GrowthData>(`/api/v1/health-log/${profileId}/growth-data`);
+}
+
+// ─── Vaccinations ─────────────────────────────────────────────────────────────
+
+export interface VaccinationItem {
+  id: string;
+  name: string;
+  age_weeks: number;
+  description: string;
+  dueAt: number;
+  completed: boolean;
+  completed_at: number | null;
+}
+
+export function getVaccinations(profileId: number): Promise<VaccinationItem[]> {
+  return apiFetch<VaccinationItem[]>(`/api/v1/health-log/${profileId}/vaccinations`);
+}
+
+// ─── Mood trend ───────────────────────────────────────────────────────────────
+
+export interface MoodTrendPoint {
+  date: string;
+  score: number;
+}
+
+export function getMoodTrend(profileId: number): Promise<MoodTrendPoint[]> {
+  return apiFetch<MoodTrendPoint[]>(`/api/v1/health-log/${profileId}/mood-trend`);
+}

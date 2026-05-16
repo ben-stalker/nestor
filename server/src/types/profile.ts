@@ -27,6 +27,9 @@ export interface Profile {
   text_size: TextSize;
   simplified_nav: number;
   term_dates_ical_url: string | null;
+  dob: number | null;
+  feed_alert_hours: number;
+  conversion_rate: number;
   created_at: number;
 }
 
@@ -40,6 +43,9 @@ export const CreateProfileSchema = z.object({
   permissions_json: z.record(z.string(), z.boolean()).optional(),
   text_size: TextSizeSchema.optional().default('default'),
   simplified_nav: z.number().int().min(0).max(1).optional().default(0),
+  dob: z.number().int().nullable().optional(),
+  feed_alert_hours: z.number().int().min(1).max(24).optional().default(4),
+  conversion_rate: z.number().min(0).optional().default(0),
 });
 export type CreateProfileInput = z.input<typeof CreateProfileSchema>;
 
@@ -57,5 +63,8 @@ export const UpdateProfileSchema = z.object({
   text_size: TextSizeSchema.optional(),
   simplified_nav: z.number().int().min(0).max(1).optional(),
   term_dates_ical_url: z.string().url().nullable().optional(),
+  dob: z.number().int().nullable().optional(),
+  feed_alert_hours: z.number().int().min(1).max(24).optional(),
+  conversion_rate: z.number().min(0).optional(),
 });
 export type UpdateProfileInput = z.input<typeof UpdateProfileSchema>;
