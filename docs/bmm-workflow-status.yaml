@@ -118,11 +118,23 @@ phases:
           - STORY-8.8
           - STORY-8.9
           - STORY-8.10
+          - STORY-9.1
+          - STORY-9.2
+          - STORY-9.3
+          - STORY-9.4
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-9.1–9.4 complete (2026-05-16): Finance module — migration 012_finance.sql
+  (finance_agreements/savings_goals), FinanceRepository (CRUD + monthly aggregation),
+  finance routes (agreements CRUD + savings CRUD + GET /summary aggregating agreements
+  + subscriptions), FinancePage with 3 tabs (Agreements/Savings Goals/Summary),
+  AgreementList/AgreementForm (PCP balloon_payment, mortgage fixed_rate_end_date),
+  SavingsGoalList/SavingsGoalForm (progress bar, target date countdown),
+  CommitmentsSummary (expandable per-category subtotals). 34 new server tests (827 total),
+  16 new client tests (443 total). Lint + typecheck clean.
   STORY-8.1–8.10 complete (2026-05-16): House module — migration 011_house.sql
   (bin_schedules/subscriptions/home_maintenance/meter_readings/budget_categories/
   budget_expenses/checklists/checklist_items), seven repositories (BinSchedule,
