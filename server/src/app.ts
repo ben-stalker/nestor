@@ -39,6 +39,10 @@ import createBudgetRouter from './routes/budget';
 import createChecklistsRouter from './routes/checklists';
 import createFinanceRouter from './routes/finance';
 import createPetsRouter from './routes/pets';
+import createBoardRouter from './routes/board';
+import BoardMessageRepository from './repositories/BoardMessageRepository';
+import CountdownRepository from './repositories/CountdownRepository';
+import WhiteboardRepository from './repositories/WhiteboardRepository';
 import FinanceRepository from './repositories/FinanceRepository';
 import PetRepository from './repositories/PetRepository';
 import PetHealthLogRepository from './repositories/PetHealthLogRepository';
@@ -104,6 +108,9 @@ export default function createApp(): Express {
   const financeRepo = new FinanceRepository(db);
   const petRepo = new PetRepository(db);
   const petHealthRepo = new PetHealthLogRepository(db);
+  const boardMsgRepo = new BoardMessageRepository(db);
+  const countdownRepo = new CountdownRepository(db);
+  const whiteboardRepo = new WhiteboardRepository(db);
   const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
 
   const googleProvider = new GoogleCalDAVProvider(calendarAccountRepo);
@@ -160,6 +167,7 @@ export default function createApp(): Express {
   app.use(createChecklistsRouter(checklistRepo));
   app.use(createFinanceRouter(financeRepo, subRepo, requireAdminPin));
   app.use(createPetsRouter(petRepo, petHealthRepo, requireAdminPin, profileRepo, eventRepo));
+  app.use(createBoardRouter(boardMsgRepo, countdownRepo, whiteboardRepo, checklistRepo, requireAdminPin, profileRepo));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

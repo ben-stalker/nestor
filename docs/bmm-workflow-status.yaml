@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-16-epic10"
+last_updated: "2026-05-16-epic11"
 
 phases:
   phase_1_analysis:
@@ -137,11 +137,28 @@ phases:
           - STORY-10.4
           - STORY-10.5
           - STORY-10.6
+          - STORY-11.1
+          - STORY-11.2
+          - STORY-11.3
+          - STORY-11.4
+          - STORY-11.5
+          - STORY-11.6
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-11.1–11.6 complete (2026-05-16): Epic 11 — Board Module. Migration 016_board.sql
+  (board_messages + countdown_timers + whiteboard_snapshots tables). BoardMessageRepository,
+  CountdownRepository, WhiteboardRepository. createBoardRouter (messages CRUD + archive,
+  countdowns CRUD, whiteboard PNG upload/serve/delete, board lists reusing checklist engine,
+  guest checklists with arrival/departure templates). evaluateGuestAlerts service (7/3/1-day
+  alerts before guest arrival if incomplete). board:message_new event bus + WS forward.
+  Client: BoardPage (5 tabs), MessageBoard (sticky notes + author colour + real-time WS push),
+  Whiteboard (HTML5 canvas + pointer events + undo + 9 colours + snapshot gallery),
+  CountdownList (day chips + form modal), ListsTab (one_off/recurring + item CRUD + reset),
+  GuestVisitTab (arrival/departure templates + item ticking). Router updated /board → BoardPage.
+  28 new server tests (933 total), 21 new client tests (501 total). Lint + typecheck clean.
   STORY-10.1–10.6 complete (2026-05-16): Epic 10 — Pets Module. Migration 015_pets.sql
   (pets + pet_health_logs tables, partial index idx_pet_health_next_due). PetRepository
   (CRUD + soft delete) + PetHealthLogRepository (CRUD + upcomingCare query). Zod types
