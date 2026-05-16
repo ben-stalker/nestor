@@ -329,4 +329,172 @@ describe('GET /api/v1/finance/summary', () => {
     expect((res.body as { grand_total_minor: number }).grand_total_minor).toBe(0);
     db.close();
   });
+
+  it('includes active outgoing regular commitments in summary', async () => {
+    const db = makeDb();
+    const { app, financeRepo } = makeApp(db);
+    financeRepo.createRegularCommitment({
+      name: 'Rent',
+      amount_minor: 80000,
+      direction: 'out',
+      currency: 'GBP',
+    });
+    const res = await request(app).get('/api/v1/finance/summary');
+    expect(res.status).toBe(200);
+    const body = res.body as {
+      categories: Array<{ label: string; monthly_total_minor: number }>;
+      grand_total_minor: number;
+    };
+    expect(body.grand_total_minor).toBe(80000);
+    const regularCat = body.categories.find((c) => c.label === 'Regular Commitments');
+    expect(regularCat?.monthly_total_minor).toBe(80000);
+    db.close();
+  });
+});
+
+// ─── Regular Commitments ──────────────────────────────────────────────────────
+
+describe('GET /api/v1/finance/regular', () => {
+  it('returns empty list', async () => {
+    const db = makeDb();
+    const { app } = makeApp(db);
+    const res = await request(app).get('/api/v1/finance/regular');
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([]);
+    db.close();
+  });
+});
+
+describe('POST /api/v1/finance/regular', () => {
+  it('creates an outgoing commitment', async () => {
+    const db = makeDb();
+    const { app } = makeApp(db);
+    const res = await request(app).post('/api/v1/finance/regular').send({
+      name: 'Rent',
+      amount_minor: 80000,
+      direction: 'out',
+      day_of_month: 1,
+      currency: 'GBP',
+    });
+    expect(res.status).toBe(201);
+    const body = res.body as { name: string; direction: string; day_of_month: number };
+    expect(body.name).toBe('Rent');
+    expect(body.direction).toBe('out');
+    expect(body.day_of_month).toBe(1);
+    db.close();
+  });
+
+  it('creates an incoming commitment', async () => {
+    const db = makeDb();
+    const { app } = makeApp(db);
+    const res = await request(app).post('/api/v1/finance/regular').send({
+      name: 'Child Benefit',
+      amount_minor: 9500,
+      direction: 'in',
+      currency: 'GBP',
+    });
+    expect(res.status).toBe(201);
+    expect((res.body as { direction: string }).direction).toBe('in');
+    db.close();
+  });
+
+  it('rejects missing required fields', async () => {
+    const db = makeDb();
+    const { app } = makeApp(db);
+    const res = await request(app).post('/api/v1/finance/regular').send({ name: 'Incomplete' });
+    expect(res.status).toBe(400);
+    db.close();
+  });
+});
+
+describe('PATCH /api/v1/finance/regular/:id', () => {
+  it('updates a commitment', async () => {
+    const db = makeDb();
+    const { app, financeRepo } = makeApp(db);
+    const created = financeRepo.createRegularCommitment({
+      name: 'Old',
+      amount_minor: 5000,
+      direction: 'out',
+      currency: 'GBP',
+    });
+    const res = await request(app)
+      .patch(`/api/v1/finance/regular/${created.id}`)
+      .send({ name: 'Updated' });
+    expect(res.status).toBe(200);
+    expect((res.body as { name: string }).name).toBe('Updated');
+    db.close();
+  });
+
+  it('returns 404 for unknown id', async () => {
+    const db = makeDb();
+    const { app } = makeApp(db);
+    const res = await request(app).patch('/api/v1/finance/regular/9999').send({ name: 'X' });
+    expect(res.status).toBe(404);
+    db.close();
+  });
+});
+
+describe('DELETE /api/v1/finance/regular/:id', () => {
+  it('deletes a commitment', async () => {
+    const db = makeDb();
+    const { app, financeRepo } = makeApp(db);
+    const created = financeRepo.createRegularCommitment({
+      name: 'To Delete',
+      amount_minor: 1000,
+      direction: 'out',
+      currency: 'GBP',
+    });
+    const res = await request(app).delete(`/api/v1/finance/regular/${created.id}`);
+    expect(res.status).toBe(204);
+    db.close();
+  });
+});
+
+// ─── Paydown Schedule ─────────────────────────────────────────────────────────
+
+describe('GET /api/v1/finance/agreements/:id/paydown', () => {
+  it('returns 404 for unknown agreement', async () => {
+    const db = makeDb();
+    const { app } = makeApp(db);
+    const res = await request(app).get('/api/v1/finance/agreements/9999/paydown');
+    expect(res.status).toBe(404);
+    db.close();
+  });
+
+  it('returns empty months when no balance set', async () => {
+    const db = makeDb();
+    const { app, financeRepo } = makeApp(db);
+    const a = financeRepo.createAgreement({
+      name: 'No Balance',
+      type: 'loan',
+      monthly_payment_minor: 10000,
+      start_date: START,
+      alert_months_before: 3,
+      currency: 'GBP',
+    });
+    const res = await request(app).get(`/api/v1/finance/agreements/${a.id}/paydown`);
+    expect(res.status).toBe(200);
+    expect((res.body as { months: unknown[] }).months).toEqual([]);
+    db.close();
+  });
+
+  it('returns paydown schedule for agreement with balance', async () => {
+    const db = makeDb();
+    const { app, financeRepo } = makeApp(db);
+    const a = financeRepo.createAgreement({
+      name: 'Loan',
+      type: 'loan',
+      monthly_payment_minor: 50000,
+      start_date: START,
+      balance_minor: 100000,
+      alert_months_before: 3,
+      currency: 'GBP',
+    });
+    const res = await request(app).get(`/api/v1/finance/agreements/${a.id}/paydown`);
+    expect(res.status).toBe(200);
+    const body = res.body as { months: Array<{ label: string; balance_minor: number }> };
+    expect(body.months.length).toBeGreaterThan(0);
+    expect(body.months[body.months.length - 1].balance_minor).toBe(0);
+    db.close();
+  });
 });

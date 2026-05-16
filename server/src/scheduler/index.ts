@@ -11,7 +11,9 @@ import AlertRepository from '../repositories/AlertRepository';
 import CalendarService from '../services/CalendarService';
 import { TermDatesService } from '../services/TermDatesService';
 import VehicleRepository from '../repositories/VehicleRepository';
+import FinanceRepository from '../repositories/FinanceRepository';
 import evaluateReminders from '../services/vehicles/reminders';
+import evaluateFinanceReminders from '../services/finance/reminders';
 import { getDb } from '../db/connection';
 import BinScheduleRepository from '../repositories/BinScheduleRepository';
 import ChecklistRepository from '../repositories/ChecklistRepository';
@@ -120,7 +122,9 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
 
   Scheduler.register('reminder-eval', '5 0 * * *', async () => {
     const db = getDb();
-    await evaluateReminders(new VehicleRepository(db), new AlertRepository(db));
+    const alertRepo = new AlertRepository(db);
+    await evaluateReminders(new VehicleRepository(db), alertRepo);
+    await evaluateFinanceReminders(new FinanceRepository(db), alertRepo);
   });
 
   Scheduler.register('github-update-poll', '0 3 * * *', () => {

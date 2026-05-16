@@ -2,12 +2,14 @@ import { useState } from 'react';
 import AgreementList from './agreements/AgreementList';
 import SavingsGoalList from './savings/SavingsGoalList';
 import CommitmentsSummary from './summary/CommitmentsSummary';
+import RegularCommitmentList from './regular/RegularCommitmentList';
 
-type FinanceTab = 'agreements' | 'savings' | 'summary';
+type FinanceTab = 'agreements' | 'savings' | 'regular' | 'summary';
 
 const TABS: Array<{ id: FinanceTab; label: string }> = [
   { id: 'agreements', label: 'Agreements' },
   { id: 'savings', label: 'Savings Goals' },
+  { id: 'regular', label: 'Regular' },
   { id: 'summary', label: 'Summary' },
 ];
 
@@ -42,6 +44,7 @@ export default function FinancePage() {
       <div className="flex-1 overflow-y-auto">
         {tab === 'agreements' && <AgreementList />}
         {tab === 'savings' && <SavingsGoalList />}
+        {tab === 'regular' && <RegularCommitmentList />}
         {tab === 'summary' && <CommitmentsSummary />}
       </div>
     </main>

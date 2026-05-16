@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-08"
+last_updated: "2026-05-16"
 
 phases:
   phase_1_analysis:
@@ -122,11 +122,20 @@ phases:
           - STORY-9.2
           - STORY-9.3
           - STORY-9.4
+          - STORY-9.5
+          - STORY-9.6
+          - STORY-9.7
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-9.5–9.7 complete (2026-05-16): Finance module extended — end-date alerts
+  (finance reminders service, scheduler extension, admin run-reminder-eval endpoint),
+  regular commitments (migration 013, CRUD API + client UI with in/out direction,
+  day_of_month, category, net surplus/deficit display, included in summary),
+  debt paydown visualiser (amortisation schedule endpoint, SVG bar chart, toggle
+  on AgreementList cards). 19 new server tests (846 total). TypeScript + lint clean.
   STORY-9.1–9.4 complete (2026-05-16): Finance module — migration 012_finance.sql
   (finance_agreements/savings_goals), FinanceRepository (CRUD + monthly aggregation),
   finance routes (agreements CRUD + savings CRUD + GET /summary aggregating agreements

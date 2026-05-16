@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, Button, EmptyState, Pill } from '../../shared/ui';
 import { getAgreements, deleteAgreement } from '../api';
 import AgreementForm from './AgreementForm';
+import PaydownChart from './PaydownChart';
 import type { FinanceAgreement } from '../types';
 
 function formatMinor(minor: number, currency = 'GBP'): string {
@@ -38,6 +39,7 @@ export default function AgreementList() {
   const [showAll, setShowAll] = useState(false);
   const [editAgreement, setEditAgreement] = useState<FinanceAgreement | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [expandedPaydown, setExpandedPaydown] = useState<number | null>(null);
 
   const { data: agreements = [], isLoading } = useQuery({
     queryKey: ['finance-agreements', showAll],
@@ -132,6 +134,15 @@ export default function AgreementList() {
                       </div>
                     </div>
                     <div className="flex gap-2 shrink-0">
+                      {a.balance_minor && a.monthly_payment_minor > 0 && (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setExpandedPaydown(expandedPaydown === a.id ? null : a.id)}
+                        >
+                          {expandedPaydown === a.id ? 'Hide' : 'Paydown'}
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         variant="secondary"
@@ -151,6 +162,9 @@ export default function AgreementList() {
                       </Button>
                     </div>
                   </div>
+                  {expandedPaydown === a.id && (
+                    <PaydownChart agreementId={a.id} name={a.name} currency={a.currency} />
+                  )}
                 </Card>
               </li>
             ))}

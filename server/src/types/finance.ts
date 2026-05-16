@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+export const COMMITMENT_DIRECTIONS = ['in', 'out'] as const;
+export type CommitmentDirection = (typeof COMMITMENT_DIRECTIONS)[number];
+
 // ─── Finance Agreements ───────────────────────────────────────────────────────
 
 export const AGREEMENT_TYPES = ['mortgage', 'pcp', 'loan', 'bnpl', 'insurance'] as const;
@@ -87,4 +90,46 @@ export interface CommitmentItem {
 export interface FinanceSummary {
   categories: CommitmentCategory[];
   grand_total_minor: number;
+}
+
+// ─── Regular Commitments ─────────────────────────────────────────────────────
+
+export interface RegularCommitment {
+  id: number;
+  name: string;
+  amount_minor: number;
+  direction: CommitmentDirection;
+  day_of_month: number | null;
+  category: string | null;
+  currency: string;
+  notes: string | null;
+  active: boolean;
+  created_at: number;
+}
+
+export const RegularCommitmentInputSchema = z.object({
+  name: z.string().min(1).max(200),
+  amount_minor: z.number().int().min(1),
+  direction: z.enum(COMMITMENT_DIRECTIONS).default('out'),
+  day_of_month: z.number().int().min(1).max(31).nullable().optional(),
+  category: z.string().max(100).nullable().optional(),
+  currency: z.string().length(3).default('GBP'),
+  notes: z.string().max(2000).nullable().optional(),
+});
+export type RegularCommitmentInput = z.infer<typeof RegularCommitmentInputSchema>;
+
+export const RegularCommitmentUpdateSchema = RegularCommitmentInputSchema.partial().extend({
+  active: z.boolean().optional(),
+});
+export type RegularCommitmentUpdate = z.infer<typeof RegularCommitmentUpdateSchema>;
+
+// ─── Paydown Schedule ─────────────────────────────────────────────────────────
+
+export interface PaydownMonth {
+  label: string;
+  balance_minor: number;
+}
+
+export interface PaydownSchedule {
+  months: PaydownMonth[];
 }

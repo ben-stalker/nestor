@@ -1,4 +1,5 @@
 export type AgreementType = 'mortgage' | 'pcp' | 'loan' | 'bnpl' | 'insurance';
+export type CommitmentDirection = 'in' | 'out';
 
 export interface FinanceAgreement {
   id: number;
@@ -44,4 +45,26 @@ export interface CommitmentCategory {
 export interface FinanceSummary {
   categories: CommitmentCategory[];
   grand_total_minor: number;
+}
+
+export interface RegularCommitment {
+  id: number;
+  name: string;
+  amount_minor: number;
+  direction: CommitmentDirection;
+  day_of_month: number | null;
+  category: string | null;
+  currency: string;
+  notes: string | null;
+  active: boolean;
+  created_at: number;
+}
+
+export interface PaydownMonth {
+  label: string;
+  balance_minor: number;
+}
+
+export interface PaydownSchedule {
+  months: PaydownMonth[];
 }

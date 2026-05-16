@@ -7,6 +7,8 @@ import {
   FinanceAgreementUpdateSchema,
   SavingsGoalInputSchema,
   SavingsGoalUpdateSchema,
+  RegularCommitmentInputSchema,
+  RegularCommitmentUpdateSchema,
 } from '../types/finance';
 import type { CommitmentCategory, FinanceSummary } from '../types/finance';
 
@@ -180,6 +182,9 @@ export default function createFinanceRouter(
     try {
       const agreements = financeRepo.listAgreements(true);
       const subscriptions = subRepo.list(true);
+      const regulars = financeRepo
+        .listRegularCommitments(true)
+        .filter((r) => r.direction === 'out');
 
       // Group agreements by type using reduce
       const agreementMap = agreements.reduce((map, a) => {
@@ -225,15 +230,122 @@ export default function createFinanceRouter(
             }
           : null;
 
+      // Regular outgoing commitments as their own category
+      const regularItems = regulars.map((r): CommitmentCategory['items'][number] => ({
+        id: r.id,
+        name: r.name,
+        monthly_minor: r.amount_minor,
+        source: 'agreement' as const,
+      }));
+      const regularCategory: CommitmentCategory | null =
+        regularItems.length > 0
+          ? {
+              label: 'Regular Commitments',
+              monthly_total_minor: regularItems.reduce((sum, i) => sum + i.monthly_minor, 0),
+              items: regularItems,
+            }
+          : null;
+
       const categories: CommitmentCategory[] = [
         ...Array.from(agreementMap.values()),
         ...(subCategory ? [subCategory] : []),
+        ...(regularCategory ? [regularCategory] : []),
       ];
 
       const grandTotal = categories.reduce((sum, c) => sum + c.monthly_total_minor, 0);
 
       const summary: FinanceSummary = { categories, grand_total_minor: grandTotal };
       res.json(summary);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // ─── Regular Commitments ─────────────────────────────────────────────────────
+
+  router.get('/api/v1/finance/regular', (req, res, next) => {
+    try {
+      const activeOnly = req.query.active !== 'false';
+      res.json(financeRepo.listRegularCommitments(activeOnly));
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.get('/api/v1/finance/regular/:id', (req, res, next) => {
+    try {
+      const commitment = financeRepo.getRegularCommitment(Number(req.params.id));
+      if (!commitment) {
+        res.status(404).json({ error: 'Not found', code: 'NOT_FOUND' });
+        return;
+      }
+      res.json(commitment);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.post('/api/v1/finance/regular', requireAdminPin, (req, res, next) => {
+    try {
+      const parsed = RegularCommitmentInputSchema.safeParse(req.body);
+      if (!parsed.success) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        return;
+      }
+      res.status(201).json(financeRepo.createRegularCommitment(parsed.data));
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.patch('/api/v1/finance/regular/:id', requireAdminPin, (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const parsed = RegularCommitmentUpdateSchema.safeParse(req.body);
+      if (!parsed.success) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        return;
+      }
+      const updated = financeRepo.updateRegularCommitment(id, parsed.data);
+      if (!updated) {
+        res.status(404).json({ error: 'Not found', code: 'NOT_FOUND' });
+        return;
+      }
+      res.json(updated);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.delete('/api/v1/finance/regular/:id', requireAdminPin, (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const existing = financeRepo.getRegularCommitment(id);
+      if (!existing) {
+        res.status(404).json({ error: 'Not found', code: 'NOT_FOUND' });
+        return;
+      }
+      financeRepo.deleteRegularCommitment(id);
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // ─── Paydown Schedule ─────────────────────────────────────────────────────────
+
+  router.get('/api/v1/finance/agreements/:id/paydown', (req, res, next) => {
+    try {
+      const schedule = financeRepo.getPaydownSchedule(Number(req.params.id));
+      if (!schedule) {
+        res.status(404).json({ error: 'Not found', code: 'NOT_FOUND' });
+        return;
+      }
+      res.json(schedule);
     } catch (err) {
       next(err);
     }

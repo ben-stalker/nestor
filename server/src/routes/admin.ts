@@ -8,6 +8,7 @@ import ProfileRepository from '../repositories/ProfileRepository';
 import { getDb } from '../db/connection';
 import logger from '../utils/logger';
 import { listAdapters } from '../services/transport/adapterRegistry';
+import { Scheduler } from '../scheduler';
 
 const ActivateKioskSchema = z.object({ profileId: z.string().min(1) });
 const PinSchema = z.object({ pin: z.string().min(1) });
@@ -122,6 +123,17 @@ export default function createAdminRouter(
         isStub: a.isStub ?? false,
       })),
     );
+  });
+
+  // POST /api/v1/admin/run-reminder-eval — manually trigger the nightly reminder evaluator.
+  router.post('/run-reminder-eval', async (_req, res) => {
+    try {
+      await Scheduler.runNow('reminder-eval');
+      res.status(204).end();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      res.status(500).json({ error: message });
+    }
   });
 
   return router;
