@@ -21,6 +21,9 @@ import evaluateBinAlerts from '../services/binAlertService';
 import HealthLogRepository from '../repositories/HealthLogRepository';
 import evalFeedAlerts from '../services/babyAlertService';
 import { evalVaccinationAlerts } from '../services/VaccinationService';
+import PetRepository from '../repositories/PetRepository';
+import PetHealthLogRepository from '../repositories/PetHealthLogRepository';
+import evaluatePetAlerts from '../services/petAlertService';
 
 export type JobHandler = () => void | Promise<void>;
 
@@ -131,6 +134,7 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
     await evaluateFinanceReminders(new FinanceRepository(db), alertRepo);
     evalFeedAlerts(profileRepo, new HealthLogRepository(db), alertRepo);
     evalVaccinationAlerts(profileRepo, new HealthLogRepository(db), alertRepo);
+    evaluatePetAlerts(new PetRepository(db), new PetHealthLogRepository(db), alertRepo);
   });
 
   Scheduler.register('github-update-poll', '0 3 * * *', () => {

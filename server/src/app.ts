@@ -38,7 +38,10 @@ import createMeterReadingsRouter from './routes/meterReadings';
 import createBudgetRouter from './routes/budget';
 import createChecklistsRouter from './routes/checklists';
 import createFinanceRouter from './routes/finance';
+import createPetsRouter from './routes/pets';
 import FinanceRepository from './repositories/FinanceRepository';
+import PetRepository from './repositories/PetRepository';
+import PetHealthLogRepository from './repositories/PetHealthLogRepository';
 import ShoppingItemRepository from './repositories/ShoppingItemRepository';
 import VehicleRepository from './repositories/VehicleRepository';
 import VehicleBookingRepository from './repositories/VehicleBookingRepository';
@@ -99,6 +102,8 @@ export default function createApp(): Express {
   const budgetRepo = new BudgetRepository(db);
   const checklistRepo = new ChecklistRepository(db);
   const financeRepo = new FinanceRepository(db);
+  const petRepo = new PetRepository(db);
+  const petHealthRepo = new PetHealthLogRepository(db);
   const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
 
   const googleProvider = new GoogleCalDAVProvider(calendarAccountRepo);
@@ -154,6 +159,7 @@ export default function createApp(): Express {
   app.use(createBudgetRouter(budgetRepo, requireAdminPin));
   app.use(createChecklistsRouter(checklistRepo));
   app.use(createFinanceRouter(financeRepo, subRepo, requireAdminPin));
+  app.use(createPetsRouter(petRepo, petHealthRepo, requireAdminPin, profileRepo, eventRepo));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

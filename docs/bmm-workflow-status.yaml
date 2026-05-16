@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-16-epic7"
+last_updated: "2026-05-16-epic10"
 
 phases:
   phase_1_analysis:
@@ -131,11 +131,28 @@ phases:
           - STORY-7.10
           - STORY-7.11
           - STORY-7.12
+          - STORY-10.1
+          - STORY-10.2
+          - STORY-10.3
+          - STORY-10.4
+          - STORY-10.5
+          - STORY-10.6
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-10.1–10.6 complete (2026-05-16): Epic 10 — Pets Module. Migration 015_pets.sql
+  (pets + pet_health_logs tables, partial index idx_pet_health_next_due). PetRepository
+  (CRUD + soft delete) + PetHealthLogRepository (CRUD + upcomingCare query). Zod types
+  in server/src/types/pets.ts. petAlertService: pet_care alerts with deduplication via
+  alertKey. 11 REST endpoints (photo upload via multer+sharp→webp 800px, document upload
+  PDF/JPEG/PNG). Calendar event integration for vet_visit log type (linked_calendar_event_id).
+  Scheduler reminder-eval extended with evaluatePetAlerts. Client module: types, api,
+  3 hooks, PetsPage (two-column portrait/landscape), PetList, PetCard, PetDetail (3 tabs),
+  PetFormModal, HealthLogList, HealthLogEntry, HealthLogFormModal, WeightChart (SVG polyline),
+  DocumentList. Pets registered as filtersStore plugin. navModes.ts already had pets entry.
+  47 new tests (25 server / 22 client). Server 898 total, client 476 total. Lint + typecheck clean.
   STORY-7.7–7.12 complete (2026-05-16): Epic 7 finished — migration 014
   (profiles.dob/feed_alert_hours/conversion_rate), baby tracking (BabyView quick-log
   buttons + baby-summary endpoint + feed-overdue alert service), growth chart (WHO
