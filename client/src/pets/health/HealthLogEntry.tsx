@@ -30,7 +30,10 @@ function NextDueChip({ dateStr }: { dateStr: string }) {
   if (days < 0) cls = 'bg-red-100 text-red-700';
   else if (days <= 7) cls = 'bg-amber-100 text-amber-700';
   return (
-    <span className={`text-caption font-medium px-2 py-0.5 rounded-full ${cls}`} data-testid="next-due-chip">
+    <span
+      className={`text-caption font-medium px-2 py-0.5 rounded-full ${cls}`}
+      data-testid="next-due-chip"
+    >
       {nextDueLabel(dateStr)}
     </span>
   );

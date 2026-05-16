@@ -63,7 +63,12 @@ export default function DocumentList({ petId, logs }: DocumentListProps) {
       </div>
 
       {showUpload && (
-        <form onSubmit={(e) => { handleUpload(e).catch(() => {}); }} className="space-y-3 bg-surface-elev rounded-card p-3">
+        <form
+          onSubmit={(e) => {
+            handleUpload(e).catch(() => {});
+          }}
+          className="space-y-3 bg-surface-elev rounded-card p-3"
+        >
           <div>
             <label className="block text-caption text-secondary mb-1" htmlFor="doc-title">
               Title *

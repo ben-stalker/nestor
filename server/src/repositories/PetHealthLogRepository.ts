@@ -46,10 +46,7 @@ export default class PetHealthLogRepository extends BaseRepository {
   }
 
   get(id: number): PetHealthLog | undefined {
-    const row = this.queryOne<PetHealthLogRow>(
-      'SELECT * FROM pet_health_logs WHERE id = ?',
-      [id],
-    );
+    const row = this.queryOne<PetHealthLogRow>('SELECT * FROM pet_health_logs WHERE id = ?', [id]);
     return row ? fromRow(row) : undefined;
   }
 
@@ -116,10 +113,10 @@ export default class PetHealthLogRepository extends BaseRepository {
       return v === undefined ? null : v;
     });
 
-    this.run(
-      `UPDATE pet_health_logs SET ${setClauses}, updated_at = unixepoch() WHERE id = ?`,
-      [...values, id],
-    );
+    this.run(`UPDATE pet_health_logs SET ${setClauses}, updated_at = unixepoch() WHERE id = ?`, [
+      ...values,
+      id,
+    ]);
     return this.get(id)!;
   }
 

@@ -31,9 +31,7 @@ function fromRow(row: PetRow): Pet {
 
 export default class PetRepository extends BaseRepository {
   list(): Pet[] {
-    const rows = this.all<PetRow>(
-      'SELECT * FROM pets WHERE is_active = 1 ORDER BY name',
-    );
+    const rows = this.all<PetRow>('SELECT * FROM pets WHERE is_active = 1 ORDER BY name');
     return rows.map(fromRow);
   }
 
@@ -78,10 +76,10 @@ export default class PetRepository extends BaseRepository {
       const v = input[f];
       return v === undefined ? null : v;
     });
-    this.run(
-      `UPDATE pets SET ${setClauses}, updated_at = unixepoch() WHERE id = ?`,
-      [...values, id],
-    );
+    this.run(`UPDATE pets SET ${setClauses}, updated_at = unixepoch() WHERE id = ?`, [
+      ...values,
+      id,
+    ]);
     return this.get(id)!;
   }
 

@@ -72,10 +72,7 @@ describe('WeightChart', () => {
   });
 
   it('shows the most recent weight prominently', () => {
-    const logs = [
-      makeWeightLog(1, '2024-01-01', 10.0),
-      makeWeightLog(2, '2024-06-01', 12.5),
-    ];
+    const logs = [makeWeightLog(1, '2024-01-01', 10.0), makeWeightLog(2, '2024-06-01', 12.5)];
     render(<WeightChart logs={logs} />);
     expect(screen.getByText('12.5 kg')).toBeInTheDocument();
   });

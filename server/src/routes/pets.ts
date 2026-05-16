@@ -71,152 +71,127 @@ export default function createPetsRouter(
     },
   );
 
-  router.get(
-    '/api/v1/pets',
-    requireProfile,
-    requirePermission('view_pets'),
-    (_req, res, next) => {
-      try {
-        res.json(petRepo.list());
-      } catch (err) {
-        next(err);
-      }
-    },
-  );
+  router.get('/api/v1/pets', requireProfile, requirePermission('view_pets'), (_req, res, next) => {
+    try {
+      res.json(petRepo.list());
+    } catch (err) {
+      next(err);
+    }
+  });
 
-  router.post(
-    '/api/v1/pets',
-    requireProfile,
-    requireAdminPin,
-    (req, res, next) => {
-      try {
-        const parsed = PetInputSchema.safeParse(req.body);
-        if (!parsed.success) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
-          return;
-        }
-        const pet = petRepo.create(parsed.data);
-        res.status(201).json(pet);
-      } catch (err) {
-        next(err);
+  router.post('/api/v1/pets', requireProfile, requireAdminPin, (req, res, next) => {
+    try {
+      const parsed = PetInputSchema.safeParse(req.body);
+      if (!parsed.success) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        return;
       }
-    },
-  );
+      const pet = petRepo.create(parsed.data);
+      res.status(201).json(pet);
+    } catch (err) {
+      next(err);
+    }
+  });
 
-  router.patch(
-    '/api/v1/pets/:id',
-    requireProfile,
-    requireAdminPin,
-    (req, res, next) => {
-      try {
-        const id = Number(req.params.id);
-        if (!Number.isInteger(id) || id <= 0) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
-          return;
-        }
-        if (!petRepo.get(id)) {
-          res.status(404).json({ error: 'NOT_FOUND' });
-          return;
-        }
-        const parsed = PetInputSchema.partial().safeParse(req.body);
-        if (!parsed.success) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
-          return;
-        }
-        const updated = petRepo.update(id, parsed.data);
-        res.json(updated);
-      } catch (err) {
-        next(err);
+  router.patch('/api/v1/pets/:id', requireProfile, requireAdminPin, (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id <= 0) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        return;
       }
-    },
-  );
+      if (!petRepo.get(id)) {
+        res.status(404).json({ error: 'NOT_FOUND' });
+        return;
+      }
+      const parsed = PetInputSchema.partial().safeParse(req.body);
+      if (!parsed.success) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        return;
+      }
+      const updated = petRepo.update(id, parsed.data);
+      res.json(updated);
+    } catch (err) {
+      next(err);
+    }
+  });
 
-  router.delete(
-    '/api/v1/pets/:id',
-    requireProfile,
-    requireAdminPin,
-    (req, res, next) => {
-      try {
-        const id = Number(req.params.id);
-        if (!Number.isInteger(id) || id <= 0) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
-          return;
-        }
-        if (!petRepo.get(id)) {
-          res.status(404).json({ error: 'NOT_FOUND' });
-          return;
-        }
-        petRepo.delete(id);
-        res.status(204).end();
-      } catch (err) {
-        next(err);
+  router.delete('/api/v1/pets/:id', requireProfile, requireAdminPin, (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id <= 0) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        return;
       }
-    },
-  );
+      if (!petRepo.get(id)) {
+        res.status(404).json({ error: 'NOT_FOUND' });
+        return;
+      }
+      petRepo.delete(id);
+      res.status(204).end();
+    } catch (err) {
+      next(err);
+    }
+  });
 
   // ─── Pet Photo ───────────────────────────────────────────────────────────────
 
-  router.post(
-    '/api/v1/pets/:id/photo',
-    requireProfile,
-    requireAdminPin,
-    (req, res, next) => {
-      upload.single('photo')(req, res, (err: unknown) => {
-        if (err) {
-          if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-            res.status(400).json({
-              error: 'validation',
-              code: 'FILE_TOO_LARGE',
-              details: ['Photo must be ≤ 10 MB'],
-            });
-            return;
-          }
-          next(err);
+  router.post('/api/v1/pets/:id/photo', requireProfile, requireAdminPin, (req, res, next) => {
+    upload.single('photo')(req, res, (err: unknown) => {
+      if (err) {
+        if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+          res.status(400).json({
+            error: 'validation',
+            code: 'FILE_TOO_LARGE',
+            details: ['Photo must be ≤ 10 MB'],
+          });
           return;
         }
+        next(err);
+        return;
+      }
 
-        const id = Number(req.params.id);
-        if (!Number.isInteger(id) || id <= 0) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
-          return;
-        }
-        if (!petRepo.get(id)) {
-          res.status(404).json({ error: 'NOT_FOUND' });
-          return;
-        }
-        if (!req.file) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['photo file required'] });
-          return;
-        }
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id <= 0) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        return;
+      }
+      if (!petRepo.get(id)) {
+        res.status(404).json({ error: 'NOT_FOUND' });
+        return;
+      }
+      if (!req.file) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['photo file required'] });
+        return;
+      }
 
-        ensurePhotoDir();
-        const filename = `${crypto.randomUUID()}.webp`;
-        const filePath = path.join(PHOTO_UPLOAD_DIR, filename);
+      ensurePhotoDir();
+      const filename = `${crypto.randomUUID()}.webp`;
+      const filePath = path.join(PHOTO_UPLOAD_DIR, filename);
 
-        sharp(req.file.buffer)
-          .resize({ width: 800, withoutEnlargement: true })
-          .webp()
-          .toFile(filePath)
-          .then(() => {
-            const updated = petRepo.update(id, { photo_path: filePath });
-            res.json({ photo_path: updated?.photo_path ?? filePath });
-          })
-          .catch((fileErr: unknown) => next(fileErr));
-      });
-    },
-  );
+      sharp(req.file.buffer)
+        .resize({ width: 800, withoutEnlargement: true })
+        .webp()
+        .toFile(filePath)
+        .then(() => {
+          const updated = petRepo.update(id, { photo_path: filePath });
+          res.json({ photo_path: updated?.photo_path ?? filePath });
+        })
+        .catch((fileErr: unknown) => next(fileErr));
+    });
+  });
 
   router.get(
     '/api/v1/pets/:id/photo',
@@ -275,64 +250,59 @@ export default function createPetsRouter(
     },
   );
 
-  router.post(
-    '/api/v1/pets/:id/health-log',
-    requireProfile,
-    requireAdminPin,
-    (req, res, next) => {
-      try {
-        const id = Number(req.params.id);
-        if (!Number.isInteger(id) || id <= 0) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
-          return;
-        }
-        const pet = petRepo.get(id);
-        if (!pet) {
-          res.status(404).json({ error: 'NOT_FOUND' });
-          return;
-        }
-        const parsed = PetHealthLogInputSchema.safeParse(req.body);
-        if (!parsed.success) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
-          return;
-        }
-
-        let linkedCalendarEventId: number | null = null;
-
-        if (parsed.data.log_type === 'vet_visit' && parsed.data.vet_appointment_date && eventRepo) {
-          try {
-            const startMs = new Date(`${parsed.data.vet_appointment_date}T10:00:00`).getTime();
-            const endMs = startMs + 60 * 60 * 1000;
-            const event = eventRepo.create({
-              title: `Vet: ${pet.name} — ${parsed.data.title}`,
-              start_datetime: startMs,
-              end_datetime: endMs,
-              all_day: false,
-              type: 'vet',
-              colour_override: '#f97316',
-              source: 'local',
-            });
-            linkedCalendarEventId = event.id;
-          } catch {
-            // Non-fatal: calendar event creation failed, continue without it
-          }
-        }
-
-        const entry = petHealthRepo.create({
-          pet_id: id,
-          ...parsed.data,
-          linked_calendar_event_id: linkedCalendarEventId,
-        });
-        res.status(201).json(entry);
-      } catch (err) {
-        next(err);
+  router.post('/api/v1/pets/:id/health-log', requireProfile, requireAdminPin, (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id <= 0) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        return;
       }
-    },
-  );
+      const pet = petRepo.get(id);
+      if (!pet) {
+        res.status(404).json({ error: 'NOT_FOUND' });
+        return;
+      }
+      const parsed = PetHealthLogInputSchema.safeParse(req.body);
+      if (!parsed.success) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        return;
+      }
+
+      let linkedCalendarEventId: number | null = null;
+
+      if (parsed.data.log_type === 'vet_visit' && parsed.data.vet_appointment_date && eventRepo) {
+        try {
+          const startMs = new Date(`${parsed.data.vet_appointment_date}T10:00:00`).getTime();
+          const endMs = startMs + 60 * 60 * 1000;
+          const event = eventRepo.create({
+            title: `Vet: ${pet.name} — ${parsed.data.title}`,
+            start_datetime: startMs,
+            end_datetime: endMs,
+            all_day: false,
+            type: 'vet',
+            colour_override: '#f97316',
+            source: 'local',
+          });
+          linkedCalendarEventId = event.id;
+        } catch {
+          // Non-fatal: calendar event creation failed, continue without it
+        }
+      }
+
+      const entry = petHealthRepo.create({
+        pet_id: id,
+        ...parsed.data,
+        linked_calendar_event_id: linkedCalendarEventId,
+      });
+      res.status(201).json(entry);
+    } catch (err) {
+      next(err);
+    }
+  });
 
   router.patch(
     '/api/v1/pets/:id/health-log/:logId',
@@ -342,12 +312,7 @@ export default function createPetsRouter(
       try {
         const id = Number(req.params.id);
         const logId = Number(req.params.logId);
-        if (
-          !Number.isInteger(id) ||
-          id <= 0 ||
-          !Number.isInteger(logId) ||
-          logId <= 0
-        ) {
+        if (!Number.isInteger(id) || id <= 0 || !Number.isInteger(logId) || logId <= 0) {
           res
             .status(400)
             .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
@@ -385,12 +350,7 @@ export default function createPetsRouter(
       try {
         const id = Number(req.params.id);
         const logId = Number(req.params.logId);
-        if (
-          !Number.isInteger(id) ||
-          id <= 0 ||
-          !Number.isInteger(logId) ||
-          logId <= 0
-        ) {
+        if (!Number.isInteger(id) || id <= 0 || !Number.isInteger(logId) || logId <= 0) {
           res
             .status(400)
             .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
@@ -444,12 +404,7 @@ export default function createPetsRouter(
 
         const id = Number(req.params.id);
         const logId = Number(req.params.logId);
-        if (
-          !Number.isInteger(id) ||
-          id <= 0 ||
-          !Number.isInteger(logId) ||
-          logId <= 0
-        ) {
+        if (!Number.isInteger(id) || id <= 0 || !Number.isInteger(logId) || logId <= 0) {
           res
             .status(400)
             .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
@@ -465,13 +420,11 @@ export default function createPetsRouter(
           return;
         }
         if (!req.file) {
-          res
-            .status(400)
-            .json({
-              error: 'validation',
-              code: 'INVALID_INPUT',
-              details: ['document file required'],
-            });
+          res.status(400).json({
+            error: 'validation',
+            code: 'INVALID_INPUT',
+            details: ['document file required'],
+          });
           return;
         }
 
@@ -502,12 +455,7 @@ export default function createPetsRouter(
       try {
         const id = Number(req.params.id);
         const logId = Number(req.params.logId);
-        if (
-          !Number.isInteger(id) ||
-          id <= 0 ||
-          !Number.isInteger(logId) ||
-          logId <= 0
-        ) {
+        if (!Number.isInteger(id) || id <= 0 || !Number.isInteger(logId) || logId <= 0) {
           res
             .status(400)
             .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });

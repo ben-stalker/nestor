@@ -261,7 +261,13 @@ describe('POST /api/v1/pets/:id/health-log', () => {
     const repos = makeRepos(db);
     const admin = addAdminProfile(repos.profileRepo);
     const pet = repos.petRepo.create({ name: 'Buddy', species: 'dog' });
-    const app = makeApp(repos.petRepo, repos.petHealthRepo, repos.profileRepo, noOpAdminPin, repos.eventRepo);
+    const app = makeApp(
+      repos.petRepo,
+      repos.petHealthRepo,
+      repos.profileRepo,
+      noOpAdminPin,
+      repos.eventRepo,
+    );
     const res = await request(app)
       .post(`/api/v1/pets/${pet.id}/health-log`)
       .set('X-Profile-Id', String(admin.id))

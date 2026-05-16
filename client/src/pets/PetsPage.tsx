@@ -62,9 +62,7 @@ export default function PetsPage() {
       {/* Left column: pet list (landscape sidebar / portrait full width) */}
       <div
         className={`${
-          selectedPet
-            ? 'hidden landscape:flex landscape:w-72 landscape:shrink-0'
-            : 'flex flex-1'
+          selectedPet ? 'hidden landscape:flex landscape:w-72 landscape:shrink-0' : 'flex flex-1'
         } flex-col border-r border-surface-elev`}
       >
         <PetList
@@ -88,10 +86,7 @@ export default function PetsPage() {
               ← Back to list
             </button>
           </div>
-          <PetDetail
-            pet={selectedPet}
-            onDeleted={() => setSelectedPet(null)}
-          />
+          <PetDetail pet={selectedPet} onDeleted={() => setSelectedPet(null)} />
         </div>
       ) : (
         <div className="hidden landscape:flex flex-1 items-center justify-center text-secondary text-body">

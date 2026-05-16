@@ -39,12 +39,7 @@ describe('HealthLogEntry', () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowStr = tomorrow.toISOString().split('T')[0];
-    render(
-      <HealthLogEntry
-        log={makeLog({ next_due_date: tomorrowStr })}
-        petId={1}
-      />,
-    );
+    render(<HealthLogEntry log={makeLog({ next_due_date: tomorrowStr })} petId={1} />);
     expect(screen.getByTestId('next-due-chip')).toBeInTheDocument();
     expect(screen.getByText('Due tomorrow')).toBeInTheDocument();
   });
@@ -65,12 +60,7 @@ describe('HealthLogEntry', () => {
   });
 
   it('renders weight for weight log_type', () => {
-    render(
-      <HealthLogEntry
-        log={makeLog({ log_type: 'weight', weight_kg: 10.5 })}
-        petId={1}
-      />,
-    );
+    render(<HealthLogEntry log={makeLog({ log_type: 'weight', weight_kg: 10.5 })} petId={1} />);
     expect(screen.getByText('10.50 kg')).toBeInTheDocument();
   });
 });

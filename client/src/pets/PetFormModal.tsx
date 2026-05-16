@@ -71,12 +71,12 @@ export default function PetFormModal({ open, pet, onClose, onSave, isSaving }: P
               type="file"
               accept="image/*"
               ref={fileRef}
-              onChange={(e) => { handlePhotoChange(e).catch(() => {}); }}
+              onChange={(e) => {
+                handlePhotoChange(e).catch(() => {});
+              }}
               className="text-body text-primary"
             />
-            {photoUploading && (
-              <p className="text-caption text-secondary mt-1">Uploading…</p>
-            )}
+            {photoUploading && <p className="text-caption text-secondary mt-1">Uploading…</p>}
           </div>
         )}
 

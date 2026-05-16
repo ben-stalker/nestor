@@ -122,11 +122,7 @@ export default function PetDetail({ pet, onDeleted }: PetDetailProps) {
           <Button variant="ghost" size="sm" onClick={() => setShowEditPet(true)}>
             <Edit2 size={14} />
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={() => setConfirmDelete(true)}
-          >
+          <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
             <Trash2 size={14} />
           </Button>
         </div>
@@ -195,7 +191,10 @@ export default function PetDetail({ pet, onDeleted }: PetDetailProps) {
                 {pet.vet_phone && (
                   <div className="flex items-start gap-2">
                     <Phone size={14} className="text-secondary mt-0.5 shrink-0" />
-                    <a href={`tel:${pet.vet_phone}`} className="text-body text-accent hover:underline">
+                    <a
+                      href={`tel:${pet.vet_phone}`}
+                      className="text-body text-accent hover:underline"
+                    >
                       {pet.vet_phone}
                     </a>
                   </div>
@@ -278,9 +277,7 @@ export default function PetDetail({ pet, onDeleted }: PetDetailProps) {
           </div>
         )}
 
-        {tab === 'documents' && (
-          <DocumentList petId={pet.id} logs={logs} />
-        )}
+        {tab === 'documents' && <DocumentList petId={pet.id} logs={logs} />}
       </div>
 
       {/* Add health log modal */}

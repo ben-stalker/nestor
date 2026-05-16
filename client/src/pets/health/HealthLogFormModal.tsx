@@ -41,7 +41,8 @@ export default function HealthLogFormModal({
       next_due_date: nextDueDate || null,
       reminder_days_before: reminderDays ? Number(reminderDays) : null,
       weight_kg: logType === 'weight' && weightKg ? Number(weightKg) : null,
-      vet_appointment_date: logType === 'vet_visit' && vetAppointmentDate ? vetAppointmentDate : null,
+      vet_appointment_date:
+        logType === 'vet_visit' && vetAppointmentDate ? vetAppointmentDate : null,
     });
   };
 
