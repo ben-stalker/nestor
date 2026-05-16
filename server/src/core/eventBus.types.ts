@@ -19,4 +19,5 @@ export interface EventMap {
   'voice:status': { status: 'idle' | 'listening' | 'processing' | 'speaking' };
   'settings:updated': { keys: string[] };
   'shopping:updated': Record<string, never>;
+  'board:message_new': { id: number };
 }
