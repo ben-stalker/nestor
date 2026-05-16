@@ -31,6 +31,12 @@ import createChoresRouter from './routes/chores';
 import createRewardsRouter from './routes/rewards';
 import createFamilyRouter from './routes/family';
 import createHealthLogRouter from './routes/healthLog';
+import createBinsRouter from './routes/bins';
+import createSubscriptionsRouter from './routes/subscriptions';
+import createMaintenanceRouter from './routes/maintenance';
+import createMeterReadingsRouter from './routes/meterReadings';
+import createBudgetRouter from './routes/budget';
+import createChecklistsRouter from './routes/checklists';
 import ShoppingItemRepository from './repositories/ShoppingItemRepository';
 import VehicleRepository from './repositories/VehicleRepository';
 import VehicleBookingRepository from './repositories/VehicleBookingRepository';
@@ -43,6 +49,12 @@ import ChoreRepository from './repositories/ChoreRepository';
 import ChoreCompletionRepository from './repositories/ChoreCompletionRepository';
 import RewardRedemptionRepository from './repositories/RewardRedemptionRepository';
 import HealthLogRepository from './repositories/HealthLogRepository';
+import BinScheduleRepository from './repositories/BinScheduleRepository';
+import SubscriptionRepository from './repositories/SubscriptionRepository';
+import HomeMaintenanceRepository from './repositories/HomeMaintenanceRepository';
+import MeterReadingRepository from './repositories/MeterReadingRepository';
+import BudgetRepository from './repositories/BudgetRepository';
+import ChecklistRepository from './repositories/ChecklistRepository';
 import CalendarService from './services/CalendarService';
 import { GoogleCalDAVProvider } from './services/calendar/GoogleCalDAVProvider';
 import {
@@ -78,6 +90,12 @@ export default function createApp(): Express {
   const completionRepo = new ChoreCompletionRepository(db);
   const redemptionRepo = new RewardRedemptionRepository(db);
   const healthRepo = new HealthLogRepository(db);
+  const binRepo = new BinScheduleRepository(db);
+  const subRepo = new SubscriptionRepository(db);
+  const maintenanceRepo = new HomeMaintenanceRepository(db);
+  const meterRepo = new MeterReadingRepository(db);
+  const budgetRepo = new BudgetRepository(db);
+  const checklistRepo = new ChecklistRepository(db);
   const calendarService = new CalendarService(calendarAccountRepo, eventRepo);
 
   const googleProvider = new GoogleCalDAVProvider(calendarAccountRepo);
@@ -126,6 +144,12 @@ export default function createApp(): Express {
   );
   app.use(createFamilyRouter(profileRepo, choreRepo, completionRepo, redemptionRepo, eventRepo));
   app.use(createHealthLogRouter(healthRepo, profileRepo));
+  app.use(createBinsRouter(binRepo, requireAdminPin));
+  app.use(createSubscriptionsRouter(subRepo, requireAdminPin));
+  app.use(createMaintenanceRouter(maintenanceRepo, requireAdminPin));
+  app.use(createMeterReadingsRouter(meterRepo, requireAdminPin));
+  app.use(createBudgetRouter(budgetRepo, requireAdminPin));
+  app.use(createChecklistsRouter(checklistRepo));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

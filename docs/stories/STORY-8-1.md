@@ -4,7 +4,7 @@
 **Sprint:** 5 — Calendar Polish + House Foundation + Vehicles
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 

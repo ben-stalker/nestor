@@ -13,6 +13,9 @@ import { TermDatesService } from '../services/TermDatesService';
 import VehicleRepository from '../repositories/VehicleRepository';
 import evaluateReminders from '../services/vehicles/reminders';
 import { getDb } from '../db/connection';
+import BinScheduleRepository from '../repositories/BinScheduleRepository';
+import ChecklistRepository from '../repositories/ChecklistRepository';
+import evaluateBinAlerts from '../services/binAlertService';
 
 export type JobHandler = () => void | Promise<void>;
 
@@ -139,5 +142,15 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
       new AlertRepository(db),
     );
     await termDatesService.syncAll();
+  });
+
+  Scheduler.register('bin-alert-eval', '0 7,18 * * *', () => {
+    const db = getDb();
+    evaluateBinAlerts(new BinScheduleRepository(db), new AlertRepository(db));
+  });
+
+  Scheduler.register('checklist-reset', '0 3 * * *', () => {
+    const db = getDb();
+    new ChecklistRepository(db).resetDailyChecklists();
   });
 }
