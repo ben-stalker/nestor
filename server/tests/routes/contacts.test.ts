@@ -204,9 +204,7 @@ describe('PATCH /api/v1/contacts/:id', () => {
     const db = makeDb();
     const { app, contactRepo } = makeApp(db);
     const c = contactRepo.create({ name: 'Old Name', category: 'family' });
-    const res = await request(app)
-      .patch(`/api/v1/contacts/${c.id}`)
-      .send({ name: 'New Name' });
+    const res = await request(app).patch(`/api/v1/contacts/${c.id}`).send({ name: 'New Name' });
     expect(res.status).toBe(200);
     expect((res.body as { name: string }).name).toBe('New Name');
     db.close();

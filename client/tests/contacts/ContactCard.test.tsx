@@ -21,12 +21,7 @@ const ContactCard = (await import('../../src/contacts/ContactCard')).default;
 describe('ContactCard', () => {
   it('renders contact name and role', () => {
     render(
-      <ContactCard
-        contact={mockContact}
-        isAdmin={false}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-      />,
+      <ContactCard contact={mockContact} isAdmin={false} onEdit={vi.fn()} onDelete={vi.fn()} />,
     );
     expect(screen.getByText('Dr. Smith')).toBeInTheDocument();
     expect(screen.getByText('GP')).toBeInTheDocument();
@@ -34,12 +29,7 @@ describe('ContactCard', () => {
 
   it('renders tel: link for phone number', () => {
     render(
-      <ContactCard
-        contact={mockContact}
-        isAdmin={false}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-      />,
+      <ContactCard contact={mockContact} isAdmin={false} onEdit={vi.fn()} onDelete={vi.fn()} />,
     );
     const link = screen.getByRole('link', { name: /call/i });
     expect(link).toHaveAttribute('href', 'tel:01234567890');
@@ -47,12 +37,7 @@ describe('ContactCard', () => {
 
   it('renders mailto: link for email', () => {
     render(
-      <ContactCard
-        contact={mockContact}
-        isAdmin={false}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-      />,
+      <ContactCard contact={mockContact} isAdmin={false} onEdit={vi.fn()} onDelete={vi.fn()} />,
     );
     const link = screen.getByRole('link', { name: /email/i });
     expect(link).toHaveAttribute('href', 'mailto:smith@nhs.uk');
@@ -60,12 +45,7 @@ describe('ContactCard', () => {
 
   it('shows edit/delete buttons for admin', () => {
     render(
-      <ContactCard
-        contact={mockContact}
-        isAdmin={true}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-      />,
+      <ContactCard contact={mockContact} isAdmin={true} onEdit={vi.fn()} onDelete={vi.fn()} />,
     );
     expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();
@@ -73,12 +53,7 @@ describe('ContactCard', () => {
 
   it('hides edit/delete buttons for non-admin', () => {
     render(
-      <ContactCard
-        contact={mockContact}
-        isAdmin={false}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-      />,
+      <ContactCard contact={mockContact} isAdmin={false} onEdit={vi.fn()} onDelete={vi.fn()} />,
     );
     expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument();
@@ -98,12 +73,7 @@ describe('ContactCard', () => {
 
   it('renders address', () => {
     render(
-      <ContactCard
-        contact={mockContact}
-        isAdmin={false}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-      />,
+      <ContactCard contact={mockContact} isAdmin={false} onEdit={vi.fn()} onDelete={vi.fn()} />,
     );
     expect(screen.getByText('1 High St')).toBeInTheDocument();
   });
