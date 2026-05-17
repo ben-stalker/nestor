@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-17-epic13"
+last_updated: "2026-05-17-epic14"
 
 phases:
   phase_1_analysis:
@@ -152,27 +152,11 @@ phases:
           - STORY-13.3
           - STORY-13.4
           - STORY-13.5
+          - STORY-14.1
+          - STORY-14.2
+          - STORY-14.3
 
-backlog:
-  - id: EPIC-14
-    title: Octopus Energy integration
-    description: >
-      Pull live and historical electricity (and optionally gas) usage from the
-      Octopus Energy API using the customer's personal API key.  Display
-      consumption data alongside the existing meter-reading and fuel-rate panels
-      in the EV / Energy module.
-    stories:
-      - STORY-14.1: Octopus API credentials — settings screen for API key + account
-          number; server-side validation via GET /v1/accounts/{accountNumber}.
-      - STORY-14.2: Consumption sync job — scheduled hourly job polls
-          /v1/electricity-meter-points/{mpan}/meters/{serial}/consumption
-          (and gas equivalent) and stores half-hourly kWh into a new
-          octopus_consumption table (migration 020).
-      - STORY-14.3: Usage dashboard — chart showing daily/weekly consumption from
-          Octopus data; cost overlay using live standing charge + unit rate fetched
-          from /v1/products/{tariff} endpoint; comparison with manual meter readings.
-    added: "2026-05-17"
-    priority: medium
+backlog: []
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
