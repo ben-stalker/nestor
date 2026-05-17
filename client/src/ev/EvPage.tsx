@@ -1,19 +1,21 @@
 import { useState } from 'react';
-import { Zap, BarChart2, Settings, Bell } from 'lucide-react';
+import { Zap, BarChart2, Settings, Bell, Plug } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getVehicles } from '../vehicles/api';
 import ChargingLogList from './ChargingLogList';
 import EnergyOverview from './EnergyOverview';
 import FuelRatesPanel from './FuelRatesPanel';
 import PlugInReminderPanel from './PlugInReminderPanel';
+import OctopusSettings from './OctopusSettings';
 
-type Tab = 'charging' | 'overview' | 'rates' | 'reminders';
+type Tab = 'charging' | 'overview' | 'rates' | 'reminders' | 'octopus';
 
 const TABS: Array<{ id: Tab; label: string; icon: React.ReactNode }> = [
   { id: 'charging', label: 'Charging', icon: <Zap size={16} /> },
   { id: 'overview', label: 'Energy', icon: <BarChart2 size={16} /> },
   { id: 'rates', label: 'Rates', icon: <Settings size={16} /> },
   { id: 'reminders', label: 'Reminders', icon: <Bell size={16} /> },
+  { id: 'octopus', label: 'Octopus', icon: <Plug size={16} /> },
 ];
 
 export default function EvPage() {
@@ -64,6 +66,7 @@ export default function EvPage() {
         {activeTab === 'overview' && <EnergyOverview />}
         {activeTab === 'rates' && <FuelRatesPanel />}
         {activeTab === 'reminders' && <PlugInReminderPanel vehicles={vehicles} />}
+        {activeTab === 'octopus' && <OctopusSettings />}
       </div>
     </main>
   );

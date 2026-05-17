@@ -1,3 +1,4 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiFetch from '../api/client';
 import type {
   EvChargingLog,
@@ -6,6 +7,8 @@ import type {
   FuelRates,
   EvChargingLogInput,
   EvChargingLogUpdate,
+  OctopusStatus,
+  OctopusCredentialResult,
 } from './types';
 
 export async function listChargingLogs(vehicleId?: number): Promise<EvChargingLog[]> {
@@ -59,5 +62,56 @@ export async function updateFuelRates(
     method: 'PUT',
     headers: adminPin ? { 'X-Admin-Pin': adminPin } : {},
     body: JSON.stringify({ ...rates, effective_date }),
+  });
+}
+
+// Octopus Energy API calls
+
+export async function getOctopusStatus(): Promise<OctopusStatus> {
+  return apiFetch<OctopusStatus>('/api/v1/octopus/status');
+}
+
+export async function saveOctopusCredentials(
+  apiKey: string,
+  accountNumber: string,
+): Promise<OctopusCredentialResult> {
+  return apiFetch<OctopusCredentialResult>('/api/v1/octopus/credentials', {
+    method: 'POST',
+    body: JSON.stringify({ apiKey, accountNumber }),
+  });
+}
+
+export async function deleteOctopusCredentials(): Promise<void> {
+  await apiFetch<void>('/api/v1/octopus/credentials', { method: 'DELETE' });
+}
+
+// TanStack Query hooks for Octopus
+
+export function useOctopusStatus() {
+  return useQuery({
+    queryKey: ['octopus-status'],
+    queryFn: getOctopusStatus,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useSaveOctopusCredentials() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ apiKey, accountNumber }: { apiKey: string; accountNumber: string }) =>
+      saveOctopusCredentials(apiKey, accountNumber),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['octopus-status'] });
+    },
+  });
+}
+
+export function useDeleteOctopusCredentials() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: deleteOctopusCredentials,
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['octopus-status'] });
+    },
   });
 }

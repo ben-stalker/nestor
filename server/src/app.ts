@@ -42,6 +42,7 @@ import createPetsRouter from './routes/pets';
 import createBoardRouter from './routes/board';
 import createContactsRouter from './routes/contacts';
 import createEvRouter from './routes/ev';
+import createOctopusRouter from './routes/octopus';
 import ContactRepository from './repositories/ContactRepository';
 import EvChargingRepository from './repositories/EvChargingRepository';
 import BoardMessageRepository from './repositories/BoardMessageRepository';
@@ -69,6 +70,7 @@ import MeterReadingRepository from './repositories/MeterReadingRepository';
 import BudgetRepository from './repositories/BudgetRepository';
 import ChecklistRepository from './repositories/ChecklistRepository';
 import CalendarService from './services/CalendarService';
+import { CryptoService } from './utils/crypto';
 import { GoogleCalDAVProvider } from './services/calendar/GoogleCalDAVProvider';
 import {
   BasicAuthCalDAVProvider,
@@ -130,6 +132,7 @@ export default function createApp(): Express {
 
   const requireAdminPin = createRequireAdminPin(profileRepo);
   const kioskLock = createKioskLockMiddleware(settingsRepo);
+  const cryptoService = new CryptoService(settingsRepo);
 
   app.use(healthRouter);
   app.use(clientErrorsRouter);
@@ -194,6 +197,7 @@ export default function createApp(): Express {
       profileRepo,
     ),
   );
+  app.use(createOctopusRouter(settingsRepo, cryptoService, requireAdminPin));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

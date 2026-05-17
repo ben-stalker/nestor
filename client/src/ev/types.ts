@@ -51,3 +51,22 @@ export interface EvChargingLogUpdate {
   location?: string | null;
   notes?: string | null;
 }
+
+export interface OctopusStatus {
+  configured: boolean;
+  accountNumber: string | null;
+  mpan: string | null;
+  meterSerial: string | null;
+  gasMprn: string | null;
+  gasMeterSerial: string | null;
+  tariffCode: string | null;
+}
+
+export interface OctopusCredentialResult {
+  ok: boolean;
+  mpan: string | null;
+  meterSerial: string | null;
+  gasMprn: string | null;
+  gasMeterSerial: string | null;
+  tariffCode: string | null;
+}

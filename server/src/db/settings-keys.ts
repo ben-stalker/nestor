@@ -81,6 +81,14 @@ export const FuelRateHistorySchema = z.array(
   }),
 );
 
+export const OctopusApiKeySchema = z.string().min(1);
+export const OctopusAccountNumberSchema = z.string().min(1);
+export const OctopusMpanSchema = z.string().min(1);
+export const OctopusMeterSerialSchema = z.string().min(1);
+export const OctopusGasMprnSchema = z.string().min(1);
+export const OctopusGasMeterSerialSchema = z.string().min(1);
+export const OctopusTariffCodeSchema = z.string().min(1);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -115,6 +123,13 @@ export const SETTING_SCHEMAS = {
   url_import_warned: UrlImportWarnedSchema,
   freelancer_features: FreelancerFeaturesSchema,
   fuel_rate_history: FuelRateHistorySchema,
+  octopus_api_key: OctopusApiKeySchema,
+  octopus_account_number: OctopusAccountNumberSchema,
+  octopus_mpan: OctopusMpanSchema,
+  octopus_meter_serial: OctopusMeterSerialSchema,
+  octopus_gas_mprn: OctopusGasMprnSchema,
+  octopus_gas_meter_serial: OctopusGasMeterSerialSchema,
+  octopus_tariff_code: OctopusTariffCodeSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;
