@@ -55,7 +55,7 @@ describe('EnergyOverview', () => {
       </QueryClientProvider>,
     );
     await screen.findByText('EV Charging');
-    await screen.findByText('£11.27');
+    await screen.findByText('45.2 kWh');
   });
 
   it('renders monthly history section', async () => {
