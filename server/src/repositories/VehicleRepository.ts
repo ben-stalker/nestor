@@ -19,6 +19,9 @@ interface VehicleRow {
   current_mileage: number | null;
   active: number;
   reminder_overrides_json: string | null;
+  plug_in_reminder_time: string | null;
+  plug_in_reminder_days: string | null;
+  plug_in_snoozed_until: number | null;
 }
 
 function fromRow(row: VehicleRow): Vehicle {
@@ -28,6 +31,9 @@ function fromRow(row: VehicleRow): Vehicle {
     active: row.active === 1,
     reminder_overrides_json: row.reminder_overrides_json
       ? (JSON.parse(row.reminder_overrides_json) as Record<string, number[]>)
+      : null,
+    plug_in_reminder_days: row.plug_in_reminder_days
+      ? (JSON.parse(row.plug_in_reminder_days) as number[])
       : null,
   };
 }
@@ -78,7 +84,7 @@ export default class VehicleRepository extends BaseRepository {
     const values = fields.map((f) => {
       const v = patch[f];
       if (f === 'active') return v ? 1 : 0;
-      if (f === 'reminder_overrides_json')
+      if (f === 'reminder_overrides_json' || f === 'plug_in_reminder_days')
         return v !== null && v !== undefined ? JSON.stringify(v) : null;
       return v ?? null;
     });

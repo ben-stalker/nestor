@@ -73,6 +73,14 @@ export const UrlImportWarnedSchema = z.boolean();
 
 export const FreelancerFeaturesSchema = z.boolean();
 
+export const FuelRateHistorySchema = z.array(
+  z.object({
+    fuel: z.string(),
+    rate: z.number().nonnegative(),
+    effective_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  }),
+);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -106,6 +114,7 @@ export const SETTING_SCHEMAS = {
   custody_label: CustodyLabelSchema,
   url_import_warned: UrlImportWarnedSchema,
   freelancer_features: FreelancerFeaturesSchema,
+  fuel_rate_history: FuelRateHistorySchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;
