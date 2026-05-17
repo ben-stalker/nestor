@@ -7,6 +7,7 @@ import EnergyOverview from './EnergyOverview';
 import FuelRatesPanel from './FuelRatesPanel';
 import PlugInReminderPanel from './PlugInReminderPanel';
 import OctopusSettings from './OctopusSettings';
+import OctopusTab from './OctopusTab';
 
 type Tab = 'charging' | 'overview' | 'rates' | 'reminders' | 'octopus';
 
@@ -66,7 +67,14 @@ export default function EvPage() {
         {activeTab === 'overview' && <EnergyOverview />}
         {activeTab === 'rates' && <FuelRatesPanel />}
         {activeTab === 'reminders' && <PlugInReminderPanel vehicles={vehicles} />}
-        {activeTab === 'octopus' && <OctopusSettings />}
+        {activeTab === 'octopus' && (
+          <div>
+            <OctopusTab />
+            <div className="mt-4 border-t pt-4">
+              <OctopusSettings />
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );

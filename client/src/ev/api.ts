@@ -9,6 +9,8 @@ import type {
   EvChargingLogUpdate,
   OctopusStatus,
   OctopusCredentialResult,
+  OctopusConsumptionResponse,
+  OctopusTariff,
 } from './types';
 
 export async function listChargingLogs(vehicleId?: number): Promise<EvChargingLog[]> {
@@ -113,5 +115,37 @@ export function useDeleteOctopusCredentials() {
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['octopus-status'] });
     },
+  });
+}
+
+export async function getOctopusConsumption(
+  fuelType: 'electricity' | 'gas' = 'electricity',
+  days: 7 | 14 | 30 = 14,
+): Promise<OctopusConsumptionResponse> {
+  return apiFetch<OctopusConsumptionResponse>(
+    `/api/v1/octopus/consumption?fuelType=${fuelType}&days=${days}`,
+  );
+}
+
+export function useOctopusConsumption(
+  fuelType: 'electricity' | 'gas' = 'electricity',
+  days: 7 | 14 | 30 = 14,
+) {
+  return useQuery({
+    queryKey: ['octopus-consumption', fuelType, days],
+    queryFn: () => getOctopusConsumption(fuelType, days),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export async function getOctopusTariff(): Promise<OctopusTariff> {
+  return apiFetch<OctopusTariff>('/api/v1/octopus/tariff');
+}
+
+export function useOctopusTariff() {
+  return useQuery({
+    queryKey: ['octopus-tariff'],
+    queryFn: getOctopusTariff,
+    staleTime: 60 * 60 * 1000,
   });
 }

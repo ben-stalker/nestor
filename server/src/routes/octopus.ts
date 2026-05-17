@@ -2,12 +2,21 @@ import { z } from 'zod';
 import { Router } from 'express';
 import type { RequestHandler } from 'express';
 import type AppSettingsRepository from '../repositories/AppSettingsRepository';
+import type OctopusConsumptionRepository from '../repositories/OctopusConsumptionRepository';
 import type { CryptoService } from '../utils/crypto';
 import { validateAccount } from '../services/OctopusClient';
 
 const CredentialsBodySchema = z.object({
   apiKey: z.string().min(1, 'API key is required'),
   accountNumber: z.string().min(1, 'Account number is required'),
+});
+
+const ConsumptionQuerySchema = z.object({
+  fuelType: z.enum(['electricity', 'gas']).default('electricity'),
+  days: z
+    .enum(['7', '14', '30'])
+    .default('14')
+    .transform((v) => parseInt(v, 10)),
 });
 
 const OCTOPUS_KEYS = [
@@ -24,6 +33,7 @@ export default function createOctopusRouter(
   settingsRepo: AppSettingsRepository,
   cryptoService: CryptoService,
   requireAdminPin: RequestHandler,
+  consumptionRepo?: OctopusConsumptionRepository,
 ): Router {
   const router = Router();
 
@@ -109,6 +119,67 @@ export default function createOctopusRouter(
     try {
       OCTOPUS_KEYS.forEach((key) => settingsRepo.delete(key));
       res.status(204).end();
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // GET /api/v1/octopus/consumption
+  router.get('/api/v1/octopus/consumption', (req, res, next) => {
+    try {
+      const encryptedKey = settingsRepo.get<string>('octopus_api_key');
+      if (!encryptedKey) {
+        res.json({ configured: false, data: [], unitRatePence: 0, standingChargePence: 0 });
+        return;
+      }
+
+      const parsed = ConsumptionQuerySchema.safeParse(req.query);
+      if (!parsed.success) {
+        res.status(400).json({
+          error: 'validation',
+          code: 'INVALID_QUERY',
+          details: parsed.error.issues,
+        });
+        return;
+      }
+
+      const { fuelType, days } = parsed.data;
+      const unitRatePence = settingsRepo.get<number>('octopus_unit_rate') ?? 0;
+      const standingChargePence = settingsRepo.get<number>('octopus_standing_charge') ?? 0;
+
+      if (!consumptionRepo) {
+        res.json({ configured: true, data: [], unitRatePence, standingChargePence });
+        return;
+      }
+
+      const dailyTotals = consumptionRepo.dailyTotals(fuelType, days);
+
+      const data = dailyTotals.map((row) => ({
+        date: row.date,
+        kwh: row.kwh,
+        costMinor: Math.round(row.kwh * unitRatePence + standingChargePence),
+      }));
+
+      res.json({ configured: true, data, unitRatePence, standingChargePence });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // GET /api/v1/octopus/tariff
+  router.get('/api/v1/octopus/tariff', (_req, res, next) => {
+    try {
+      const encryptedKey = settingsRepo.get<string>('octopus_api_key');
+      const unitRatePence = settingsRepo.get<number>('octopus_unit_rate') ?? null;
+      const standingChargePence = settingsRepo.get<number>('octopus_standing_charge') ?? null;
+
+      const configured = Boolean(encryptedKey) && unitRatePence !== null;
+
+      res.json({
+        unitRatePence: unitRatePence ?? 0,
+        standingChargePence: standingChargePence ?? 0,
+        configured,
+      });
     } catch (err) {
       next(err);
     }

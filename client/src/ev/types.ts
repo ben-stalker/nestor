@@ -70,3 +70,22 @@ export interface OctopusCredentialResult {
   gasMeterSerial: string | null;
   tariffCode: string | null;
 }
+
+export interface OctopusConsumptionDay {
+  date: string;
+  kwh: number;
+  costMinor: number;
+}
+
+export interface OctopusConsumptionResponse {
+  configured: boolean;
+  data: OctopusConsumptionDay[];
+  unitRatePence: number;
+  standingChargePence: number;
+}
+
+export interface OctopusTariff {
+  unitRatePence: number;
+  standingChargePence: number;
+  configured: boolean;
+}

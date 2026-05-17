@@ -204,7 +204,9 @@ export default function createApp(): Express {
       profileRepo,
     ),
   );
-  app.use(createOctopusRouter(settingsRepo, cryptoService, requireAdminPin));
+  app.use(
+    createOctopusRouter(settingsRepo, cryptoService, requireAdminPin, octopusConsumptionRepo),
+  );
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));
