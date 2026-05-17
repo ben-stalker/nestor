@@ -33,10 +33,7 @@ export default function EvPage() {
           <h1 className="text-h1 font-bold">EV & Energy</h1>
         </div>
 
-        <div
-          role="tablist"
-          className="flex gap-1 overflow-x-auto pb-1 scrollbar-none"
-        >
+        <div role="tablist" className="flex gap-1 overflow-x-auto pb-1 scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}

@@ -40,8 +40,7 @@ export default function ChargingLogForm({ vehicleId, vehicles, entry, onSave, on
       return;
     }
     const sessionDate = Math.floor(new Date(form.session_date).getTime() / 1000);
-    const costMinor =
-      form.cost_minor !== '' ? Math.round(parseFloat(form.cost_minor) * 100) : null;
+    const costMinor = form.cost_minor !== '' ? Math.round(parseFloat(form.cost_minor) * 100) : null;
 
     if (entry) {
       onSave({

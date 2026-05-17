@@ -15,7 +15,10 @@ const FuelRateUpdateSchema = z.object({
   electricity: z.number().nonnegative().optional(),
   gas: z.number().nonnegative().optional(),
   oil: z.number().nonnegative().optional(),
-  effective_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  effective_date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
 });
 
 function calcMeterCost(
@@ -40,8 +43,7 @@ function calcMeterCost(
   if (!startReading || !endReading) return { units: 0, costMinor: 0 };
 
   const units = parseFloat(Math.max(0, endReading.value - startReading.value).toFixed(2));
-  const rate =
-    endReading.cost_per_unit ?? startReading.cost_per_unit ?? rates[fuelType] ?? 0;
+  const rate = endReading.cost_per_unit ?? startReading.cost_per_unit ?? rates[fuelType] ?? 0;
   return { units, costMinor: Math.round(units * rate * 100) };
 }
 
@@ -70,8 +72,7 @@ export default function createEvRouter(
             .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid vehicleId'] });
           return;
         }
-        const logs =
-          vehicleId !== undefined ? evRepo.listForVehicle(vehicleId) : evRepo.listAll();
+        const logs = vehicleId !== undefined ? evRepo.listForVehicle(vehicleId) : evRepo.listAll();
         res.json(logs);
       } catch (err) {
         next(err);
@@ -244,48 +245,43 @@ export default function createEvRouter(
   );
 
   // PUT /api/v1/ev/fuel-rates
-  router.put(
-    '/api/v1/ev/fuel-rates',
-    requireProfile,
-    requireAdminPin,
-    (req, res, next) => {
-      try {
-        const parsed = FuelRateUpdateSchema.safeParse(req.body);
-        if (!parsed.success) {
-          res
-            .status(400)
-            .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
-          return;
-        }
-        if (!settingsRepo) {
-          res.status(503).json({ error: 'Settings unavailable' });
-          return;
-        }
-
-        const { effective_date: effectiveDate, ...newRates } = parsed.data;
-        const existing = settingsRepo.get<Record<string, number>>('fuel_rates') ?? {};
-        const merged = { ...existing, ...newRates };
-        settingsRepo.set('fuel_rates', merged);
-
-        if (effectiveDate) {
-          const historyResult = FuelRateHistorySchema.safeParse(
-            settingsRepo.get('fuel_rate_history') ?? [],
-          );
-          const entries = historyResult.success ? historyResult.data : [];
-          Object.entries(newRates).forEach(([fuel, rate]) => {
-            if (rate !== undefined) {
-              entries.unshift({ fuel, rate, effective_date: effectiveDate });
-            }
-          });
-          settingsRepo.set('fuel_rate_history', entries.slice(0, 100));
-        }
-
-        res.json({ current: merged });
-      } catch (err) {
-        next(err);
+  router.put('/api/v1/ev/fuel-rates', requireProfile, requireAdminPin, (req, res, next) => {
+    try {
+      const parsed = FuelRateUpdateSchema.safeParse(req.body);
+      if (!parsed.success) {
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        return;
       }
-    },
-  );
+      if (!settingsRepo) {
+        res.status(503).json({ error: 'Settings unavailable' });
+        return;
+      }
+
+      const { effective_date: effectiveDate, ...newRates } = parsed.data;
+      const existing = settingsRepo.get<Record<string, number>>('fuel_rates') ?? {};
+      const merged = { ...existing, ...newRates };
+      settingsRepo.set('fuel_rates', merged);
+
+      if (effectiveDate) {
+        const historyResult = FuelRateHistorySchema.safeParse(
+          settingsRepo.get('fuel_rate_history') ?? [],
+        );
+        const entries = historyResult.success ? historyResult.data : [];
+        Object.entries(newRates).forEach(([fuel, rate]) => {
+          if (rate !== undefined) {
+            entries.unshift({ fuel, rate, effective_date: effectiveDate });
+          }
+        });
+        settingsRepo.set('fuel_rate_history', entries.slice(0, 100));
+      }
+
+      res.json({ current: merged });
+    } catch (err) {
+      next(err);
+    }
+  });
 
   return router;
 }

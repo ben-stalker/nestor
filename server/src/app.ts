@@ -175,7 +175,14 @@ export default function createApp(): Express {
   app.use(createPetsRouter(petRepo, petHealthRepo, requireAdminPin, profileRepo, eventRepo));
   app.use(createContactsRouter(contactRepo, requireAdminPin, profileRepo));
   app.use(
-    createEvRouter(evChargingRepo, vehicleRepo, meterRepo, profileRepo, requireAdminPin, settingsRepo),
+    createEvRouter(
+      evChargingRepo,
+      vehicleRepo,
+      meterRepo,
+      profileRepo,
+      requireAdminPin,
+      settingsRepo,
+    ),
   );
   app.use(
     createBoardRouter(

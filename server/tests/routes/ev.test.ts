@@ -151,9 +151,7 @@ describe('PATCH /api/v1/ev/charging-log/:id', () => {
     const { app, evRepo, vehicleRepo } = makeApp(db);
     const v = makeEv(vehicleRepo);
     const s = evRepo.create({ vehicle_id: v.id, session_date: 1700000000, kwh: 20 });
-    const res = await request(app)
-      .patch(`/api/v1/ev/charging-log/${s.id}`)
-      .send({ kwh: 25 });
+    const res = await request(app).patch(`/api/v1/ev/charging-log/${s.id}`).send({ kwh: 25 });
     expect(res.status).toBe(200);
     expect((res.body as { kwh: number }).kwh).toBe(25);
     db.close();
@@ -239,7 +237,7 @@ describe('PUT /api/v1/ev/fuel-rates', () => {
     const { app } = makeApp(db);
     const res = await request(app)
       .put('/api/v1/ev/fuel-rates')
-      .send({ electricity: 0.28, gas: 0.10, effective_date: '2026-01-01' });
+      .send({ electricity: 0.28, gas: 0.1, effective_date: '2026-01-01' });
     expect(res.status).toBe(200);
     expect((res.body as { current: { electricity: number } }).current.electricity).toBe(0.28);
     db.close();

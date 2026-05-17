@@ -84,7 +84,10 @@ export default function FuelRatesPanel() {
       </div>
 
       {editing ? (
-        <form onSubmit={handleSave} className="space-y-3 p-4 rounded-card bg-surface border border-neutral-200">
+        <form
+          onSubmit={handleSave}
+          className="space-y-3 p-4 rounded-card bg-surface border border-neutral-200"
+        >
           {(['electricity', 'gas', 'oil'] as const).map((fuel) => (
             <div key={fuel}>
               <label className="block text-caption text-secondary mb-1">{FUEL_LABELS[fuel]}</label>

@@ -8,7 +8,9 @@ export default function evaluateEvPlugInAlerts(
   alertRepo: AlertRepository,
 ): void {
   const now = new Date();
-  const todayStart = Math.floor(new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / 1000);
+  const todayStart = Math.floor(
+    new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / 1000,
+  );
   const todayEnd = todayStart + 86400;
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon ... 6=Sat — matches JS convention; stored same in DB
@@ -28,10 +30,15 @@ export default function evaluateEvPlugInAlerts(
     if (currentMinutes < reminderMinutes) return;
 
     // Check if snoozed
-    if (vehicle.plug_in_snoozed_until !== null && now.getTime() / 1000 < vehicle.plug_in_snoozed_until) return;
+    if (
+      vehicle.plug_in_snoozed_until !== null &&
+      now.getTime() / 1000 < vehicle.plug_in_snoozed_until
+    )
+      return;
 
     // Check if a charging session was already logged today
-    const todaySessions = evRepo.listForMonth(now.getFullYear(), now.getMonth() + 1, vehicle.id)
+    const todaySessions = evRepo
+      .listForMonth(now.getFullYear(), now.getMonth() + 1, vehicle.id)
       .filter((s) => s.session_date >= todayStart && s.session_date < todayEnd);
     if (todaySessions.length > 0) return;
 

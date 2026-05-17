@@ -20,7 +20,10 @@ export async function createChargingLog(input: EvChargingLogInput): Promise<EvCh
   });
 }
 
-export async function updateChargingLog(id: number, patch: EvChargingLogUpdate): Promise<EvChargingLog> {
+export async function updateChargingLog(
+  id: number,
+  patch: EvChargingLogUpdate,
+): Promise<EvChargingLog> {
   return apiFetch<EvChargingLog>(`/api/v1/ev/charging-log/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(patch),

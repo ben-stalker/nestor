@@ -1,5 +1,10 @@
 import BaseRepository from './BaseRepository';
-import type { EvChargingLog, EvChargingLogInput, EvChargingLogUpdate, MonthlyEvSummary } from '../types/ev';
+import type {
+  EvChargingLog,
+  EvChargingLogInput,
+  EvChargingLogUpdate,
+  MonthlyEvSummary,
+} from '../types/ev';
 
 export default class EvChargingRepository extends BaseRepository {
   listForVehicle(vehicleId: number): EvChargingLog[] {
@@ -44,7 +49,9 @@ export default class EvChargingRepository extends BaseRepository {
   }
 
   get(id: number): EvChargingLog | undefined {
-    return this.queryOne<EvChargingLog>('SELECT * FROM ev_charging_log WHERE id = ?', [id]) ?? undefined;
+    return (
+      this.queryOne<EvChargingLog>('SELECT * FROM ev_charging_log WHERE id = ?', [id]) ?? undefined
+    );
   }
 
   create(input: EvChargingLogInput): EvChargingLog {

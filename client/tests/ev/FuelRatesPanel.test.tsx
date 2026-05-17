@@ -11,7 +11,7 @@ vi.mock('../../src/api/client', () => ({
 
 vi.mock('../../src/ev/api', () => ({
   getFuelRates: vi.fn().mockResolvedValue({
-    current: { electricity: 0.28, gas: 0.10 },
+    current: { electricity: 0.28, gas: 0.1 },
     history: [{ fuel: 'electricity', rate: 0.24, effective_date: '2025-01-01' }],
   }),
   updateFuelRates: vi.fn(),

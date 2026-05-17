@@ -4,7 +4,12 @@ import Button from '../shared/ui/Button';
 import Skeleton from '../shared/ui/Skeleton';
 import EmptyState from '../shared/ui/EmptyState';
 import ChargingLogForm from './ChargingLogForm';
-import { useChargingLogs, useCreateChargingLog, useUpdateChargingLog, useDeleteChargingLog } from './hooks/useEvCharging';
+import {
+  useChargingLogs,
+  useCreateChargingLog,
+  useUpdateChargingLog,
+  useDeleteChargingLog,
+} from './hooks/useEvCharging';
 import type { EvChargingLog, EvChargingLogInput, EvChargingLogUpdate } from './types';
 import useAppStore from '../store/appStore';
 
@@ -46,10 +51,7 @@ export default function ChargingLogList({ vehicles, selectedVehicleId, onVehicle
 
   function handleSave(data: EvChargingLogInput | { id: number; patch: EvChargingLogUpdate }) {
     if ('id' in data) {
-      update.mutate(
-        { id: data.id, patch: data.patch },
-        { onSuccess: () => setEditing(undefined) },
-      );
+      update.mutate({ id: data.id, patch: data.patch }, { onSuccess: () => setEditing(undefined) });
     } else {
       create.mutate(data, { onSuccess: () => setShowForm(false) });
     }

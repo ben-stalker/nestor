@@ -18,7 +18,9 @@ function VehicleReminderCard({ vehicle }: { vehicle: Vehicle }) {
 
   const [editing, setEditing] = useState(false);
   const [time, setTime] = useState(vehicle.plug_in_reminder_time ?? '21:00');
-  const [days, setDays] = useState<number[]>(vehicle.plug_in_reminder_days ?? [0, 1, 2, 3, 4, 5, 6]);
+  const [days, setDays] = useState<number[]>(
+    vehicle.plug_in_reminder_days ?? [0, 1, 2, 3, 4, 5, 6],
+  );
   const [saving, setSaving] = useState(false);
 
   function toggleDay(d: number) {
@@ -105,7 +107,9 @@ function VehicleReminderCard({ vehicle }: { vehicle: Vehicle }) {
                   size="sm"
                   variant="secondary"
                   loading={saving}
-                  onClick={() => { void clearReminder(); }}
+                  onClick={() => {
+                    void clearReminder();
+                  }}
                 >
                   Remove
                 </Button>
@@ -130,7 +134,9 @@ function VehicleReminderCard({ vehicle }: { vehicle: Vehicle }) {
           {!isSnoozed && adminPin && (
             <button
               className="text-caption text-mode-ev underline"
-              onClick={() => { void snoozeTonight(); }}
+              onClick={() => {
+                void snoozeTonight();
+              }}
             >
               Mark as plugged in (snooze tonight)
             </button>
@@ -169,7 +175,13 @@ function VehicleReminderCard({ vehicle }: { vehicle: Vehicle }) {
             </div>
           </div>
           <div className="flex gap-2 pt-1">
-            <Button size="sm" loading={saving} onClick={() => { void save(); }}>
+            <Button
+              size="sm"
+              loading={saving}
+              onClick={() => {
+                void save();
+              }}
+            >
               Save
             </Button>
             <Button size="sm" variant="secondary" onClick={() => setEditing(false)}>

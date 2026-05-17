@@ -15,12 +15,7 @@ const vehicles = [{ id: 1, nickname: 'Leaf', type: 'ev' }];
 describe('ChargingLogForm', () => {
   it('renders form fields', () => {
     render(
-      <ChargingLogForm
-        vehicleId={1}
-        vehicles={vehicles}
-        onSave={vi.fn()}
-        onClose={vi.fn()}
-      />,
+      <ChargingLogForm vehicleId={1} vehicles={vehicles} onSave={vi.fn()} onClose={vi.fn()} />,
     );
     expect(screen.getByLabelText(/energy charged/i)).toBeTruthy();
     expect(screen.getByText(/log session/i)).toBeTruthy();
@@ -29,12 +24,7 @@ describe('ChargingLogForm', () => {
   it('calls onClose when cancel clicked', () => {
     const onClose = vi.fn();
     render(
-      <ChargingLogForm
-        vehicleId={1}
-        vehicles={vehicles}
-        onSave={vi.fn()}
-        onClose={onClose}
-      />,
+      <ChargingLogForm vehicleId={1} vehicles={vehicles} onSave={vi.fn()} onClose={onClose} />,
     );
     fireEvent.click(screen.getByText('Cancel'));
     expect(onClose).toHaveBeenCalled();
@@ -42,14 +32,7 @@ describe('ChargingLogForm', () => {
 
   it('shows validation error for missing kWh', () => {
     const onSave = vi.fn();
-    render(
-      <ChargingLogForm
-        vehicleId={1}
-        vehicles={vehicles}
-        onSave={onSave}
-        onClose={vi.fn()}
-      />,
-    );
+    render(<ChargingLogForm vehicleId={1} vehicles={vehicles} onSave={onSave} onClose={vi.fn()} />);
     fireEvent.submit(screen.getByRole('form') ?? screen.getByText(/log session/i).closest('form')!);
     expect(onSave).not.toHaveBeenCalled();
   });

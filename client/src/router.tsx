@@ -31,7 +31,6 @@ function MeRoute() {
   return <MePage profile={profile} />;
 }
 
-
 export default function Router() {
   return (
     <Routes>
