@@ -110,9 +110,10 @@ describe('Board messages', () => {
       .set('x-profile-id', String(profileId))
       .send({ content: 'Hello board!', pinned: false });
     expect(res.status).toBe(201);
-    expect(res.body.content).toBe('Hello board!');
-    expect(res.body.pinned).toBe(false);
-    expect(res.body.archived).toBe(false);
+    const body = res.body as { content: string; pinned: boolean; archived: boolean };
+    expect(body.content).toBe('Hello board!');
+    expect(body.pinned).toBe(false);
+    expect(body.archived).toBe(false);
   });
 
   it('POST /api/v1/board/messages creates pinned message', async () => {
@@ -121,7 +122,7 @@ describe('Board messages', () => {
       .set('x-profile-id', String(profileId))
       .send({ content: 'Important!', pinned: true });
     expect(res.status).toBe(201);
-    expect(res.body.pinned).toBe(true);
+    expect((res.body as { pinned: boolean }).pinned).toBe(true);
   });
 
   it('POST /api/v1/board/messages rejects empty content', async () => {
@@ -137,14 +138,14 @@ describe('Board messages', () => {
       .post('/api/v1/board/messages')
       .set('x-profile-id', String(profileId))
       .send({ content: 'Old content' });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .patch(`/api/v1/board/messages/${id}`)
       .set('x-profile-id', String(profileId))
       .send({ content: 'New content' });
     expect(res.status).toBe(200);
-    expect(res.body.content).toBe('New content');
+    expect((res.body as { content: string }).content).toBe('New content');
   });
 
   it('PATCH /api/v1/board/messages/:id returns 404 for unknown', async () => {
@@ -160,13 +161,13 @@ describe('Board messages', () => {
       .post('/api/v1/board/messages')
       .set('x-profile-id', String(profileId))
       .send({ content: 'Dismiss me' });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .post(`/api/v1/board/messages/${id}/archive`)
       .set('x-profile-id', String(profileId));
     expect(res.status).toBe(200);
-    expect(res.body.archived).toBe(true);
+    expect((res.body as { archived: boolean }).archived).toBe(true);
   });
 
   it('GET /api/v1/board/messages excludes archived by default', async () => {
@@ -179,7 +180,7 @@ describe('Board messages', () => {
       .post('/api/v1/board/messages')
       .set('x-profile-id', String(profileId))
       .send({ content: 'Archived' });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
     await request(app)
       .post(`/api/v1/board/messages/${id}/archive`)
       .set('x-profile-id', String(profileId));
@@ -197,7 +198,7 @@ describe('Board messages', () => {
       .post('/api/v1/board/messages')
       .set('x-profile-id', String(profileId))
       .send({ content: 'To delete' });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .delete(`/api/v1/board/messages/${id}`)
@@ -245,9 +246,10 @@ describe('Countdown timers', () => {
       .set('x-profile-id', String(profileId))
       .send({ name: 'Christmas 2027', target_date: targetDate, show_on_home: true });
     expect(res.status).toBe(201);
-    expect(res.body.name).toBe('Christmas 2027');
-    expect(res.body.target_date).toBe(targetDate);
-    expect(res.body.show_on_home).toBe(true);
+    const body = res.body as { name: string; target_date: number; show_on_home: boolean };
+    expect(body.name).toBe('Christmas 2027');
+    expect(body.target_date).toBe(targetDate);
+    expect(body.show_on_home).toBe(true);
   });
 
   it('POST /api/v1/board/countdowns rejects missing name', async () => {
@@ -263,15 +265,16 @@ describe('Countdown timers', () => {
       .post('/api/v1/board/countdowns')
       .set('x-profile-id', String(profileId))
       .send({ name: 'Holiday', target_date: Date.now() + 86400000 });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .patch(`/api/v1/board/countdowns/${id}`)
       .set('x-profile-id', String(profileId))
       .send({ name: 'Summer Holiday', show_on_home: true });
     expect(res.status).toBe(200);
-    expect(res.body.name).toBe('Summer Holiday');
-    expect(res.body.show_on_home).toBe(true);
+    const body = res.body as { name: string; show_on_home: boolean };
+    expect(body.name).toBe('Summer Holiday');
+    expect(body.show_on_home).toBe(true);
   });
 
   it('DELETE /api/v1/board/countdowns/:id deletes countdown', async () => {
@@ -279,7 +282,7 @@ describe('Countdown timers', () => {
       .post('/api/v1/board/countdowns')
       .set('x-profile-id', String(profileId))
       .send({ name: 'X', target_date: Date.now() + 86400000 });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .delete(`/api/v1/board/countdowns/${id}`)
@@ -321,8 +324,9 @@ describe('Board lists', () => {
       .set('x-profile-id', String(profileId))
       .send({ name: 'Weekend tasks', type: 'one_off' });
     expect(res.status).toBe(201);
-    expect(res.body.name).toBe('Weekend tasks');
-    expect(res.body.type).toBe('one_off');
+    const body = res.body as { name: string; type: string };
+    expect(body.name).toBe('Weekend tasks');
+    expect(body.type).toBe('one_off');
   });
 
   it('POST /api/v1/board/lists creates recurring list', async () => {
@@ -331,7 +335,7 @@ describe('Board lists', () => {
       .set('x-profile-id', String(profileId))
       .send({ name: 'Weekly chores', type: 'recurring' });
     expect(res.status).toBe(201);
-    expect(res.body.type).toBe('recurring');
+    expect((res.body as { type: string }).type).toBe('recurring');
   });
 
   it('POST /api/v1/board/lists rejects invalid type', async () => {
@@ -347,15 +351,16 @@ describe('Board lists', () => {
       .post('/api/v1/board/lists')
       .set('x-profile-id', String(profileId))
       .send({ name: 'My list' });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .post(`/api/v1/board/lists/${id}/items`)
       .set('x-profile-id', String(profileId))
       .send({ text: 'Buy milk', sort_order: 0 });
     expect(res.status).toBe(201);
-    expect(res.body.text).toBe('Buy milk');
-    expect(res.body.ticked).toBe(false);
+    const body = res.body as { text: string; ticked: boolean };
+    expect(body.text).toBe('Buy milk');
+    expect(body.ticked).toBe(false);
   });
 
   it('PATCH /api/v1/board/lists/:id/items/:itemId ticks item', async () => {
@@ -363,20 +368,20 @@ describe('Board lists', () => {
       .post('/api/v1/board/lists')
       .set('x-profile-id', String(profileId))
       .send({ name: 'My list' });
-    const listId = (created.body as { id: number }).id;
+    const { id: listId } = created.body as { id: number };
 
     const itemRes = await request(app)
       .post(`/api/v1/board/lists/${listId}/items`)
       .set('x-profile-id', String(profileId))
       .send({ text: 'Buy eggs', sort_order: 0 });
-    const itemId = (itemRes.body as { id: number }).id;
+    const { id: itemId } = itemRes.body as { id: number };
 
     const res = await request(app)
       .patch(`/api/v1/board/lists/${listId}/items/${itemId}`)
       .set('x-profile-id', String(profileId))
       .send({ ticked: true });
     expect(res.status).toBe(200);
-    expect(res.body.ticked).toBe(true);
+    expect((res.body as { ticked: boolean }).ticked).toBe(true);
   });
 
   it('POST /api/v1/board/lists/:id/reset resets items', async () => {
@@ -384,13 +389,13 @@ describe('Board lists', () => {
       .post('/api/v1/board/lists')
       .set('x-profile-id', String(profileId))
       .send({ name: 'Recurring', type: 'recurring' });
-    const listId = (created.body as { id: number }).id;
+    const { id: listId } = created.body as { id: number };
 
     const itemRes = await request(app)
       .post(`/api/v1/board/lists/${listId}/items`)
       .set('x-profile-id', String(profileId))
       .send({ text: 'Do laundry', sort_order: 0 });
-    const itemId = (itemRes.body as { id: number }).id;
+    const { id: itemId } = itemRes.body as { id: number };
 
     await request(app)
       .patch(`/api/v1/board/lists/${listId}/items/${itemId}`)
@@ -413,7 +418,7 @@ describe('Board lists', () => {
       .post('/api/v1/board/lists')
       .set('x-profile-id', String(profileId))
       .send({ name: 'Temp' });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .delete(`/api/v1/board/lists/${id}`)
@@ -461,12 +466,11 @@ describe('Guest checklists', () => {
         template: 'arrival',
       });
     expect(res.status).toBe(201);
-    expect(res.body.guest_name).toBe('Mum');
-    expect(res.body.guest_arrival_date).toBe(arrivalDate);
-    expect(res.body.items.length).toBeGreaterThan(0);
-    expect((res.body as { items: Array<{ text: string }> }).items[0].text).toBe(
-      'Fresh towels in bathroom',
-    );
+    const body = res.body as { guest_name: string; guest_arrival_date: number; items: Array<{ text: string }> };
+    expect(body.guest_name).toBe('Mum');
+    expect(body.guest_arrival_date).toBe(arrivalDate);
+    expect(body.items.length).toBeGreaterThan(0);
+    expect(body.items[0].text).toBe('Fresh towels in bathroom');
   });
 
   it('POST /api/v1/board/guest-checklists creates departure checklist', async () => {
@@ -493,20 +497,20 @@ describe('Guest checklists', () => {
       .post('/api/v1/board/guest-checklists')
       .set('x-profile-id', String(profileId))
       .send({ name: 'Guest', guest_name: 'Friend' });
-    const listId = (created.body as { id: number }).id;
+    const { id: listId } = created.body as { id: number };
 
     const addRes = await request(app)
       .post(`/api/v1/board/guest-checklists/${listId}/items`)
       .set('x-profile-id', String(profileId))
       .send({ text: 'Set up guest room', sort_order: 0 });
-    const itemId = (addRes.body as { id: number }).id;
+    const { id: itemId } = addRes.body as { id: number };
 
     const res = await request(app)
       .patch(`/api/v1/board/guest-checklists/${listId}/items/${itemId}`)
       .set('x-profile-id', String(profileId))
       .send({ ticked: true });
     expect(res.status).toBe(200);
-    expect(res.body.ticked).toBe(true);
+    expect((res.body as { ticked: boolean }).ticked).toBe(true);
   });
 
   it('DELETE /api/v1/board/guest-checklists/:id deletes checklist', async () => {
@@ -514,7 +518,7 @@ describe('Guest checklists', () => {
       .post('/api/v1/board/guest-checklists')
       .set('x-profile-id', String(profileId))
       .send({ name: 'Temp guest', guest_name: 'X' });
-    const id = (created.body as { id: number }).id;
+    const { id } = created.body as { id: number };
 
     const res = await request(app)
       .delete(`/api/v1/board/guest-checklists/${id}`)
