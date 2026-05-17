@@ -4,7 +4,7 @@
 **Sprint:** 8 — Finance, EV, Board, Settings shell
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 

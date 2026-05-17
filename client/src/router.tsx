@@ -15,6 +15,7 @@ import ContactsPage from './contacts/ContactsPage';
 import EvPage from './ev/EvPage';
 import PluginsPage from './plugins/PluginsPage';
 import YouTubeBrowsePage from './plugins/youtubePlayer/YouTubeBrowsePage';
+import AdminPage from './admin/AdminPage';
 import { useActiveProfile } from './core/hooks/useActiveProfile';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
@@ -60,6 +61,8 @@ export default function Router() {
         <Route path="/board" element={<BoardPage />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/admin/plugins" element={<PluginsPage />} />
+        <Route path="/admin/:section" element={<AdminPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="/plugins/youtube-player" element={<YouTubeBrowsePage />} />
         <Route
           path="*"

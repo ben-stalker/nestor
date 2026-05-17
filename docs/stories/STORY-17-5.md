@@ -4,7 +4,7 @@
 **Sprint:** 9 — MVP cut
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** completed
 
 ---
 

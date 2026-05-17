@@ -12,6 +12,7 @@ export interface Profile {
   pinSet: boolean;
   text_size: TextSize;
   simplified_nav: number;
+  permissions_json: Record<string, boolean> | null;
   created_at: number;
 }
 

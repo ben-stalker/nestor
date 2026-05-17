@@ -13,7 +13,7 @@ import ProfileRepository from './repositories/ProfileRepository';
 import clientErrorsRouter from './routes/clientErrors';
 import healthRouter from './routes/health';
 import createProfilesRouter from './routes/profiles';
-import settingsRouter from './routes/settings';
+import createSettingsRouter from './routes/settings';
 import createAdminRouter from './routes/admin';
 import createWeatherRouter from './routes/weather';
 import createHomeRouter from './routes/home';
@@ -47,6 +47,7 @@ import createOctopusRouter from './routes/octopus';
 import createVoiceRouter from './routes/voice';
 import createInternalVoiceRouter from './routes/internalVoice';
 import createPluginsRouter from './routes/plugins';
+import createSystemRouter from './routes/system';
 import VoiceCommandRepository from './repositories/VoiceCommandRepository';
 import PluginSettingsRepository from './repositories/PluginSettingsRepository';
 import { PluginManager, setActivePluginManager } from './services/pluginManager';
@@ -153,7 +154,7 @@ export default function createApp(): Express {
     '/api/v1/profiles',
     createProfilesRouter(profileRepo, undefined, [kioskLock, requireAdminPin]),
   );
-  app.use('/api/v1/settings', settingsRouter);
+  app.use('/api/v1/settings', createSettingsRouter(settingsRepo));
   app.use(
     '/api/v1/admin',
     createAdminRouter(settingsRepo, profileRepo, undefined, octopusSyncService),
@@ -216,6 +217,8 @@ export default function createApp(): Express {
   app.use(
     createOctopusRouter(settingsRepo, cryptoService, requireAdminPin, octopusConsumptionRepo),
   );
+
+  app.use(createSystemRouter(settingsRepo, db));
 
   const voiceCmdRepo = new VoiceCommandRepository(db);
   app.use('/api/v1/voice', createVoiceRouter());

@@ -195,5 +195,37 @@ export default function createGoogleCalendarRouter(
     }
   });
 
+  // GET /api/v1/calendar/accounts — list all connected accounts (admin only)
+  router.get('/api/v1/calendar/accounts', (_req, res) => {
+    res.json(accountRepo.list());
+  });
+
+  // DELETE /api/v1/calendar/accounts/:id — remove a connected account
+  router.delete('/api/v1/calendar/accounts/:id', (req, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      res.status(400).json({ error: 'Invalid account id' });
+      return;
+    }
+    const deleted = accountRepo.delete(id);
+    if (!deleted) {
+      res.status(404).json({ error: 'Account not found' });
+      return;
+    }
+    res.status(204).end();
+  });
+
+  // PATCH /api/v1/calendar/accounts/:id/sync-interval — update sync interval
+  router.patch('/api/v1/calendar/accounts/:id/sync-interval', (req, res) => {
+    const id = Number(req.params.id);
+    const interval = Number((req.body as { interval?: unknown }).interval);
+    if (!Number.isFinite(id) || !Number.isFinite(interval) || interval < 5) {
+      res.status(400).json({ error: 'Invalid id or interval' });
+      return;
+    }
+    accountRepo.update(id, { sync_interval_mins: interval });
+    res.status(204).end();
+  });
+
   return router;
 }

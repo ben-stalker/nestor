@@ -184,13 +184,41 @@ phases:
           - STORY-16.11
           - STORY-16.12
           - STORY-16.13
+          - STORY-17.1
+          - STORY-17.2
+          - STORY-17.3
+          - STORY-17.4
+          - STORY-17.5
+          - STORY-17.6
+          - STORY-17.7
+          - STORY-17.8
+          - STORY-17.9
+          - STORY-17.10
 
 backlog: []
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
-last_updated: "2026-05-17-epic-16"
+last_updated: "2026-05-17-epic-17"
 notes: >
+  EPIC-17 complete (2026-05-17): Admin & Settings. 10 stories (17.1–17.10).
+  AdminPage shell with left-rail nav, search, lazy-loaded section panels,
+  admin-PIN gate. Panels: ProfilesPanel (CRUD, permission matrix, colour picker),
+  LocalePanel (language/date/time/currency/units + live preview), CalendarPanel
+  (CalDAV account list/delete/sync-interval, WFH schedule grid), DisplayPanel
+  (orientation, idle/sleep timeouts, night mode, screensaver), NavigationPanel
+  (drag-to-reorder, visibility, custom labels, layout selector), VoicePanel
+  (hub name, wake word retrain, TTS voice/speed, quiet hours, audio chimes),
+  AccessibilityPanel (text size, high contrast, colour-blind palette, reduced
+  motion, simplified nav), SystemPanel (version/update badge, backup/restore,
+  factory reset double-confirm, Tailscale/Syncthing status), NotificationsPanel
+  (10 reminder types, per-type day inputs). Server: routes/system.ts (version,
+  backup, restore, factory-reset, tailscale, syncthing endpoints), settings.ts
+  converted to factory function createSettingsRouter(), calendar account admin
+  endpoints added to googleCalendar.ts (list/delete/sync-interval), settings-keys.ts
+  extended with voice/nav/accessibility/screensaver/wfh schemas. router.tsx updated
+  with /admin/:section route. 12 new server tests, 5 new client tests.
+  Server 1148 total, client tests passing. Lint + typecheck clean.
   EPIC-15 complete (2026-05-17): Voice Pipeline. migration 022_voice_command_log.sql
   (voice_command_log table with transcript/matched_handler/response/duration_ms).
   server/src/voice/: audioDetect.ts (arecord -l USB detection), whisperRunner.ts (whisper.cpp
