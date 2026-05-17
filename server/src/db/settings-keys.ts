@@ -98,6 +98,36 @@ export const VoiceEnabledSchema = z.boolean();
 export const VoiceWakewordModelPathSchema = z.string();
 export const VoiceSttModelSchema = z.enum(['tiny', 'base', 'small']);
 export const VoiceTtsVoiceSchema = z.string();
+export const VoiceTtsSpeedSchema = z.number().min(0.5).max(2.0);
+export const VoiceHubNameSchema = z.string().min(1).max(50);
+
+// Navigation customisation
+export const NavModeLabelsSchema = z.record(z.string(), z.string());
+export const NavModeOrderSchema = z.array(z.string());
+export const NavModeHiddenSchema = z.array(z.string());
+
+// Accessibility globals
+export const TextSizeGlobalSchema = z.enum(['normal', 'large', 'x-large']);
+export const HighContrastSchema = z.boolean();
+export const ColourBlindPaletteSchema = z.enum([
+  'none',
+  'deuteranopia',
+  'protanopia',
+  'tritanopia',
+]);
+export const ReducedMotionGlobalSchema = z.boolean();
+export const SimplifiedNavGlobalSchema = z.boolean();
+
+// Calendar sync
+export const CalendarSyncIntervalSchema = z.number().int().min(5).max(1440);
+export const WfhScheduleSchema = z.record(
+  z.string(),
+  z.record(z.string(), z.enum(['home', 'office', 'away', ''])),
+);
+
+// Display / screensaver
+export const ScreensaverFolderSchema = z.string();
+export const ScreensaverIntervalSecondsSchema = z.number().int().min(5).max(300);
 
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
@@ -148,6 +178,20 @@ export const SETTING_SCHEMAS = {
   voice_wakeword_model_path: VoiceWakewordModelPathSchema,
   voice_stt_model: VoiceSttModelSchema,
   voice_tts_voice: VoiceTtsVoiceSchema,
+  voice_tts_speed: VoiceTtsSpeedSchema,
+  voice_hub_name: VoiceHubNameSchema,
+  nav_mode_labels: NavModeLabelsSchema,
+  nav_mode_order: NavModeOrderSchema,
+  nav_mode_hidden: NavModeHiddenSchema,
+  text_size_global: TextSizeGlobalSchema,
+  high_contrast: HighContrastSchema,
+  colour_blind_palette: ColourBlindPaletteSchema,
+  reduced_motion_global: ReducedMotionGlobalSchema,
+  simplified_nav_global: SimplifiedNavGlobalSchema,
+  calendar_sync_interval: CalendarSyncIntervalSchema,
+  wfh_schedule: WfhScheduleSchema,
+  screensaver_folder: ScreensaverFolderSchema,
+  screensaver_interval_seconds: ScreensaverIntervalSecondsSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;
