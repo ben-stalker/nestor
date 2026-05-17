@@ -94,6 +94,11 @@ export const OctopusStandingChargeSchema = z.number().nonnegative();
 export const AudioChimeCategoriesSchema = z.record(z.string(), z.boolean());
 export const AudioChimeVolumeSchema = z.number().min(0).max(1);
 
+export const VoiceEnabledSchema = z.boolean();
+export const VoiceWakewordModelPathSchema = z.string();
+export const VoiceSttModelSchema = z.enum(['tiny', 'base', 'small']);
+export const VoiceTtsVoiceSchema = z.string();
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -139,6 +144,10 @@ export const SETTING_SCHEMAS = {
   octopus_standing_charge: OctopusStandingChargeSchema,
   audio_chime_categories: AudioChimeCategoriesSchema,
   audio_chime_volume: AudioChimeVolumeSchema,
+  voice_enabled: VoiceEnabledSchema,
+  voice_wakeword_model_path: VoiceWakewordModelPathSchema,
+  voice_stt_model: VoiceSttModelSchema,
+  voice_tts_voice: VoiceTtsVoiceSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;

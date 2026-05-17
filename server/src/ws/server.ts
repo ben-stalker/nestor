@@ -76,6 +76,9 @@ export class NestorWsServer {
     eventBus.on('alert:new', forward('alert:new'));
     eventBus.on('alert:dismissed', forward('alert:dismissed'));
     eventBus.on('voice:status', forward('voice:status'));
+    eventBus.on('voice:command', forward('voice:command'));
+    eventBus.on('nav:goto', forward('nav:goto'));
+    eventBus.on('nav:date', forward('nav:date'));
     eventBus.on('calendar:synced', forward('calendar:synced'));
     eventBus.on('settings:updated', forward('settings:updated'));
     eventBus.on('shopping:updated', forward('shopping:updated'));

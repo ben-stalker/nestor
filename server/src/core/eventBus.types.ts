@@ -17,6 +17,9 @@ export interface EventMap {
   'plugin:disabled': { pluginId: string };
   'plugin:error': { pluginId: string; error: Error };
   'voice:status': { status: 'idle' | 'listening' | 'processing' | 'speaking' };
+  'voice:command': { transcript: string; matchedHandler: string | null };
+  'nav:goto': { mode: string };
+  'nav:date': { date: string };
   'settings:updated': { keys: string[] };
   'shopping:updated': Record<string, never>;
   'board:message_new': { id: number };

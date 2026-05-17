@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { createPinVerifyLimiter } from '../middleware/rateLimit';
 import AppSettingsRepository from '../repositories/AppSettingsRepository';
 import ProfileRepository from '../repositories/ProfileRepository';
+import VoiceCommandRepository from '../repositories/VoiceCommandRepository';
 import { getDb } from '../db/connection';
 import logger from '../utils/logger';
 import { listAdapters } from '../services/transport/adapterRegistry';
@@ -24,6 +25,7 @@ export default function createAdminRouter(
   profileRepo: ProfileRepository = new ProfileRepository(getDb()),
   pinLimiter: RequestHandler = createPinVerifyLimiter(),
   octopusSyncService?: OctopusSyncService,
+  voiceCmdRepo: VoiceCommandRepository = new VoiceCommandRepository(getDb()),
 ): Router {
   const router = Router();
 
@@ -163,6 +165,19 @@ export default function createAdminRouter(
     if (Object.keys(updates).length > 0) {
       settingsRepo.setMany(updates);
     }
+    res.status(204).end();
+  });
+
+  // GET /api/v1/admin/voice-commands — list recent voice command log entries.
+  router.get('/voice-commands', (req, res) => {
+    const limit = Math.min(Number(req.query.limit ?? 100), 500);
+    const commands = voiceCmdRepo.list(limit);
+    res.json(commands);
+  });
+
+  // DELETE /api/v1/admin/voice-commands — clear the entire voice command log.
+  router.delete('/voice-commands', (_req, res) => {
+    voiceCmdRepo.clearAll();
     res.status(204).end();
   });
 

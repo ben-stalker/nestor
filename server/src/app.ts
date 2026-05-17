@@ -43,6 +43,9 @@ import createBoardRouter from './routes/board';
 import createContactsRouter from './routes/contacts';
 import createEvRouter from './routes/ev';
 import createOctopusRouter from './routes/octopus';
+import createVoiceRouter from './routes/voice';
+import createInternalVoiceRouter from './routes/internalVoice';
+import VoiceCommandRepository from './repositories/VoiceCommandRepository';
 import OctopusConsumptionRepository from './repositories/OctopusConsumptionRepository';
 import { OctopusSyncService } from './services/OctopusSyncService';
 import ContactRepository from './repositories/ContactRepository';
@@ -207,6 +210,10 @@ export default function createApp(): Express {
   app.use(
     createOctopusRouter(settingsRepo, cryptoService, requireAdminPin, octopusConsumptionRepo),
   );
+
+  const voiceCmdRepo = new VoiceCommandRepository(db);
+  app.use('/api/v1/voice', createVoiceRouter());
+  app.use('/internal/voice', createInternalVoiceRouter(settingsRepo, voiceCmdRepo));
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-17-story-14.5"
+last_updated: "2026-05-17-epic-15"
 
 phases:
   phase_1_analysis:
@@ -161,12 +161,44 @@ phases:
           - STORY-14-octopus-1
           - STORY-14-octopus-2
           - STORY-14-octopus-3
+          - STORY-15.1
+          - STORY-15.2
+          - STORY-15.3
+          - STORY-15.4
+          - STORY-15.5
+          - STORY-15.6
+          - STORY-15.7
+          - STORY-15.8
+          - STORY-15.9
 
 backlog: []
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
+  EPIC-15 complete (2026-05-17): Voice Pipeline. migration 022_voice_command_log.sql
+  (voice_command_log table with transcript/matched_handler/response/duration_ms).
+  server/src/voice/: audioDetect.ts (arecord -l USB detection), whisperRunner.ts (whisper.cpp
+  subprocess), piperRunner.ts (Piper TTS + aplay), wakeWordRunner.ts (OpenWakeWord Python
+  subprocess with EventEmitter restart), TtsQueue.ts (sequential queue, quiet-hours gate,
+  30s per-item timeout), VoiceRouter.ts (nav:goto + nav:date + builtin:time/date patterns),
+  ipc.ts (voice→main HTTP IPC), process.ts (separate entry point, internal HTTP on port 3001,
+  USB audio detect, wake→capture→transcribe→IPC loop, graceful shutdown).
+  server/systemd/nestor-voice.service (Requires=nestor-server.service template).
+  Main server: routes/internalVoice.ts (POST /internal/voice/command — token-gated, routes
+  transcript, logs to DB, emits voice:command, forwards TTS; POST /internal/voice/status —
+  emits voice:status), routes/voice.ts (GET /api/v1/voice/status proxy, POST /api/v1/voice/
+  wakeword/start-training proxy), admin.ts extended (GET + DELETE /api/v1/admin/voice-commands).
+  VoiceCommandRepository.ts (insert/list/clearAll). eventBus.types.ts: nav:goto + nav:date +
+  voice:command events. ws/server.ts: subscribes and forwards all three new events.
+  settings-keys.ts: voice_enabled, voice_wakeword_model_path, voice_stt_model, voice_tts_voice.
+  Client: voice/api.ts, useVoiceStatus.ts (WS + polling), useVoiceNavigation.ts (nav:goto →
+  router, nav:date → /calendar?date=), MicIndicator.tsx (hidden when offline, states: idle/
+  listening/processing/speaking), VoiceCommandHistory.tsx (admin table with expand, clear),
+  QuietHoursBanner.tsx (active-quiet-hours banner). AppShell: useVoiceNavigation + MicIndicator.
+  HousePage: Voice tab with QuietHoursBanner + VoiceCommandHistory. CSS: mic-indicator,
+  quiet-hours-banner, voice-history, voice-cmd-row classes. 34 server tests (1076 total),
+  12 client tests (598 total). Lint + typecheck clean.
   STORY-14.5 complete (2026-05-17): Audio chime system. audioChime.ts (Web Audio API oscillator
   synthesis — sawtooth/urgent, triangle/warning, sine/info, ascending arpeggio/success).
   useAudioChime hook (default export, listens to alert:new WS, checks quiet_hours setting,

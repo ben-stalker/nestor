@@ -7,6 +7,8 @@ import BudgetSummary from './budget/BudgetSummary';
 import ChecklistList from './checklists/ChecklistList';
 import AdultChoreRota from './chores/AdultChoreRota';
 import AudioPanel from '../admin/AudioPanel';
+import VoiceCommandHistory from '../voice/VoiceCommandHistory';
+import QuietHoursBanner from '../voice/QuietHoursBanner';
 
 type HouseTab =
   | 'bins'
@@ -16,7 +18,8 @@ type HouseTab =
   | 'budget'
   | 'checklists'
   | 'chores'
-  | 'notifications';
+  | 'notifications'
+  | 'voice';
 
 const TABS: Array<{ id: HouseTab; label: string }> = [
   { id: 'bins', label: 'Bins' },
@@ -27,6 +30,7 @@ const TABS: Array<{ id: HouseTab; label: string }> = [
   { id: 'checklists', label: 'Checklists' },
   { id: 'chores', label: 'Chores' },
   { id: 'notifications', label: 'Notifications' },
+  { id: 'voice', label: 'Voice' },
 ];
 
 export default function HousePage() {
@@ -66,6 +70,12 @@ export default function HousePage() {
         {tab === 'checklists' && <ChecklistList />}
         {tab === 'chores' && <AdultChoreRota />}
         {tab === 'notifications' && <AudioPanel />}
+        {tab === 'voice' && (
+          <div className="p-4 flex flex-col gap-4">
+            <QuietHoursBanner />
+            <VoiceCommandHistory />
+          </div>
+        )}
       </div>
     </main>
   );

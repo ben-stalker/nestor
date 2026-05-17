@@ -7,6 +7,8 @@ import { useWebSocket } from '../hooks/useWebSocket';
 import { APP_SETTINGS_KEY } from './hooks/useAppSettings';
 import useAudioChime from '../alerts/useAudioChime';
 import { unlockAudioContext } from '../alerts/audioChime';
+import useVoiceNavigation from '../voice/useVoiceNavigation';
+import MicIndicator from '../voice/MicIndicator';
 import NavBar from './NavBar';
 import FilterPanel from './FilterPanel';
 import KioskOverlay from './KioskOverlay';
@@ -19,6 +21,7 @@ export default function AppShell() {
   const queryClient = useQueryClient();
 
   useAudioChime();
+  useVoiceNavigation();
 
   useEffect(() => {
     const unlock = () => unlockAudioContext();
@@ -37,6 +40,7 @@ export default function AppShell() {
       <NavBar />
       <FilterPanel />
       <Outlet />
+      <MicIndicator />
       <KioskOverlay />
       <GuestOverlay />
       <IdleOverlay />
