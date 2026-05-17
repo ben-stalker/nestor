@@ -1,0 +1,6 @@
+{
+  "name": "@nestor-plugin/tesla",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js"
+}

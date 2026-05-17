@@ -4,6 +4,7 @@ import express, { type Express } from 'express';
 import errorHandler from './middleware/errorHandler';
 import httpLogger from './middleware/logger';
 import requestId from './middleware/requestId';
+import securityHeaders from './middleware/securityHeaders';
 import createRequireAdminPin from './middleware/requireAdminPin';
 import createKioskLockMiddleware from './middleware/kioskLock';
 import { getDb } from './db/connection';
@@ -45,7 +46,11 @@ import createEvRouter from './routes/ev';
 import createOctopusRouter from './routes/octopus';
 import createVoiceRouter from './routes/voice';
 import createInternalVoiceRouter from './routes/internalVoice';
+import createPluginsRouter from './routes/plugins';
 import VoiceCommandRepository from './repositories/VoiceCommandRepository';
+import PluginSettingsRepository from './repositories/PluginSettingsRepository';
+import { PluginManager, setActivePluginManager } from './services/pluginManager';
+import { scanPluginsDirectory } from './services/pluginLoader';
 import OctopusConsumptionRepository from './repositories/OctopusConsumptionRepository';
 import { OctopusSyncService } from './services/OctopusSyncService';
 import ContactRepository from './repositories/ContactRepository';
@@ -90,6 +95,7 @@ export default function createApp(): Express {
   const app = express();
 
   app.use(requestId);
+  app.use(securityHeaders);
   app.use(httpLogger);
   app.use(express.json({ limit: '10mb' }));
 
@@ -214,6 +220,30 @@ export default function createApp(): Express {
   const voiceCmdRepo = new VoiceCommandRepository(db);
   app.use('/api/v1/voice', createVoiceRouter());
   app.use('/internal/voice', createInternalVoiceRouter(settingsRepo, voiceCmdRepo));
+
+  const pluginSettingsRepo = new PluginSettingsRepository(db, {
+    encrypt: (s) => cryptoService.encrypt(s),
+    decrypt: (s) => cryptoService.decrypt(s),
+  });
+  scanPluginsDirectory();
+  const pluginManager = new PluginManager({
+    alertRepo,
+    settingsRepo,
+    pluginSettingsRepo,
+  });
+  setActivePluginManager(pluginManager);
+  app.use(
+    createPluginsRouter({
+      manager: pluginManager,
+      settingsRepo,
+      pluginSettingsRepo,
+      requireAdminPin,
+    }),
+  );
+  void pluginManager.startEnabledFromSettings().catch((err) => {
+    // eslint-disable-next-line no-console
+    console.warn('[plugins] failed to start enabled plugins:', err);
+  });
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

@@ -1,0 +1,17 @@
+{
+  "id": "tesla",
+  "name": "Tesla",
+  "version": "0.1.0",
+  "author": "Nestor",
+  "description": "Shows battery, range and charging status for a Tesla vehicle via the Tesla Fleet API.",
+  "capabilities": ["home_screen_widget", "alert_source", "tts_announcements", "settings_panel"],
+  "settingsFields": [
+    { "key": "access_token", "label": "Tesla Fleet API access token", "type": "password" },
+    { "key": "vehicle_id", "label": "Vehicle ID", "type": "text" },
+    { "key": "low_battery_threshold", "label": "Low-battery alert threshold (%)", "type": "number", "default": 20 },
+    { "key": "enable_alerts", "label": "Enable low-battery alerts", "type": "toggle", "default": true },
+    { "key": "enable_tts", "label": "Speak when fully charged", "type": "toggle", "default": true }
+  ],
+  "apiRisk": "unofficial",
+  "entry": "index.js"
+}

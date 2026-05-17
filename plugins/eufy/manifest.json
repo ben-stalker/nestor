@@ -1,0 +1,16 @@
+{
+  "id": "eufy",
+  "name": "Eufy",
+  "version": "0.1.0",
+  "author": "Nestor",
+  "description": "Doorbell ring alerts and robot-vacuum status via the unofficial Eufy security client.",
+  "capabilities": ["home_screen_widget", "alert_source", "tts_announcements", "nav_mode"],
+  "settingsFields": [
+    { "key": "username", "label": "Eufy account username", "type": "text" },
+    { "key": "password", "label": "Eufy account password", "type": "password" },
+    { "key": "enable_doorbell_alerts", "label": "Doorbell ring alerts", "type": "toggle", "default": true },
+    { "key": "enable_vacuum_status", "label": "Show vacuum status widget", "type": "toggle", "default": true }
+  ],
+  "apiRisk": "unofficial",
+  "entry": "index.js"
+}

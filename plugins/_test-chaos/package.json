@@ -1,0 +1,6 @@
+{
+  "name": "@nestor-plugin/_test-chaos",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js"
+}

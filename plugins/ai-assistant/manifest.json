@@ -1,0 +1,14 @@
+{
+  "id": "ai-assistant",
+  "name": "AI Assistant (Gemini)",
+  "version": "0.1.0",
+  "author": "Nestor",
+  "description": "Sends unmatched voice transcripts to Google Gemini with a brief context prompt and speaks the response.",
+  "capabilities": ["voice_handler", "settings_panel"],
+  "settingsFields": [
+    { "key": "gemini_api_key", "label": "Gemini API key", "type": "password" },
+    { "key": "enable_disclosure_dialog", "label": "Show disclosure before first use", "type": "toggle", "default": true }
+  ],
+  "apiRisk": "community",
+  "entry": "index.js"
+}

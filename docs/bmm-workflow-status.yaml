@@ -170,11 +170,26 @@ phases:
           - STORY-15.7
           - STORY-15.8
           - STORY-15.9
+          - STORY-14.7
+          - STORY-16.1
+          - STORY-16.2
+          - STORY-16.3
+          - STORY-16.4
+          - STORY-16.5
+          - STORY-16.6
+          - STORY-16.7
+          - STORY-16.8
+          - STORY-16.9
+          - STORY-16.10
+          - STORY-16.11
+          - STORY-16.12
+          - STORY-16.13
 
 backlog: []
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
+last_updated: "2026-05-17-epic-16"
 notes: >
   EPIC-15 complete (2026-05-17): Voice Pipeline. migration 022_voice_command_log.sql
   (voice_command_log table with transcript/matched_handler/response/duration_ms).

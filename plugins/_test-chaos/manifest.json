@@ -1,0 +1,18 @@
+{
+  "id": "_test-chaos",
+  "name": "Chaos Test Plugin",
+  "version": "0.1.0",
+  "author": "Nestor",
+  "description": "Used by tests to verify plugin error isolation — throws randomly on init.",
+  "capabilities": ["home_screen_widget"],
+  "settingsFields": [
+    {
+      "key": "always_throw",
+      "label": "Always throw on init",
+      "type": "toggle",
+      "default": false
+    }
+  ],
+  "apiRisk": "official",
+  "entry": "index.js"
+}
