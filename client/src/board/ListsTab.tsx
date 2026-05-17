@@ -37,11 +37,7 @@ function ListDetail({ list, onBack }: { list: BoardList; onBack: () => void }) {
 
   return (
     <div className="p-4 space-y-4">
-      <button
-        type="button"
-        onClick={onBack}
-        className="text-caption text-accent hover:underline"
-      >
+      <button type="button" onClick={onBack} className="text-caption text-accent hover:underline">
         ← Back to lists
       </button>
 
@@ -73,11 +69,17 @@ function ListDetail({ list, onBack }: { list: BoardList; onBack: () => void }) {
                 type="checkbox"
                 checked={item.ticked}
                 onChange={(e) =>
-                  updateItem.mutate({ listId: detail.id, itemId: item.id, patch: { ticked: e.target.checked } })
+                  updateItem.mutate({
+                    listId: detail.id,
+                    itemId: item.id,
+                    patch: { ticked: e.target.checked },
+                  })
                 }
                 className="accent-accent w-5 h-5 shrink-0"
               />
-              <span className={`text-body flex-1 ${item.ticked ? 'line-through text-secondary' : 'text-primary'}`}>
+              <span
+                className={`text-body flex-1 ${item.ticked ? 'line-through text-secondary' : 'text-primary'}`}
+              >
                 {item.text}
               </span>
               <button
@@ -148,7 +150,10 @@ function NewListModal({ onClose }: NewListModalProps) {
             <legend className="text-caption text-secondary mb-2">Type</legend>
             <div className="flex gap-3">
               {(['one_off', 'recurring'] as const).map((t) => (
-                <label key={t} className="flex items-center gap-2 text-body text-secondary cursor-pointer">
+                <label
+                  key={t}
+                  className="flex items-center gap-2 text-body text-secondary cursor-pointer"
+                >
                   <input
                     type="radio"
                     name="type"
@@ -163,7 +168,9 @@ function NewListModal({ onClose }: NewListModalProps) {
             </div>
           </fieldset>
           <div className="flex gap-3 justify-end">
-            <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>
+            <Button variant="ghost" type="button" onClick={onClose}>
+              Cancel
+            </Button>
             <Button type="submit" disabled={!name.trim() || create.isPending}>
               {create.isPending ? 'Creating…' : 'Create'}
             </Button>

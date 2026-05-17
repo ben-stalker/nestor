@@ -1,5 +1,11 @@
 import apiFetch from '../api/client';
-import type { BoardMessage, CountdownTimer, WhiteboardSnapshot, BoardList, BoardListItem } from './types';
+import type {
+  BoardMessage,
+  CountdownTimer,
+  WhiteboardSnapshot,
+  BoardList,
+  BoardListItem,
+} from './types';
 
 // ─── Messages ─────────────────────────────────────────────────────────────────
 
@@ -104,7 +110,10 @@ export async function fetchList(id: number): Promise<BoardList> {
   return apiFetch(`/api/v1/board/lists/${id}`);
 }
 
-export async function createList(data: { name: string; type?: 'one_off' | 'recurring' }): Promise<BoardList> {
+export async function createList(data: {
+  name: string;
+  type?: 'one_off' | 'recurring';
+}): Promise<BoardList> {
   return apiFetch('/api/v1/board/lists', { method: 'POST', body: JSON.stringify(data) });
 }
 
@@ -116,7 +125,11 @@ export async function deleteList(id: number): Promise<void> {
   return apiFetch(`/api/v1/board/lists/${id}`, { method: 'DELETE' });
 }
 
-export async function createListItem(listId: number, text: string, sort_order = 0): Promise<BoardListItem> {
+export async function createListItem(
+  listId: number,
+  text: string,
+  sort_order = 0,
+): Promise<BoardListItem> {
   return apiFetch(`/api/v1/board/lists/${listId}/items`, {
     method: 'POST',
     body: JSON.stringify({ text, sort_order }),
@@ -164,7 +177,10 @@ export async function createGuestChecklist(data: {
   });
 }
 
-export async function updateGuestChecklist(id: number, patch: Partial<BoardList>): Promise<BoardList> {
+export async function updateGuestChecklist(
+  id: number,
+  patch: Partial<BoardList>,
+): Promise<BoardList> {
   return apiFetch(`/api/v1/board/guest-checklists/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(patch),
@@ -175,7 +191,11 @@ export async function deleteGuestChecklist(id: number): Promise<void> {
   return apiFetch(`/api/v1/board/guest-checklists/${id}`, { method: 'DELETE' });
 }
 
-export async function createGuestItem(listId: number, text: string, sort_order = 0): Promise<BoardListItem> {
+export async function createGuestItem(
+  listId: number,
+  text: string,
+  sort_order = 0,
+): Promise<BoardListItem> {
   return apiFetch(`/api/v1/board/guest-checklists/${listId}/items`, {
     method: 'POST',
     body: JSON.stringify({ text, sort_order }),

@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { EmptyState, Button } from '../shared/ui';
-import {
-  useMessages,
-  useCreateMessage,
-  useUpdateMessage,
-  useArchiveMessage,
-} from './hooks';
+import { useMessages, useCreateMessage, useUpdateMessage, useArchiveMessage } from './hooks';
 import type { BoardMessage } from './types';
 import { useWebSocket } from '../hooks/useWebSocket';
 
 const PROFILE_COLOURS = [
-  '#f87171', '#fb923c', '#fbbf24', '#a3e635',
-  '#34d399', '#22d3ee', '#818cf8', '#c084fc',
+  '#f87171',
+  '#fb923c',
+  '#fbbf24',
+  '#a3e635',
+  '#34d399',
+  '#22d3ee',
+  '#818cf8',
+  '#c084fc',
 ];
 
 function colourForProfile(id: number | null): string {
@@ -42,10 +43,7 @@ function ComposeModal({ onClose }: ComposeProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!content.trim()) return;
-    create.mutate(
-      { content: content.trim(), pinned },
-      { onSuccess: onClose },
-    );
+    create.mutate({ content: content.trim(), pinned }, { onSuccess: onClose });
   }
 
   return (
@@ -152,10 +150,7 @@ export default function MessageBoard() {
       </div>
 
       {messages.length === 0 && (
-        <EmptyState
-          heading="No messages yet"
-          body="Post a quick note for your household."
-        />
+        <EmptyState heading="No messages yet" body="Post a quick note for your household." />
       )}
 
       {pinned.length > 0 && (

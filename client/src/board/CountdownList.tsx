@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { Card, EmptyState, Button } from '../shared/ui';
-import {
-  useCountdowns,
-  useCreateCountdown,
-  useUpdateCountdown,
-  useDeleteCountdown,
-} from './hooks';
+import { useCountdowns, useCreateCountdown, useUpdateCountdown, useDeleteCountdown } from './hooks';
 import type { CountdownTimer } from './types';
 
 function daysUntil(targetMs: number): number {
@@ -42,9 +37,7 @@ interface FormProps {
 function CountdownForm({ initial, onSave, onClose, pending }: FormProps) {
   const [name, setName] = useState(initial?.name ?? '');
   const [date, setDate] = useState(
-    initial?.target_date
-      ? new Date(initial.target_date).toISOString().split('T')[0]
-      : '',
+    initial?.target_date ? new Date(initial.target_date).toISOString().split('T')[0] : '',
   );
   const [showOnHome, setShowOnHome] = useState(initial?.show_on_home ?? false);
 
@@ -139,11 +132,12 @@ export default function CountdownList() {
                       <p className="text-body font-medium text-primary">{cd.name}</p>
                       <p className="text-caption text-secondary">
                         {new Date(cd.target_date).toLocaleDateString('en-GB', {
-                          weekday: 'short', day: 'numeric', month: 'long', year: 'numeric',
+                          weekday: 'short',
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
                         })}
-                        {cd.show_on_home && (
-                          <span className="ml-2 text-accent">· Home</span>
-                        )}
+                        {cd.show_on_home && <span className="ml-2 text-accent">· Home</span>}
                       </p>
                     </div>
                   </div>
@@ -174,9 +168,7 @@ export default function CountdownList() {
         <CountdownForm
           pending={create.isPending}
           onClose={() => setAdding(false)}
-          onSave={(data) =>
-            create.mutate(data, { onSuccess: () => setAdding(false) })
-          }
+          onSave={(data) => create.mutate(data, { onSuccess: () => setAdding(false) })}
         />
       )}
 
@@ -186,10 +178,7 @@ export default function CountdownList() {
           pending={update.isPending}
           onClose={() => setEditing(null)}
           onSave={(data) =>
-            update.mutate(
-              { id: editing.id, patch: data },
-              { onSuccess: () => setEditing(null) },
-            )
+            update.mutate({ id: editing.id, patch: data }, { onSuccess: () => setEditing(null) })
           }
         />
       )}

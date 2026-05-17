@@ -26,9 +26,7 @@ function daysText(days: number, compact?: boolean): string {
 
 function DaysLabel({ days, compact }: { days: number; compact?: boolean }) {
   return (
-    <span className={`ml-1 font-semibold ${daysColour(days)}`}>
-      ({daysText(days, compact)})
-    </span>
+    <span className={`ml-1 font-semibold ${daysColour(days)}`}>({daysText(days, compact)})</span>
   );
 }
 
@@ -56,11 +54,7 @@ function GuestDetail({ guest, onBack }: { guest: BoardList; onBack: () => void }
 
   return (
     <div className="p-4 space-y-4">
-      <button
-        type="button"
-        onClick={onBack}
-        className="text-caption text-accent hover:underline"
-      >
+      <button type="button" onClick={onBack} className="text-caption text-accent hover:underline">
         ← Back to guest visits
       </button>
 
@@ -68,15 +62,18 @@ function GuestDetail({ guest, onBack }: { guest: BoardList; onBack: () => void }
         <h2 className="text-h2 font-semibold text-primary">{detail.guest_name}</h2>
         {detail.guest_arrival_date && (
           <p className="text-caption text-secondary">
-            Arrives {new Date(detail.guest_arrival_date).toLocaleDateString('en-GB', {
-              weekday: 'short', day: 'numeric', month: 'long',
+            Arrives{' '}
+            {new Date(detail.guest_arrival_date).toLocaleDateString('en-GB', {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'long',
             })}
-            {days !== null && (
-              <DaysLabel days={days} />
-            )}
+            {days !== null && <DaysLabel days={days} />}
           </p>
         )}
-        <p className="text-caption text-secondary">{done}/{items.length} done</p>
+        <p className="text-caption text-secondary">
+          {done}/{items.length} done
+        </p>
       </div>
 
       <Card>
@@ -95,7 +92,9 @@ function GuestDetail({ guest, onBack }: { guest: BoardList; onBack: () => void }
                 }
                 className="accent-accent w-5 h-5 shrink-0"
               />
-              <span className={`text-body flex-1 ${item.ticked ? 'line-through text-secondary' : 'text-primary'}`}>
+              <span
+                className={`text-body flex-1 ${item.ticked ? 'line-through text-secondary' : 'text-primary'}`}
+              >
                 {item.text}
               </span>
             </li>
@@ -187,7 +186,10 @@ function NewGuestModal({ onClose }: NewGuestModalProps) {
             <legend className="text-caption text-secondary mb-2">Template</legend>
             <div className="flex gap-3">
               {(['arrival', 'departure'] as const).map((t) => (
-                <label key={t} className="flex items-center gap-2 text-body text-secondary cursor-pointer">
+                <label
+                  key={t}
+                  className="flex items-center gap-2 text-body text-secondary cursor-pointer"
+                >
                   <input
                     type="radio"
                     name="template"
@@ -202,7 +204,9 @@ function NewGuestModal({ onClose }: NewGuestModalProps) {
             </div>
           </fieldset>
           <div className="flex gap-3 justify-end">
-            <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>
+            <Button variant="ghost" type="button" onClick={onClose}>
+              Cancel
+            </Button>
             <Button type="submit" disabled={!guestName.trim() || create.isPending}>
               {create.isPending ? 'Creating…' : 'Create'}
             </Button>
@@ -246,18 +250,16 @@ export default function GuestVisitTab() {
             <li key={g.id}>
               <Card>
                 <div className="flex items-center justify-between gap-3">
-                  <button
-                    type="button"
-                    className="flex-1 text-left"
-                    onClick={() => setSelected(g)}
-                  >
+                  <button type="button" className="flex-1 text-left" onClick={() => setSelected(g)}>
                     <p className="text-body font-medium text-primary">{g.guest_name}</p>
                     <p className="text-caption text-secondary">
                       {g.name}
                       {g.guest_arrival_date && (
                         <span className="ml-2">
-                          · {new Date(g.guest_arrival_date).toLocaleDateString('en-GB', {
-                            day: 'numeric', month: 'short',
+                          ·{' '}
+                          {new Date(g.guest_arrival_date).toLocaleDateString('en-GB', {
+                            day: 'numeric',
+                            month: 'short',
                           })}
                           {days !== null && <DaysLabel days={days} compact />}
                         </span>

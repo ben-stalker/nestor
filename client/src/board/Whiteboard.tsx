@@ -2,7 +2,17 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { Button, EmptyState } from '../shared/ui';
 import { useSnapshots, useSaveSnapshot, useDeleteSnapshot } from './hooks';
 
-const COLOURS = ['#1e293b', '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#ffffff'];
+const COLOURS = [
+  '#1e293b',
+  '#ef4444',
+  '#f97316',
+  '#eab308',
+  '#22c55e',
+  '#3b82f6',
+  '#8b5cf6',
+  '#ec4899',
+  '#ffffff',
+];
 const WIDTHS = [2, 4, 8, 16];
 
 interface Point {
@@ -10,7 +20,10 @@ interface Point {
   y: number;
 }
 
-function getPoint(e: PointerEvent | React.PointerEvent<HTMLCanvasElement>, canvas: HTMLCanvasElement): Point {
+function getPoint(
+  e: PointerEvent | React.PointerEvent<HTMLCanvasElement>,
+  canvas: HTMLCanvasElement,
+): Point {
   const rect = canvas.getBoundingClientRect();
   return {
     x: (e.clientX - rect.left) * (canvas.width / rect.width),
@@ -80,7 +93,10 @@ function DrawingCanvas({ onSave }: { onSave: (blob: Blob) => void }) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const pt = getPoint(e as unknown as PointerEvent, canvas);
-    if (!lastPoint.current) { lastPoint.current = pt; return; }
+    if (!lastPoint.current) {
+      lastPoint.current = pt;
+      return;
+    }
 
     ctx.beginPath();
     ctx.moveTo(lastPoint.current.x, lastPoint.current.y);
@@ -114,7 +130,10 @@ function DrawingCanvas({ onSave }: { onSave: (blob: Blob) => void }) {
             <button
               key={c}
               type="button"
-              onClick={() => { setColour(c); setErasing(false); }}
+              onClick={() => {
+                setColour(c);
+                setErasing(false);
+              }}
               className={`w-7 h-7 rounded-full border-2 transition-transform ${
                 colour === c && !erasing ? 'border-accent scale-125' : 'border-surface-elev'
               }`}
@@ -198,7 +217,10 @@ export default function WhiteboardTab() {
 
   function handleSave(blob: Blob) {
     const name = `Whiteboard ${new Date().toLocaleString('en-GB', {
-      day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
     })}`;
     save.mutate({ name, blob }, { onSuccess: () => setView('gallery') });
   }
@@ -212,7 +234,9 @@ export default function WhiteboardTab() {
             type="button"
             onClick={() => setView('draw')}
             className={`px-3 py-1.5 rounded text-caption font-medium border transition-colors ${
-              view === 'draw' ? 'bg-accent text-white border-accent' : 'border-surface-elev text-secondary'
+              view === 'draw'
+                ? 'bg-accent text-white border-accent'
+                : 'border-surface-elev text-secondary'
             }`}
           >
             Draw
@@ -221,7 +245,9 @@ export default function WhiteboardTab() {
             type="button"
             onClick={() => setView('gallery')}
             className={`px-3 py-1.5 rounded text-caption font-medium border transition-colors ${
-              view === 'gallery' ? 'bg-accent text-white border-accent' : 'border-surface-elev text-secondary'
+              view === 'gallery'
+                ? 'bg-accent text-white border-accent'
+                : 'border-surface-elev text-secondary'
             }`}
           >
             Saved ({snapshots.length})
@@ -242,7 +268,11 @@ export default function WhiteboardTab() {
           )}
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {snapshots.map((s) => (
-              <div key={s.id} className="rounded-card border border-surface-elev overflow-hidden" data-testid="snapshot-card">
+              <div
+                key={s.id}
+                className="rounded-card border border-surface-elev overflow-hidden"
+                data-testid="snapshot-card"
+              >
                 <img
                   src={`/api/v1/board/whiteboard/${s.id}/image`}
                   alt={s.name}

@@ -18,7 +18,12 @@ import {
   CountdownTimerUpdateSchema,
   WhiteboardSnapshotInputSchema,
 } from '../types/board';
-import { ChecklistInputSchema, ChecklistItemInputSchema, ChecklistItemUpdateSchema, ChecklistUpdateSchema } from '../types/house';
+import {
+  ChecklistInputSchema,
+  ChecklistItemInputSchema,
+  ChecklistItemUpdateSchema,
+  ChecklistUpdateSchema,
+} from '../types/house';
 import eventBus from '../core/eventBus';
 
 const WHITEBOARD_DIR = path.join(os.homedir(), '.nestor', 'uploads', 'whiteboard');
@@ -63,7 +68,9 @@ export default function createBoardRouter(
     try {
       const parsed = BoardMessageInputSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       const profileId = req.profile?.id ?? null;
@@ -79,7 +86,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!boardMsgRepo.get(id)) {
@@ -88,7 +97,9 @@ export default function createBoardRouter(
       }
       const parsed = BoardMessageUpdateSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.json(boardMsgRepo.update(id, parsed.data));
@@ -101,7 +112,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!boardMsgRepo.get(id)) {
@@ -118,7 +131,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!boardMsgRepo.get(id)) {
@@ -146,7 +161,9 @@ export default function createBoardRouter(
     try {
       const parsed = CountdownTimerInputSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.status(201).json(countdownRepo.create(parsed.data));
@@ -159,7 +176,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!countdownRepo.get(id)) {
@@ -168,7 +187,9 @@ export default function createBoardRouter(
       }
       const parsed = CountdownTimerUpdateSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.json(countdownRepo.update(id, parsed.data));
@@ -181,7 +202,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!countdownRepo.get(id)) {
@@ -209,11 +232,17 @@ export default function createBoardRouter(
     upload.single('snapshot')(req, res, (err: unknown) => {
       if (err) {
         if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-          res.status(400).json({ error: 'validation', code: 'FILE_TOO_LARGE', details: ['Snapshot must be ≤ 20 MB'] });
+          res.status(400).json({
+            error: 'validation',
+            code: 'FILE_TOO_LARGE',
+            details: ['Snapshot must be ≤ 20 MB'],
+          });
           return;
         }
         if (err instanceof Error) {
-          res.status(400).json({ error: 'validation', code: 'INVALID_FILE_TYPE', details: [err.message] });
+          res
+            .status(400)
+            .json({ error: 'validation', code: 'INVALID_FILE_TYPE', details: [err.message] });
           return;
         }
         next(err);
@@ -221,18 +250,27 @@ export default function createBoardRouter(
       }
 
       if (!req.file) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['snapshot file required'] });
+        res.status(400).json({
+          error: 'validation',
+          code: 'INVALID_INPUT',
+          details: ['snapshot file required'],
+        });
         return;
       }
 
-      const rawName = typeof req.body === 'object' && req.body !== null && 'name' in (req.body as object)
-        ? (req.body as Record<string, unknown>).name
-        : undefined;
+      const rawName =
+        typeof req.body === 'object' && req.body !== null && 'name' in (req.body as object)
+          ? (req.body as Record<string, unknown>).name
+          : undefined;
       const nameResult = WhiteboardSnapshotInputSchema.safeParse({
-        name: (typeof rawName === 'string' ? rawName : null) ?? `Whiteboard ${new Date().toLocaleString()}`,
+        name:
+          (typeof rawName === 'string' ? rawName : null) ??
+          `Whiteboard ${new Date().toLocaleString()}`,
       });
       if (!nameResult.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: nameResult.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: nameResult.error.issues });
         return;
       }
 
@@ -257,7 +295,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const snapshot = whiteboardRepo.get(id);
@@ -281,7 +321,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!whiteboardRepo.get(id)) {
@@ -290,7 +332,9 @@ export default function createBoardRouter(
       }
       const parsed = WhiteboardSnapshotInputSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.json(whiteboardRepo.updateName(id, parsed.data.name));
@@ -303,7 +347,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const snapshot = whiteboardRepo.get(id);
@@ -312,7 +358,11 @@ export default function createBoardRouter(
         return;
       }
       whiteboardRepo.delete(id);
-      try { fs.unlinkSync(snapshot.file_path); } catch { /* ignore missing file */ }
+      try {
+        fs.unlinkSync(snapshot.file_path);
+      } catch {
+        /* ignore missing file */
+      }
       res.status(204).end();
     } catch (err) {
       next(err);
@@ -323,9 +373,9 @@ export default function createBoardRouter(
 
   router.get('/api/v1/board/lists', requireProfile, (_req, res, next) => {
     try {
-      const lists = checklistRepo.list().filter(
-        (c) => c.type === 'one_off' || c.type === 'recurring',
-      );
+      const lists = checklistRepo
+        .list()
+        .filter((c) => c.type === 'one_off' || c.type === 'recurring');
       res.json(lists);
     } catch (err) {
       next(err);
@@ -337,12 +387,18 @@ export default function createBoardRouter(
       const rawBody = (req.body ?? {}) as Record<string, unknown>;
       const type = rawBody.type ?? 'one_off';
       if (type !== 'one_off' && type !== 'recurring') {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['type must be one_off or recurring'] });
+        res.status(400).json({
+          error: 'validation',
+          code: 'INVALID_INPUT',
+          details: ['type must be one_off or recurring'],
+        });
         return;
       }
       const parsed = ChecklistInputSchema.safeParse({ ...rawBody, type });
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.status(201).json(checklistRepo.create(parsed.data));
@@ -355,7 +411,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const list = checklistRepo.get(id);
@@ -373,7 +431,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!checklistRepo.get(id)) {
@@ -382,7 +442,9 @@ export default function createBoardRouter(
       }
       const parsed = ChecklistUpdateSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.json(checklistRepo.update(id, parsed.data));
@@ -395,7 +457,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!checklistRepo.get(id)) {
@@ -413,7 +477,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!checklistRepo.get(id)) {
@@ -422,7 +488,9 @@ export default function createBoardRouter(
       }
       const parsed = ChecklistItemInputSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.status(201).json(checklistRepo.createItem(id, parsed.data));
@@ -436,12 +504,16 @@ export default function createBoardRouter(
       const id = Number(req.params.id);
       const itemId = Number(req.params.itemId);
       if (!Number.isInteger(id) || id <= 0 || !Number.isInteger(itemId) || itemId <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const parsed = ChecklistItemUpdateSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.json(checklistRepo.updateItem(itemId, parsed.data));
@@ -454,7 +526,9 @@ export default function createBoardRouter(
     try {
       const itemId = Number(req.params.itemId);
       if (!Number.isInteger(itemId) || itemId <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       checklistRepo.deleteItem(itemId);
@@ -468,7 +542,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       if (!checklistRepo.get(id)) {
@@ -498,18 +574,25 @@ export default function createBoardRouter(
       const rawReqBody = (req.body ?? {}) as Record<string, unknown>;
       const parsed = ChecklistInputSchema.safeParse({ ...rawReqBody, type: 'one_off' });
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       if (!parsed.data.guest_name) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['guest_name is required'] });
+        res.status(400).json({
+          error: 'validation',
+          code: 'INVALID_INPUT',
+          details: ['guest_name is required'],
+        });
         return;
       }
       const checklist = checklistRepo.create(parsed.data);
 
-      const template = typeof req.body === 'object' && req.body !== null
-        ? (req.body as Record<string, unknown>).template
-        : undefined;
+      const template =
+        typeof req.body === 'object' && req.body !== null
+          ? (req.body as Record<string, unknown>).template
+          : undefined;
       const templateStr = typeof template === 'string' ? template : undefined;
       const arrivalItems = [
         { text: 'Fresh towels in bathroom', sort_order: 0 },
@@ -542,7 +625,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const checklist = checklistRepo.get(id);
@@ -560,7 +645,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const existing = checklistRepo.get(id);
@@ -570,7 +657,9 @@ export default function createBoardRouter(
       }
       const parsed = ChecklistUpdateSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.json(checklistRepo.update(id, parsed.data));
@@ -583,7 +672,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const existing = checklistRepo.get(id);
@@ -602,7 +693,9 @@ export default function createBoardRouter(
     try {
       const id = Number(req.params.id);
       if (!Number.isInteger(id) || id <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
         return;
       }
       const existing = checklistRepo.get(id);
@@ -612,7 +705,9 @@ export default function createBoardRouter(
       }
       const parsed = ChecklistItemInputSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+        res
+          .status(400)
+          .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
         return;
       }
       res.status(201).json(checklistRepo.createItem(id, parsed.data));
@@ -621,23 +716,31 @@ export default function createBoardRouter(
     }
   });
 
-  router.patch('/api/v1/board/guest-checklists/:id/items/:itemId', requireProfile, (req, res, next) => {
-    try {
-      const itemId = Number(req.params.itemId);
-      if (!Number.isInteger(itemId) || itemId <= 0) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
-        return;
+  router.patch(
+    '/api/v1/board/guest-checklists/:id/items/:itemId',
+    requireProfile,
+    (req, res, next) => {
+      try {
+        const itemId = Number(req.params.itemId);
+        if (!Number.isInteger(itemId) || itemId <= 0) {
+          res
+            .status(400)
+            .json({ error: 'validation', code: 'INVALID_INPUT', details: ['invalid id'] });
+          return;
+        }
+        const parsed = ChecklistItemUpdateSchema.safeParse(req.body);
+        if (!parsed.success) {
+          res
+            .status(400)
+            .json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
+          return;
+        }
+        res.json(checklistRepo.updateItem(itemId, parsed.data));
+      } catch (err) {
+        next(err);
       }
-      const parsed = ChecklistItemUpdateSchema.safeParse(req.body);
-      if (!parsed.success) {
-        res.status(400).json({ error: 'validation', code: 'INVALID_INPUT', details: parsed.error.issues });
-        return;
-      }
-      res.json(checklistRepo.updateItem(itemId, parsed.data));
-    } catch (err) {
-      next(err);
-    }
-  });
+    },
+  );
 
   return router;
 }

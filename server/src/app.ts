@@ -167,7 +167,16 @@ export default function createApp(): Express {
   app.use(createChecklistsRouter(checklistRepo));
   app.use(createFinanceRouter(financeRepo, subRepo, requireAdminPin));
   app.use(createPetsRouter(petRepo, petHealthRepo, requireAdminPin, profileRepo, eventRepo));
-  app.use(createBoardRouter(boardMsgRepo, countdownRepo, whiteboardRepo, checklistRepo, requireAdminPin, profileRepo));
+  app.use(
+    createBoardRouter(
+      boardMsgRepo,
+      countdownRepo,
+      whiteboardRepo,
+      checklistRepo,
+      requireAdminPin,
+      profileRepo,
+    ),
+  );
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(CLIENT_DIST)) {
     app.use(express.static(CLIENT_DIST));

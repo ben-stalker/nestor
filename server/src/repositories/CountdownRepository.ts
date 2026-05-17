@@ -19,9 +19,7 @@ function fromRow(row: CountdownRow): CountdownTimer {
 
 export default class CountdownRepository extends BaseRepository {
   list(): CountdownTimer[] {
-    const rows = this.all<CountdownRow>(
-      'SELECT * FROM countdown_timers ORDER BY target_date ASC',
-    );
+    const rows = this.all<CountdownRow>('SELECT * FROM countdown_timers ORDER BY target_date ASC');
     return rows.map(fromRow);
   }
 

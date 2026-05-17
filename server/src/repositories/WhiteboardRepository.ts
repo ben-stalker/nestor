@@ -11,16 +11,19 @@ interface SnapshotRow {
 
 export default class WhiteboardRepository extends BaseRepository {
   list(): WhiteboardSnapshot[] {
-    return this.all<SnapshotRow>(
-      'SELECT * FROM whiteboard_snapshots ORDER BY created_at DESC',
-    );
+    return this.all<SnapshotRow>('SELECT * FROM whiteboard_snapshots ORDER BY created_at DESC');
   }
 
   get(id: number): WhiteboardSnapshot | undefined {
-    return this.queryOne<SnapshotRow>('SELECT * FROM whiteboard_snapshots WHERE id = ?', [id]) ?? undefined;
+    return (
+      this.queryOne<SnapshotRow>('SELECT * FROM whiteboard_snapshots WHERE id = ?', [id]) ??
+      undefined
+    );
   }
 
-  create(input: WhiteboardSnapshotInput & { file_path: string; thumbnail_path?: string }): WhiteboardSnapshot {
+  create(
+    input: WhiteboardSnapshotInput & { file_path: string; thumbnail_path?: string },
+  ): WhiteboardSnapshot {
     const result = this.run(
       'INSERT INTO whiteboard_snapshots (name, file_path, thumbnail_path) VALUES (?, ?, ?)',
       [input.name, input.file_path, input.thumbnail_path ?? null],

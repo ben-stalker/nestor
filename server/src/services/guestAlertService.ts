@@ -16,9 +16,7 @@ export default function evaluateGuestAlerts(
     .forEach((checklist) => {
       if (!checklist.guest_arrival_date) return;
 
-      const daysUntil = Math.ceil(
-        (checklist.guest_arrival_date - now) / (1000 * 60 * 60 * 24),
-      );
+      const daysUntil = Math.ceil((checklist.guest_arrival_date - now) / (1000 * 60 * 60 * 24));
       if (!ALERT_DAYS_BEFORE.includes(daysUntil)) return;
 
       const items = checklistRepo.listItems(checklist.id);

@@ -170,8 +170,15 @@ export function useDeleteList() {
 export function useCreateListItem() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ listId, text, sort_order }: { listId: number; text: string; sort_order?: number }) =>
-      createListItem(listId, text, sort_order),
+    mutationFn: ({
+      listId,
+      text,
+      sort_order,
+    }: {
+      listId: number;
+      text: string;
+      sort_order?: number;
+    }) => createListItem(listId, text, sort_order),
     onSuccess: (_d, vars) => qc.invalidateQueries({ queryKey: ['board', 'lists', vars.listId] }),
   });
 }
@@ -226,15 +233,22 @@ export function useCreateGuestChecklist() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: Parameters<typeof createGuestChecklist>[0]) => createGuestChecklist(data),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: ['board', 'guests'] }); },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['board', 'guests'] });
+    },
   });
 }
 
 export function useUpdateGuestChecklist() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, patch }: { id: number; patch: Parameters<typeof updateGuestChecklist>[1] }) =>
-      updateGuestChecklist(id, patch),
+    mutationFn: ({
+      id,
+      patch,
+    }: {
+      id: number;
+      patch: Parameters<typeof updateGuestChecklist>[1];
+    }) => updateGuestChecklist(id, patch),
     onSuccess: (_d, vars) => {
       void qc.invalidateQueries({ queryKey: ['board', 'guests'] });
       void qc.invalidateQueries({ queryKey: ['board', 'guests', vars.id] });
@@ -246,16 +260,27 @@ export function useDeleteGuestChecklist() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => deleteGuestChecklist(id),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: ['board', 'guests'] }); },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['board', 'guests'] });
+    },
   });
 }
 
 export function useCreateGuestItem() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ listId, text, sort_order }: { listId: number; text: string; sort_order?: number }) =>
-      createGuestItem(listId, text, sort_order),
-    onSuccess: (_d, vars) => { void qc.invalidateQueries({ queryKey: ['board', 'guests', vars.listId] }); },
+    mutationFn: ({
+      listId,
+      text,
+      sort_order,
+    }: {
+      listId: number;
+      text: string;
+      sort_order?: number;
+    }) => createGuestItem(listId, text, sort_order),
+    onSuccess: (_d, vars) => {
+      void qc.invalidateQueries({ queryKey: ['board', 'guests', vars.listId] });
+    },
   });
 }
 
@@ -271,6 +296,8 @@ export function useUpdateGuestItem() {
       itemId: number;
       patch: Parameters<typeof updateGuestItem>[2];
     }) => updateGuestItem(listId, itemId, patch),
-    onSuccess: (_d, vars) => { void qc.invalidateQueries({ queryKey: ['board', 'guests', vars.listId] }); },
+    onSuccess: (_d, vars) => {
+      void qc.invalidateQueries({ queryKey: ['board', 'guests', vars.listId] });
+    },
   });
 }
