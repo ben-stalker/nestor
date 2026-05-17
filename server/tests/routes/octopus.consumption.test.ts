@@ -64,7 +64,7 @@ function seedCredentials(
   }
 }
 
-let _intervalCounter = 0;
+let intervalCounter = 0;
 
 /** Insert a half-hour interval for the given ISO date string using a unique slot offset */
 function insertInterval(
@@ -73,7 +73,8 @@ function insertInterval(
   dateStr: string,
   kwh: number,
 ) {
-  const slotOffset = (_intervalCounter++ % 48) * 1800;
+  const slotOffset = (intervalCounter % 48) * 1800;
+  intervalCounter += 1;
   const start = Math.floor(new Date(`${dateStr}T00:00:00Z`).getTime() / 1000) + slotOffset;
   const end = start + 1800;
   consumptionRepo.upsert({ fuelType, intervalStart: start, intervalEnd: end, kwh });
