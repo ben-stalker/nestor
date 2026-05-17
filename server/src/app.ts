@@ -43,6 +43,8 @@ import createBoardRouter from './routes/board';
 import createContactsRouter from './routes/contacts';
 import createEvRouter from './routes/ev';
 import createOctopusRouter from './routes/octopus';
+import OctopusConsumptionRepository from './repositories/OctopusConsumptionRepository';
+import { OctopusSyncService } from './services/OctopusSyncService';
 import ContactRepository from './repositories/ContactRepository';
 import EvChargingRepository from './repositories/EvChargingRepository';
 import BoardMessageRepository from './repositories/BoardMessageRepository';
@@ -116,6 +118,8 @@ export default function createApp(): Express {
   const petHealthRepo = new PetHealthLogRepository(db);
   const contactRepo = new ContactRepository(db);
   const evChargingRepo = new EvChargingRepository(db);
+  const octopusConsumptionRepo = new OctopusConsumptionRepository(db);
+  const octopusSyncService = new OctopusSyncService(octopusConsumptionRepo, settingsRepo);
   const boardMsgRepo = new BoardMessageRepository(db);
   const countdownRepo = new CountdownRepository(db);
   const whiteboardRepo = new WhiteboardRepository(db);
@@ -141,7 +145,10 @@ export default function createApp(): Express {
     createProfilesRouter(profileRepo, undefined, [kioskLock, requireAdminPin]),
   );
   app.use('/api/v1/settings', settingsRouter);
-  app.use('/api/v1/admin', createAdminRouter(settingsRepo, profileRepo));
+  app.use(
+    '/api/v1/admin',
+    createAdminRouter(settingsRepo, profileRepo, undefined, octopusSyncService),
+  );
   app.use(createWeatherRouter(settingsRepo));
   app.use(createHomeRouter());
   app.use(createAlertsRouter(alertRepo));

@@ -88,6 +88,8 @@ export const OctopusMeterSerialSchema = z.string().min(1);
 export const OctopusGasMprnSchema = z.string().min(1);
 export const OctopusGasMeterSerialSchema = z.string().min(1);
 export const OctopusTariffCodeSchema = z.string().min(1);
+export const OctopusUnitRateSchema = z.number().nonnegative();
+export const OctopusStandingChargeSchema = z.number().nonnegative();
 
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
@@ -130,6 +132,8 @@ export const SETTING_SCHEMAS = {
   octopus_gas_mprn: OctopusGasMprnSchema,
   octopus_gas_meter_serial: OctopusGasMeterSerialSchema,
   octopus_tariff_code: OctopusTariffCodeSchema,
+  octopus_unit_rate: OctopusUnitRateSchema,
+  octopus_standing_charge: OctopusStandingChargeSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;

@@ -9,6 +9,7 @@ import { getDb } from '../db/connection';
 import logger from '../utils/logger';
 import { listAdapters } from '../services/transport/adapterRegistry';
 import { Scheduler } from '../scheduler';
+import type { OctopusSyncService } from '../services/OctopusSyncService';
 
 const ActivateKioskSchema = z.object({ profileId: z.string().min(1) });
 const PinSchema = z.object({ pin: z.string().min(1) });
@@ -18,6 +19,7 @@ export default function createAdminRouter(
   settingsRepo: AppSettingsRepository = new AppSettingsRepository(getDb()),
   profileRepo: ProfileRepository = new ProfileRepository(getDb()),
   pinLimiter: RequestHandler = createPinVerifyLimiter(),
+  octopusSyncService?: OctopusSyncService,
 ): Router {
   const router = Router();
 
@@ -133,6 +135,20 @@ export default function createAdminRouter(
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       res.status(500).json({ error: message });
+    }
+  });
+
+  // POST /api/v1/admin/run-octopus-sync — manually trigger the Octopus Energy consumption sync.
+  router.post('/run-octopus-sync', async (_req, res, next) => {
+    try {
+      if (!octopusSyncService) {
+        res.status(503).json({ error: 'Octopus sync service not available' });
+        return;
+      }
+      const result = await octopusSyncService.run();
+      res.json(result);
+    } catch (err) {
+      next(err);
     }
   });
 

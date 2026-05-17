@@ -20,6 +20,37 @@ interface OctopusAccountResponse {
   }>;
 }
 
+interface OctopusConsumptionResult {
+  consumption: number;
+  interval_start: string;
+  interval_end: string;
+}
+
+interface OctopusConsumptionResponse {
+  results: OctopusConsumptionResult[];
+  next: string | null;
+}
+
+interface OctopusRateResult {
+  value_exc_vat: number;
+  value_inc_vat: number;
+}
+
+interface OctopusRatesResponse {
+  results: OctopusRateResult[];
+}
+
+export interface ConsumptionInterval {
+  intervalStart: number;
+  intervalEnd: number;
+  kwh: number;
+}
+
+export interface TariffRates {
+  unitRatePence: number;
+  standingChargePence: number;
+}
+
 const OCTOPUS_BASE_URL = 'https://api.octopus.energy';
 const TIMEOUT_MS = 10_000;
 
@@ -92,4 +123,133 @@ export async function validateAccount(
   }
 
   return { mpan, meterSerial, gasMprn, gasMeterSerial, tariffCode };
+}
+
+async function fetchOnePage(url: string, credentials: string): Promise<OctopusConsumptionResponse> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: {
+        Authorization: `Basic ${credentials}`,
+        Accept: 'application/json',
+      },
+      signal: controller.signal,
+    });
+  } catch (err: unknown) {
+    clearTimeout(timer);
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new Error('Request to Octopus API timed out');
+    }
+    throw new Error(`Network error contacting Octopus API: ${String(err)}`);
+  }
+  clearTimeout(timer);
+
+  if (!res.ok) {
+    throw new Error(`Octopus API returned ${res.status}`);
+  }
+
+  return res.json() as Promise<OctopusConsumptionResponse>;
+}
+
+async function fetchPagedConsumption(
+  url: string,
+  credentials: string,
+  accumulated: OctopusConsumptionResult[] = [],
+): Promise<OctopusConsumptionResult[]> {
+  const data = await fetchOnePage(url, credentials);
+  const all = [...accumulated, ...data.results];
+  if (data.next) {
+    return fetchPagedConsumption(data.next, credentials, all);
+  }
+  return all;
+}
+
+export async function fetchConsumption(
+  apiKey: string,
+  mpanOrMprn: string,
+  meterSerial: string,
+  fuelType: 'electricity' | 'gas',
+  fromIso: string,
+  toIso: string,
+): Promise<ConsumptionInterval[]> {
+  const credentials = Buffer.from(`${apiKey}:`).toString('base64');
+  const meterPointSegment =
+    fuelType === 'electricity'
+      ? `electricity-meter-points/${mpanOrMprn}`
+      : `gas-meter-points/${mpanOrMprn}`;
+
+  const url =
+    `${OCTOPUS_BASE_URL}/v1/${meterPointSegment}/meters/${meterSerial}/consumption/` +
+    `?period_from=${encodeURIComponent(fromIso)}&period_to=${encodeURIComponent(toIso)}&order_by=period&page_size=100`;
+
+  const raw = await fetchPagedConsumption(url, credentials);
+
+  return raw.map((r) => ({
+    intervalStart: Math.floor(new Date(r.interval_start).getTime() / 1000),
+    intervalEnd: Math.floor(new Date(r.interval_end).getTime() / 1000),
+    kwh: r.consumption,
+  }));
+}
+
+export async function fetchTariff(apiKey: string, tariffCode: string): Promise<TariffRates | null> {
+  const credentials = Buffer.from(`${apiKey}:`).toString('base64');
+
+  // Extract product code: e.g. "E-1R-VAR-22-11-01-A" → "VAR-22-11-01"
+  const parts = tariffCode.split('-');
+  const productCode = parts.slice(2, -1).join('-');
+
+  if (!productCode) {
+    return null;
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  const fetchRate = async (endpoint: string): Promise<number | null> => {
+    const url =
+      `${OCTOPUS_BASE_URL}/v1/products/${productCode}/electricity-tariffs/${tariffCode}/${endpoint}/` +
+      `?period_from=${today}`;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        headers: {
+          Authorization: `Basic ${credentials}`,
+          Accept: 'application/json',
+        },
+        signal: controller.signal,
+      });
+    } catch (err: unknown) {
+      clearTimeout(timer);
+      if (err instanceof Error && err.name === 'AbortError') {
+        throw new Error('Request to Octopus API timed out');
+      }
+      throw new Error(`Network error contacting Octopus API: ${String(err)}`);
+    }
+    clearTimeout(timer);
+
+    if (!res.ok) {
+      return null;
+    }
+
+    const data = (await res.json()) as OctopusRatesResponse;
+    const first = data.results?.[0];
+    return first?.value_inc_vat ?? null;
+  };
+
+  const [unitRate, standingCharge] = await Promise.all([
+    fetchRate('standard-unit-rates'),
+    fetchRate('standing-charges'),
+  ]);
+
+  if (unitRate === null || standingCharge === null) {
+    return null;
+  }
+
+  return { unitRatePence: unitRate, standingChargePence: standingCharge };
 }

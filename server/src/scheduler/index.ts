@@ -1,7 +1,7 @@
 import { schedule, validate } from 'node-cron';
 import type { ScheduledTask } from 'node-cron';
 import logger from '../utils/logger';
-import type AppSettingsRepository from '../repositories/AppSettingsRepository';
+import AppSettingsRepository from '../repositories/AppSettingsRepository';
 import { LocationSchema } from '../db/settings-keys';
 import * as WeatherService from '../services/WeatherService';
 import CalendarAccountRepository from '../repositories/CalendarAccountRepository';
@@ -27,6 +27,8 @@ import evaluatePetAlerts from '../services/petAlertService';
 import evaluateGuestAlerts from '../services/guestAlertService';
 import EvChargingRepository from '../repositories/EvChargingRepository';
 import evaluateEvPlugInAlerts from '../services/evAlertService';
+import OctopusConsumptionRepository from '../repositories/OctopusConsumptionRepository';
+import { OctopusSyncService } from '../services/OctopusSyncService';
 
 export type JobHandler = () => void | Promise<void>;
 
@@ -179,5 +181,15 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
       new EvChargingRepository(db),
       new AlertRepository(db),
     );
+  });
+
+  Scheduler.register('octopus-sync', '0 * * * *', async () => {
+    const db = getDb();
+    const syncService = new OctopusSyncService(
+      new OctopusConsumptionRepository(db),
+      settingsRepo ?? new AppSettingsRepository(db),
+    );
+    const result = await syncService.run();
+    logger.info({ job: 'octopus-sync', ...result }, 'Octopus sync complete');
   });
 }
