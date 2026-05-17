@@ -35,9 +35,21 @@ const mockMessages = [
 ];
 
 const mockFetchMessages = vi.fn<() => Promise<unknown>>().mockResolvedValue(mockMessages);
-const mockCreateMessage = vi.fn<(...args: unknown[]) => Promise<unknown>>().mockResolvedValue({ id: 3, content: 'New msg', pinned: false, archived: false, created_at: Date.now() });
-const mockArchiveMessage = vi.fn<(...args: unknown[]) => Promise<unknown>>().mockResolvedValue({ ...mockMessages[0], archived: true });
-const mockUpdateMessage = vi.fn<(...args: unknown[]) => Promise<unknown>>().mockResolvedValue(mockMessages[0]);
+const mockCreateMessage = vi
+  .fn<(...args: unknown[]) => Promise<unknown>>()
+  .mockResolvedValue({
+    id: 3,
+    content: 'New msg',
+    pinned: false,
+    archived: false,
+    created_at: Date.now(),
+  });
+const mockArchiveMessage = vi
+  .fn<(...args: unknown[]) => Promise<unknown>>()
+  .mockResolvedValue({ ...mockMessages[0], archived: true });
+const mockUpdateMessage = vi
+  .fn<(...args: unknown[]) => Promise<unknown>>()
+  .mockResolvedValue(mockMessages[0]);
 
 vi.mock('../../src/board/api', () => ({
   fetchMessages: () => mockFetchMessages(),

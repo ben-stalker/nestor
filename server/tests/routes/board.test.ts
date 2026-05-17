@@ -71,7 +71,14 @@ function makeApp(
   const app = express();
   app.use(express.json());
   app.use(
-    createBoardRouter(boardMsgRepo, countdownRepo, whiteboardRepo, checklistRepo, noOpAdminPin, profileRepo),
+    createBoardRouter(
+      boardMsgRepo,
+      countdownRepo,
+      whiteboardRepo,
+      checklistRepo,
+      noOpAdminPin,
+      profileRepo,
+    ),
   );
   app.use(errorHandler);
   return app;
@@ -466,7 +473,11 @@ describe('Guest checklists', () => {
         template: 'arrival',
       });
     expect(res.status).toBe(201);
-    const body = res.body as { guest_name: string; guest_arrival_date: number; items: Array<{ text: string }> };
+    const body = res.body as {
+      guest_name: string;
+      guest_arrival_date: number;
+      items: Array<{ text: string }>;
+    };
     expect(body.guest_name).toBe('Mum');
     expect(body.guest_arrival_date).toBe(arrivalDate);
     expect(body.items.length).toBeGreaterThan(0);

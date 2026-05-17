@@ -31,8 +31,12 @@ const mockCountdowns = [
 ];
 
 const mockFetchCountdowns = vi.fn<() => Promise<unknown>>().mockResolvedValue(mockCountdowns);
-const mockCreateCountdown = vi.fn<(...args: unknown[]) => Promise<unknown>>().mockResolvedValue({ id: 3, name: 'New' });
-const mockDeleteCountdown = vi.fn<(...args: unknown[]) => Promise<unknown>>().mockResolvedValue(undefined);
+const mockCreateCountdown = vi
+  .fn<(...args: unknown[]) => Promise<unknown>>()
+  .mockResolvedValue({ id: 3, name: 'New' });
+const mockDeleteCountdown = vi
+  .fn<(...args: unknown[]) => Promise<unknown>>()
+  .mockResolvedValue(undefined);
 
 vi.mock('../../src/board/api', () => ({
   fetchCountdowns: () => mockFetchCountdowns(),

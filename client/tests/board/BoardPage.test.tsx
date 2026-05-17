@@ -35,7 +35,9 @@ vi.mock('../../src/board/api', () => ({
   deleteListItem: vi.fn(),
   resetList: vi.fn(),
   fetchGuestChecklists: vi.fn().mockResolvedValue([]),
-  fetchGuestChecklist: vi.fn().mockResolvedValue({ id: 1, name: 'Guest', guest_name: 'X', items: [] }),
+  fetchGuestChecklist: vi
+    .fn()
+    .mockResolvedValue({ id: 1, name: 'Guest', guest_name: 'X', items: [] }),
   createGuestChecklist: vi.fn(),
   updateGuestChecklist: vi.fn(),
   deleteGuestChecklist: vi.fn(),
@@ -83,14 +85,20 @@ describe('BoardPage', () => {
   it('switches to Countdowns tab when clicked', async () => {
     renderPage();
     await userEvent.click(screen.getByRole('tab', { name: 'Countdowns' }));
-    expect(screen.getByRole('tab', { name: 'Countdowns' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Countdowns' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
     await waitFor(() => expect(screen.getByText(/no countdowns/i)).toBeInTheDocument());
   });
 
   it('switches to Whiteboard tab when clicked', async () => {
     renderPage();
     await userEvent.click(screen.getByRole('tab', { name: 'Whiteboard' }));
-    expect(screen.getByRole('tab', { name: 'Whiteboard' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Whiteboard' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
   });
 
   it('switches to Lists tab when clicked', async () => {
@@ -102,6 +110,9 @@ describe('BoardPage', () => {
   it('switches to Guest Visits tab when clicked', async () => {
     renderPage();
     await userEvent.click(screen.getByRole('tab', { name: 'Guest Visits' }));
-    expect(screen.getByRole('tab', { name: 'Guest Visits' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Guest Visits' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
   });
 });

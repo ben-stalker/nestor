@@ -29,7 +29,9 @@ const mockGuests = [
 const mockFetchGuestChecklists = vi.fn<() => Promise<unknown>>().mockResolvedValue(mockGuests);
 const mockFetchGuestChecklist = vi.fn<() => Promise<unknown>>().mockResolvedValue({
   ...mockGuests[0],
-  items: [{ id: 1, checklist_id: 1, text: 'Fresh towels', ticked: false, sort_order: 0, section: null }],
+  items: [
+    { id: 1, checklist_id: 1, text: 'Fresh towels', ticked: false, sort_order: 0, section: null },
+  ],
 });
 
 vi.mock('../../src/board/api', () => ({
