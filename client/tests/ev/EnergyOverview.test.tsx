@@ -54,7 +54,7 @@ describe('EnergyOverview', () => {
         <EnergyOverview />
       </QueryClientProvider>,
     );
-    await screen.findByText(/EV Charging/i);
+    await screen.findByText('EV Charging');
     await screen.findByText('£11.27');
   });
 

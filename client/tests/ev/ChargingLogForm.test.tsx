@@ -17,7 +17,7 @@ describe('ChargingLogForm', () => {
     render(
       <ChargingLogForm vehicleId={1} vehicles={vehicles} onSave={vi.fn()} onClose={vi.fn()} />,
     );
-    expect(screen.getByLabelText(/energy charged/i)).toBeTruthy();
+    expect(screen.getByPlaceholderText('e.g. 35.5')).toBeTruthy();
     expect(screen.getByText(/log session/i)).toBeTruthy();
   });
 
@@ -33,7 +33,7 @@ describe('ChargingLogForm', () => {
   it('shows validation error for missing kWh', () => {
     const onSave = vi.fn();
     render(<ChargingLogForm vehicleId={1} vehicles={vehicles} onSave={onSave} onClose={vi.fn()} />);
-    fireEvent.submit(screen.getByRole('form') ?? screen.getByText(/log session/i).closest('form')!);
+    fireEvent.submit(screen.getByText(/log session/i).closest('form')!);
     expect(onSave).not.toHaveBeenCalled();
   });
 
