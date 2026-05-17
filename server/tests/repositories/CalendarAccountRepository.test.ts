@@ -34,7 +34,7 @@ describe('CalendarAccountRepository', () => {
         provider: 'custom',
         display_name: 'My CalDAV',
         caldav_url: null,
-        credentials: { password: 's3cr3t' },
+        credentials: { password: 'test-caldav-pw' },
         sync_interval_mins: 30,
       });
       expect(account.id).toBeGreaterThan(0);
@@ -60,7 +60,7 @@ describe('CalendarAccountRepository', () => {
       const account = repo.create({
         provider: 'custom',
         display_name: 'Test',
-        credentials: { password: 'hunter2', refresh_token: 'abc' },
+        credentials: { password: 'test-cred-pw', refresh_token: 'abc' },
       });
 
       const row = db
@@ -69,10 +69,10 @@ describe('CalendarAccountRepository', () => {
           { credentials_encrypted: string }
         >('SELECT credentials_encrypted FROM calendar_accounts WHERE id = ?')
         .get(account.id);
-      expect(row?.credentials_encrypted).not.toContain('hunter2');
+      expect(row?.credentials_encrypted).not.toContain('test-cred-pw');
 
       const creds = repo.getCredentials(account.id);
-      expect(creds.password).toBe('hunter2');
+      expect(creds.password).toBe('test-cred-pw');
       expect(creds.refresh_token).toBe('abc');
     });
 
@@ -80,7 +80,7 @@ describe('CalendarAccountRepository', () => {
       const account = repo.create({
         provider: 'custom',
         display_name: 'Test',
-        credentials: { password: 'secret' },
+        credentials: { password: 'test-tamper-pw' },
       });
       db.prepare('UPDATE calendar_accounts SET credentials_encrypted = ? WHERE id = ?').run(
         'v1:AAAA:BBBB:CCCC',

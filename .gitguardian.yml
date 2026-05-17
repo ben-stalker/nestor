@@ -1,0 +1,6 @@
+version: 2
+
+ignore-paths:
+  - server/tests/
+  - client/tests/
+  - plugins/_test-chaos/

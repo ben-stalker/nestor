@@ -25,8 +25,8 @@ describe('PluginSettingsRepository', () => {
 
   it('stores and retrieves an encrypted value', () => {
     const { db, repo } = makeRepo();
-    repo.set('tesla', 'access_token', 'secret-abc');
-    expect(repo.get('tesla', 'access_token')).toBe('secret-abc');
+    repo.set('tesla', 'access_token', 'fake-test-value');
+    expect(repo.get('tesla', 'access_token')).toBe('fake-test-value');
     db.close();
   });
 
@@ -50,15 +50,15 @@ describe('PluginSettingsRepository', () => {
   it('returns all settings for a plugin', () => {
     const { db, repo } = makeRepo();
     repo.set('eufy', 'username', 'me');
-    repo.set('eufy', 'password', 'p4ss');
+    repo.set('eufy', 'password', 'test-pw');
     const all = repo.getAll('eufy');
-    expect(all).toEqual({ username: 'me', password: 'p4ss' });
+    expect(all).toEqual({ username: 'me', password: 'test-pw' });
     db.close();
   });
 
   it('deletes a single key', () => {
     const { db, repo } = makeRepo();
-    repo.set('eufy', 'password', 'p4ss');
+    repo.set('eufy', 'password', 'test-pw');
     expect(repo.delete('eufy', 'password')).toBe(true);
     expect(repo.get('eufy', 'password')).toBeUndefined();
     db.close();
@@ -67,7 +67,7 @@ describe('PluginSettingsRepository', () => {
   it('deleteAll removes all settings for a plugin', () => {
     const { db, repo } = makeRepo();
     repo.set('eufy', 'username', 'me');
-    repo.set('eufy', 'password', 'p4ss');
+    repo.set('eufy', 'password', 'test-pw');
     repo.set('tesla', 'access_token', 'x');
     const count = repo.deleteAll('eufy');
     expect(count).toBe(2);

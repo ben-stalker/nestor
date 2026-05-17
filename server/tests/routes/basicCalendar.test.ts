@@ -135,7 +135,7 @@ describe('Basic CalDAV routes (Apple / Yahoo)', () => {
       const res = await request(app).post('/api/v1/calendar/accounts/basic').send({
         provider: 'apple',
         username: 'user@icloud.com',
-        password: 'app-specific-password',
+        password: 'test-app-pw',
       });
 
       expect(res.status).toBe(201);
@@ -150,7 +150,7 @@ describe('Basic CalDAV routes (Apple / Yahoo)', () => {
       const res = await request(app).post('/api/v1/calendar/accounts/basic').send({
         provider: 'yahoo',
         username: 'user@yahoo.com',
-        password: 'app-specific-password',
+        password: 'test-app-pw',
       });
 
       expect(res.status).toBe(201);
@@ -180,7 +180,7 @@ describe('Basic CalDAV routes (Apple / Yahoo)', () => {
       const res = await request(app).post('/api/v1/calendar/accounts/basic').send({
         provider: 'apple',
         username: 'user@icloud.com',
-        password: 'secret-password',
+        password: 'test-cred-pw',
       });
 
       expect(res.status).toBe(201);
@@ -191,7 +191,7 @@ describe('Basic CalDAV routes (Apple / Yahoo)', () => {
       const { id } = body as { id: number };
       const storedCreds = accountRepo.getCredentials(id) as { username: string; password: string };
       expect(storedCreds.username).toBe('user@icloud.com');
-      expect(storedCreds.password).toBe('secret-password');
+      expect(storedCreds.password).toBe('test-cred-pw');
 
       syncSpy.mockRestore();
     });
