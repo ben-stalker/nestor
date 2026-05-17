@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-16-epic11"
+last_updated: "2026-05-17-epic12"
 
 phases:
   phase_1_analysis:
@@ -143,11 +143,25 @@ phases:
           - STORY-11.4
           - STORY-11.5
           - STORY-11.6
+          - STORY-12.1
+          - STORY-12.2
+          - STORY-12.3
+          - STORY-12.4
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
+  STORY-12.1–12.4 complete (2026-05-17): Epic 12 — Contacts Module. Migration 017_contacts.sql
+  (contacts table with category CHECK enum: medical/school/pets/home_services/emergency/family/trade/other,
+  linked_pet_id + linked_vehicle_id FKs). Migration 018_pets_vet_contact.sql (vet_contact_id FK on pets).
+  ContactRepository (CRUD + list({ category })). createContactsRouter (GET list with child=emergency-only
+  filter, GET/:id, POST/PATCH/DELETE admin-pin gated). Client: types, api, useContacts hook, ContactCard
+  (initials avatar, tel: link, long-press 600ms clipboard copy), ContactForm, ContactsList (collapsible
+  sections, search by name/role, admin CTA), ContactsPage (/contacts route), ContactPicker (category
+  select + inline add-new modal). navModes updated: contacts nav entry + view_contacts permission gate.
+  PetFormModal + MaintenanceForm updated with ContactPicker. 21 new server tests (954 total),
+  20 new client tests (521 total). Lint + typecheck clean.
   STORY-11.1–11.6 complete (2026-05-16): Epic 11 — Board Module. Migration 016_board.sql
   (board_messages + countdown_timers + whiteboard_snapshots tables). BoardMessageRepository,
   CountdownRepository, WhiteboardRepository. createBoardRouter (messages CRUD + archive,

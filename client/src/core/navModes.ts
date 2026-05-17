@@ -10,6 +10,7 @@ import {
   PawPrint,
   Zap,
   Pin,
+  BookUser,
 } from 'lucide-react';
 
 export type NavModeId =
@@ -22,7 +23,8 @@ export type NavModeId =
   | 'finance'
   | 'pets'
   | 'ev'
-  | 'board';
+  | 'board'
+  | 'contacts';
 
 export interface NavMode {
   id: NavModeId;
@@ -55,6 +57,7 @@ export const DEFAULT_NAV_MODES: NavMode[] = [
   { id: 'pets', route: '/pets', label: 'Pets', Icon: PawPrint, accent: 'mode-pets' },
   { id: 'ev', route: '/ev', label: 'EV', Icon: Zap, accent: 'mode-ev' },
   { id: 'board', route: '/board', label: 'Board', Icon: Pin, accent: 'mode-board' },
+  { id: 'contacts', route: '/contacts', label: 'Contacts', Icon: BookUser, accent: 'mode-home' },
 ];
 
 export const NAV_MODE_MAP = new Map<string, NavMode>(DEFAULT_NAV_MODES.map((m) => [m.id, m]));
@@ -71,4 +74,5 @@ export const NAV_MODE_PERMISSION: Partial<Record<NavModeId, string>> = {
   pets: 'view_pets',
   ev: 'view_vehicles',
   board: 'view_board',
+  contacts: 'view_contacts',
 };

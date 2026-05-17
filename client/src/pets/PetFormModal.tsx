@@ -4,6 +4,7 @@ import { Modal, Button } from '../shared/ui';
 import type { Pet, PetInput, PetSpecies } from './types';
 import { PET_SPECIES, PET_SPECIES_LABELS } from './types';
 import { uploadPetPhoto } from './api';
+import ContactPicker from '../contacts/ContactPicker';
 
 interface PetFormModalProps {
   open: boolean;
@@ -25,6 +26,7 @@ export default function PetFormModal({ open, pet, onClose, onSave, isSaving }: P
   const [vetName, setVetName] = useState(pet?.vet_name ?? '');
   const [vetPhone, setVetPhone] = useState(pet?.vet_phone ?? '');
   const [vetAddress, setVetAddress] = useState(pet?.vet_address ?? '');
+  const [vetContactId, setVetContactId] = useState<number | null>(pet?.vet_contact_id ?? null);
   const [feedingNotes, setFeedingNotes] = useState(pet?.feeding_notes ?? '');
   const [groomingNotes, setGroomingNotes] = useState(pet?.grooming_notes ?? '');
   const [photoUploading, setPhotoUploading] = useState(false);
@@ -44,6 +46,7 @@ export default function PetFormModal({ open, pet, onClose, onSave, isSaving }: P
       vet_name: vetName || null,
       vet_phone: vetPhone || null,
       vet_address: vetAddress || null,
+      vet_contact_id: vetContactId,
       feeding_notes: feedingNotes || null,
       grooming_notes: groomingNotes || null,
     });
@@ -182,6 +185,17 @@ export default function PetFormModal({ open, pet, onClose, onSave, isSaving }: P
             Vet Information
           </p>
           <div className="space-y-3">
+            <div>
+              <label className="block text-caption text-secondary mb-1">
+                Vet contact (from Contacts)
+              </label>
+              <ContactPicker
+                category="pets"
+                value={vetContactId}
+                onChange={setVetContactId}
+                label="Select vet contact"
+              />
+            </div>
             <div>
               <label className="block text-caption text-secondary mb-1" htmlFor="vet-name">
                 Vet / practice name

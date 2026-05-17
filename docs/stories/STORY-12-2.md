@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** M (2d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,12 +18,13 @@
 
 ## Acceptance Criteria
 
-- [ ] Route `/contacts` mounted
-- [ ] List grouped by category with collapsible sections
-- [ ] Search by name/role across all categories
-- [ ] Add/edit/delete (admin) — pencil/trash icons
-- [ ] Each contact card: avatar (initials), name, role, phone (tap-to-call from STORY-12.3), email (mailto)
-- [ ] Empty state per category
+- [x] Route `/contacts` mounted
+- [x] List grouped by category with collapsible sections
+- [x] Search by name/role across all categories
+- [x] Add/edit/delete (admin) — pencil/trash icons
+- [x] Each contact card: avatar (initials), name, role, phone (tap-to-call), email (mailto)
+- [x] Empty state per category
+- [x] 7 client tests
 
 ---
 

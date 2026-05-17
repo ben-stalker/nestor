@@ -11,6 +11,7 @@ import HousePage from './house/HousePage';
 import FinancePage from './finance/FinancePage';
 import PetsPage from './pets/PetsPage';
 import BoardPage from './board/BoardPage';
+import ContactsPage from './contacts/ContactsPage';
 import { useActiveProfile } from './core/hooks/useActiveProfile';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
@@ -65,6 +66,7 @@ export default function Router() {
         <Route path="/pets" element={<PetsPage />} />
         <Route path="/ev" element={<Placeholder name="EV" />} />
         <Route path="/board" element={<BoardPage />} />
+        <Route path="/contacts" element={<ContactsPage />} />
         <Route
           path="*"
           element={

@@ -13,6 +13,7 @@ interface PetRow {
   vet_name: string | null;
   vet_phone: string | null;
   vet_address: string | null;
+  vet_contact_id: number | null;
   feeding_notes: string | null;
   grooming_notes: string | null;
   photo_path: string | null;
@@ -48,8 +49,8 @@ export default class PetRepository extends BaseRepository {
   create(input: PetInput): Pet {
     const result = this.run(
       `INSERT INTO pets (name, species, breed, dob, colour, microchip, insurance_policy,
-        vet_name, vet_phone, vet_address, feeding_notes, grooming_notes, is_active)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+        vet_name, vet_phone, vet_address, vet_contact_id, feeding_notes, grooming_notes, is_active)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
       [
         input.name,
         input.species ?? 'dog',
@@ -61,6 +62,7 @@ export default class PetRepository extends BaseRepository {
         input.vet_name ?? null,
         input.vet_phone ?? null,
         input.vet_address ?? null,
+        input.vet_contact_id ?? null,
         input.feeding_notes ?? null,
         input.grooming_notes ?? null,
       ],

@@ -4,7 +4,7 @@
 **Sprint:** 9 — MVP cut
 **Estimate:** S (1d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,11 +18,12 @@
 
 ## Acceptance Criteria
 
-- [ ] `<ContactPicker category="">` component reusable across modules
-- [ ] Pet vet field uses `category='pets'`
-- [ ] Maintenance tradesperson uses `category='trade'`
-- [ ] Linked contacts appear in `linked_pet_id` / `linked_vehicle_id` columns where relevant
-- [ ] Picker also offers "Add new contact" inline
+- [x] `<ContactPicker category="">` component reusable across modules
+- [x] Pet vet field uses `category='pets'` (vet_contact_id via migration 018)
+- [x] Maintenance tradesperson uses `category='trade'` (contact_id already in migration 011)
+- [x] Linked contacts appear in `linked_pet_id` / `linked_vehicle_id` columns where relevant
+- [x] Picker also offers "Add new contact" inline
+- [x] 5 ContactPicker tests
 
 ---
 

@@ -25,6 +25,7 @@ export interface Pet {
   vet_name: string | null;
   vet_phone: string | null;
   vet_address: string | null;
+  vet_contact_id: number | null;
   feeding_notes: string | null;
   grooming_notes: string | null;
   photo_path: string | null;
@@ -44,6 +45,7 @@ export interface PetInput {
   vet_name?: string | null;
   vet_phone?: string | null;
   vet_address?: string | null;
+  vet_contact_id?: number | null;
   feeding_notes?: string | null;
   grooming_notes?: string | null;
 }

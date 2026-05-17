@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Modal, Button } from '../../shared/ui';
 import { createMaintenanceItem, updateMaintenanceItem } from '../api';
 import type { HomeMaintenance } from '../types';
+import ContactPicker from '../../contacts/ContactPicker';
 
 interface MaintenanceFormProps {
   open: boolean;
@@ -37,6 +38,7 @@ export default function MaintenanceForm({ open, item, onClose }: MaintenanceForm
   const [landlordReport, setLandlordReport] = useState(false);
   const [renterMode, setRenterMode] = useState(false);
   const [notes, setNotes] = useState('');
+  const [contactId, setContactId] = useState<number | null>(null);
 
   useEffect(() => {
     if (item) {
@@ -52,6 +54,7 @@ export default function MaintenanceForm({ open, item, onClose }: MaintenanceForm
       setLandlordReport(item.landlord_report);
       setRenterMode(item.renter_mode);
       setNotes(item.notes ?? '');
+      setContactId(item.contact_id);
     } else {
       setTitle('');
       setType('job');
@@ -61,6 +64,7 @@ export default function MaintenanceForm({ open, item, onClose }: MaintenanceForm
       setLandlordReport(false);
       setRenterMode(false);
       setNotes('');
+      setContactId(null);
     }
   }, [item, open]);
 
@@ -77,6 +81,7 @@ export default function MaintenanceForm({ open, item, onClose }: MaintenanceForm
       landlord_report: landlordReport,
       renter_mode: renterMode,
       notes: notes || null,
+      contact_id: contactId,
     };
     if (item) {
       updateMutation.mutate({ id: item.id, patch: payload });
@@ -110,6 +115,18 @@ export default function MaintenanceForm({ open, item, onClose }: MaintenanceForm
             <option value="warranty">Warranty</option>
             <option value="reminder">Reminder</option>
           </select>
+        </div>
+
+        <div>
+          <label className="block text-caption font-medium text-secondary mb-1">
+            Tradesperson / Contact
+          </label>
+          <ContactPicker
+            category="trade"
+            value={contactId}
+            onChange={setContactId}
+            label="Select tradesperson"
+          />
         </div>
 
         <div>

@@ -1,0 +1,1 @@
+ALTER TABLE pets ADD COLUMN vet_contact_id INTEGER REFERENCES contacts(id) ON DELETE SET NULL;

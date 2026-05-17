@@ -27,6 +27,7 @@ export const PetSchema = z.object({
   vet_name: z.string().nullable(),
   vet_phone: z.string().nullable(),
   vet_address: z.string().nullable(),
+  vet_contact_id: z.number().int().nullable(),
   feeding_notes: z.string().nullable(),
   grooming_notes: z.string().nullable(),
   photo_path: z.string().nullable(),
@@ -47,6 +48,7 @@ export const PetInputSchema = z.object({
   vet_name: z.string().max(200).nullable().optional(),
   vet_phone: z.string().max(50).nullable().optional(),
   vet_address: z.string().max(500).nullable().optional(),
+  vet_contact_id: z.number().int().nullable().optional(),
   feeding_notes: z.string().max(2000).nullable().optional(),
   grooming_notes: z.string().max(2000).nullable().optional(),
 });

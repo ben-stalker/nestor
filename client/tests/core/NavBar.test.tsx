@@ -38,7 +38,7 @@ beforeEach(() => {
 });
 
 describe('NavBar — default modes', () => {
-  it('renders all 10 default mode buttons', () => {
+  it('renders all 11 default mode buttons', () => {
     renderNavBar();
     [
       'Home',
@@ -51,6 +51,7 @@ describe('NavBar — default modes', () => {
       'Pets',
       'EV',
       'Board',
+      'Contacts',
     ].forEach((label) => expect(screen.getByText(label)).toBeInTheDocument());
   });
 
@@ -281,7 +282,7 @@ describe('NavBar — kiosk mode', () => {
     const qc = makeQC();
     qc.setQueryData(['app-settings'], { kiosk_lock: null });
     renderNavBar('/', qc);
-    expect(screen.getAllByRole('link')).toHaveLength(10);
+    expect(screen.getAllByRole('link')).toHaveLength(11);
   });
 });
 
@@ -304,6 +305,6 @@ describe('NavBar — landscape rail', () => {
 
   it('renders all default modes in landscape rail', () => {
     renderNavBar();
-    expect(screen.getAllByRole('link')).toHaveLength(10);
+    expect(screen.getAllByRole('link')).toHaveLength(11);
   });
 });

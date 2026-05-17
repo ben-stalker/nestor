@@ -4,7 +4,7 @@
 **Sprint:** 7 — Family + Pets + Contacts + House Polish
 **Estimate:** S (1d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
@@ -18,15 +18,15 @@
 
 ## Acceptance Criteria
 
-- [ ] Migration creates `contacts(id, name, role, phone, email, address, category, notes, linked_pet_id, linked_vehicle_id, created_at)`
-- [ ] Category enum: `medical`, `school`, `pets`, `home_services`, `emergency`, `family`, `trade`, `other`
-- [ ] Repository with full CRUD + `list({ category })`, `findByCategory`
-- [ ] CRUD endpoints `/api/v1/contacts?category=`
-- [ ] Permissions:
+- [x] Migration creates `contacts(id, name, role, phone, email, address, category, notes, linked_pet_id, linked_vehicle_id, created_at)`
+- [x] Category enum: `medical`, `school`, `pets`, `home_services`, `emergency`, `family`, `trade`, `other`
+- [x] Repository with full CRUD + `list({ category })`, `findByCategory`
+- [x] CRUD endpoints `/api/v1/contacts?category=`
+- [x] Permissions:
   - child: only `category='emergency'`
   - teen: full
   - admin: full
-- [ ] Tests
+- [x] Tests (21 server tests)
 
 ---
 
