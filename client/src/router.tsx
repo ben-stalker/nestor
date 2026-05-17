@@ -12,6 +12,7 @@ import FinancePage from './finance/FinancePage';
 import PetsPage from './pets/PetsPage';
 import BoardPage from './board/BoardPage';
 import ContactsPage from './contacts/ContactsPage';
+import EvPage from './ev/EvPage';
 import { useActiveProfile } from './core/hooks/useActiveProfile';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
@@ -30,16 +31,6 @@ function MeRoute() {
   return <MePage profile={profile} />;
 }
 
-function Placeholder({ name }: { name: string }) {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-warm text-primary">
-      <div className="text-center">
-        <h1 className="text-h1 font-bold tracking-tight">{name}</h1>
-        <p className="mt-2 text-body text-secondary">Coming soon</p>
-      </div>
-    </main>
-  );
-}
 
 export default function Router() {
   return (
@@ -64,7 +55,7 @@ export default function Router() {
         <Route path="/house" element={<HousePage />} />
         <Route path="/finance" element={<FinancePage />} />
         <Route path="/pets" element={<PetsPage />} />
-        <Route path="/ev" element={<Placeholder name="EV" />} />
+        <Route path="/ev" element={<EvPage />} />
         <Route path="/board" element={<BoardPage />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route

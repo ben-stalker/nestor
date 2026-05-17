@@ -18,6 +18,9 @@ export interface Vehicle {
   current_mileage: number | null;
   active: boolean;
   reminder_overrides_json: Record<string, number[]> | null;
+  plug_in_reminder_time: string | null;
+  plug_in_reminder_days: number[] | null;
+  plug_in_snoozed_until: number | null;
 }
 
 export interface VehicleBooking {

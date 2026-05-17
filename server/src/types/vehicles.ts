@@ -21,6 +21,9 @@ export interface Vehicle {
   current_mileage: number | null;
   active: boolean;
   reminder_overrides_json: Record<string, number[]> | null;
+  plug_in_reminder_time: string | null;
+  plug_in_reminder_days: number[] | null;
+  plug_in_snoozed_until: number | null;
 }
 
 export const VehicleInputSchema = z.object({
@@ -44,6 +47,9 @@ export const VehicleUpdateSchema = VehicleInputSchema.partial().extend({
   active: z.boolean().optional(),
   photo_path: z.string().max(500).nullable().optional(),
   reminder_overrides_json: z.record(z.string(), z.array(z.number().int())).nullable().optional(),
+  plug_in_reminder_time: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
+  plug_in_reminder_days: z.array(z.number().int().min(0).max(6)).nullable().optional(),
+  plug_in_snoozed_until: z.number().int().nullable().optional(),
 });
 export type VehicleUpdate = z.infer<typeof VehicleUpdateSchema>;
 

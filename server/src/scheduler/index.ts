@@ -25,6 +25,8 @@ import PetRepository from '../repositories/PetRepository';
 import PetHealthLogRepository from '../repositories/PetHealthLogRepository';
 import evaluatePetAlerts from '../services/petAlertService';
 import evaluateGuestAlerts from '../services/guestAlertService';
+import EvChargingRepository from '../repositories/EvChargingRepository';
+import evaluateEvPlugInAlerts from '../services/evAlertService';
 
 export type JobHandler = () => void | Promise<void>;
 
@@ -168,5 +170,14 @@ export function registerBuiltinJobs(settingsRepo?: AppSettingsRepository): void 
   Scheduler.register('checklist-reset', '0 3 * * *', () => {
     const db = getDb();
     new ChecklistRepository(db).resetDailyChecklists();
+  });
+
+  Scheduler.register('ev-plug-in-eval', '0 * * * *', () => {
+    const db = getDb();
+    evaluateEvPlugInAlerts(
+      new VehicleRepository(db),
+      new EvChargingRepository(db),
+      new AlertRepository(db),
+    );
   });
 }

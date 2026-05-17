@@ -41,7 +41,9 @@ import createFinanceRouter from './routes/finance';
 import createPetsRouter from './routes/pets';
 import createBoardRouter from './routes/board';
 import createContactsRouter from './routes/contacts';
+import createEvRouter from './routes/ev';
 import ContactRepository from './repositories/ContactRepository';
+import EvChargingRepository from './repositories/EvChargingRepository';
 import BoardMessageRepository from './repositories/BoardMessageRepository';
 import CountdownRepository from './repositories/CountdownRepository';
 import WhiteboardRepository from './repositories/WhiteboardRepository';
@@ -111,6 +113,7 @@ export default function createApp(): Express {
   const petRepo = new PetRepository(db);
   const petHealthRepo = new PetHealthLogRepository(db);
   const contactRepo = new ContactRepository(db);
+  const evChargingRepo = new EvChargingRepository(db);
   const boardMsgRepo = new BoardMessageRepository(db);
   const countdownRepo = new CountdownRepository(db);
   const whiteboardRepo = new WhiteboardRepository(db);
@@ -171,6 +174,9 @@ export default function createApp(): Express {
   app.use(createFinanceRouter(financeRepo, subRepo, requireAdminPin));
   app.use(createPetsRouter(petRepo, petHealthRepo, requireAdminPin, profileRepo, eventRepo));
   app.use(createContactsRouter(contactRepo, requireAdminPin, profileRepo));
+  app.use(
+    createEvRouter(evChargingRepo, vehicleRepo, meterRepo, profileRepo, requireAdminPin, settingsRepo),
+  );
   app.use(
     createBoardRouter(
       boardMsgRepo,

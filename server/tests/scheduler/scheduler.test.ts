@@ -250,9 +250,9 @@ describe('Scheduler.list()', () => {
 // registerBuiltinJobs()
 // -------------------------------------------------------------------
 describe('registerBuiltinJobs()', () => {
-  it('registers exactly 8 built-in jobs', () => {
+  it('registers exactly 9 built-in jobs', () => {
     registerBuiltinJobs();
-    expect(Scheduler.list()).toHaveLength(8);
+    expect(Scheduler.list()).toHaveLength(9);
   });
 
   it('registers the expected job names', () => {
@@ -266,5 +266,6 @@ describe('registerBuiltinJobs()', () => {
     expect(names).toContain('term-dates-sync');
     expect(names).toContain('bin-alert-eval');
     expect(names).toContain('checklist-reset');
+    expect(names).toContain('ev-plug-in-eval');
   });
 });
