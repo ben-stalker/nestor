@@ -9,12 +9,14 @@ interface AppState {
   alertCount: number;
   voiceStatus: VoiceStatus;
   badgeCounts: Record<string, number>;
+  badgeSeverities: Record<string, string>;
   guestProfileId: string | null;
 
   setActiveProfile: (profileId: string | null, adminPin?: string | null) => void;
   setAlertCount: (count: number) => void;
   setVoiceStatus: (status: VoiceStatus) => void;
   setBadgeCount: (modeId: string, count: number) => void;
+  setBadgeSeverity: (modeId: string, severity: string) => void;
   setGuestMode: (profileId: string | null) => void;
 }
 
@@ -26,6 +28,7 @@ const useAppStore = create<AppState>()(
       alertCount: 0,
       voiceStatus: 'idle' as VoiceStatus,
       badgeCounts: {},
+      badgeSeverities: {},
       guestProfileId: null,
 
       setActiveProfile: (profileId, adminPin = null) =>
@@ -37,6 +40,9 @@ const useAppStore = create<AppState>()(
 
       setBadgeCount: (modeId, count) =>
         set((s) => ({ badgeCounts: { ...s.badgeCounts, [modeId]: count } })),
+
+      setBadgeSeverity: (modeId, severity) =>
+        set((s) => ({ badgeSeverities: { ...s.badgeSeverities, [modeId]: severity } })),
 
       setGuestMode: (profileId) => set({ guestProfileId: profileId }),
     }),

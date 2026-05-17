@@ -18,6 +18,12 @@ vi.mock('../../src/api/client', () => ({
   default: vi.fn(() => Promise.resolve(null)),
 }));
 
+const mockMarkReadMutate = vi.fn();
+vi.mock('../../src/hooks/useAlerts', () => ({
+  useBadgeCounts: vi.fn(() => ({ data: undefined })),
+  useMarkRead: vi.fn(() => ({ mutate: mockMarkReadMutate })),
+}));
+
 function makeQC() {
   return new QueryClient({ defaultOptions: { queries: { retry: false } } });
 }
@@ -33,8 +39,9 @@ function renderNavBar(initialEntry = '/', qc = makeQC()) {
 }
 
 beforeEach(() => {
-  useAppStore.setState({ badgeCounts: {} });
+  useAppStore.setState({ badgeCounts: {}, badgeSeverities: {} });
   vi.mocked(useOrientation).mockReturnValue('portrait');
+  mockMarkReadMutate.mockClear();
 });
 
 describe('NavBar — default modes', () => {
@@ -283,6 +290,45 @@ describe('NavBar — kiosk mode', () => {
     qc.setQueryData(['app-settings'], { kiosk_lock: null });
     renderNavBar('/', qc);
     expect(screen.getAllByRole('link')).toHaveLength(11);
+  });
+});
+
+describe('NavBar — badge severity colours', () => {
+  it('uses alert-urgent class for error severity badge', () => {
+    useAppStore.setState({ badgeCounts: { house: 2 }, badgeSeverities: { house: 'error' } });
+    const { container } = renderNavBar();
+    const badge = container.querySelector('[aria-label="2 unread"]');
+    expect(badge?.className).toContain('bg-alert-urgent');
+  });
+
+  it('uses alert-warning class for warning severity badge', () => {
+    useAppStore.setState({ badgeCounts: { house: 1 }, badgeSeverities: { house: 'warning' } });
+    const { container } = renderNavBar();
+    const badge = container.querySelector('[aria-label="1 unread"]');
+    expect(badge?.className).toContain('bg-alert-warning');
+  });
+
+  it('uses alert-info class for info severity badge', () => {
+    useAppStore.setState({ badgeCounts: { house: 3 }, badgeSeverities: { house: 'info' } });
+    const { container } = renderNavBar();
+    const badge = container.querySelector('[aria-label="3 unread"]');
+    expect(badge?.className).toContain('bg-alert-info');
+  });
+});
+
+describe('NavBar — mark-read on nav tap', () => {
+  it('calls markRead with mode id when a nav button with a badge is clicked', () => {
+    useAppStore.setState({ badgeCounts: { calendar: 2 }, badgeSeverities: {} });
+    renderNavBar();
+    fireEvent.click(screen.getByRole('link', { name: /calendar/i }));
+    expect(mockMarkReadMutate).toHaveBeenCalledWith('calendar');
+  });
+
+  it('does not call markRead when badge count is 0', () => {
+    useAppStore.setState({ badgeCounts: { calendar: 0 }, badgeSeverities: {} });
+    renderNavBar();
+    fireEvent.click(screen.getByRole('link', { name: /calendar/i }));
+    expect(mockMarkReadMutate).not.toHaveBeenCalled();
   });
 });
 

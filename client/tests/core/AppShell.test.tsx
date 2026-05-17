@@ -14,6 +14,12 @@ vi.mock('../../src/api/client', () => ({
   default: vi.fn(() => Promise.resolve({})),
 }));
 
+// Mock alert hooks so BadgeCountsSyncer doesn't interfere with query invalidation assertions
+vi.mock('../../src/hooks/useAlerts', () => ({
+  useBadgeCounts: vi.fn(() => ({ data: undefined })),
+  useMarkRead: vi.fn(() => ({ mutate: vi.fn() })),
+}));
+
 function makeQueryClient() {
   return new QueryClient({ defaultOptions: { queries: { retry: false } } });
 }

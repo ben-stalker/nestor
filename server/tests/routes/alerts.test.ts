@@ -20,8 +20,10 @@ const MOCK_ALERT: Alert = {
   message: 'Weather data unavailable',
   deep_link: null,
   profile_id: null,
+  nav_mode_badge: 'house',
   dismissed: false,
   dismissed_at: null,
+  read_at: null,
   created_at: 1_700_000_000_000,
 };
 
@@ -41,6 +43,46 @@ describe('GET /api/v1/alerts', () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual([]);
+  });
+});
+
+describe('GET /api/v1/alerts/badge-counts', () => {
+  it('returns badge counts grouped by nav_mode_badge', async () => {
+    const counts = {
+      house: { count: 2, severity: 'warning' },
+      ev: { count: 1, severity: 'error' },
+    };
+    const repo = { badgeCounts: jest.fn().mockReturnValue(counts) };
+    const res = await request(makeApp(repo)).get('/api/v1/alerts/badge-counts');
+
+    expect(res.status).toBe(200);
+    expect((res.body as typeof counts).house.count).toBe(2);
+    expect((res.body as typeof counts).ev.severity).toBe('error');
+  });
+
+  it('returns empty object when no active alerts with badges', async () => {
+    const repo = { badgeCounts: jest.fn().mockReturnValue({}) };
+    const res = await request(makeApp(repo)).get('/api/v1/alerts/badge-counts');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({});
+  });
+});
+
+describe('POST /api/v1/alerts/mark-read', () => {
+  it('calls markRead with navMode and returns 204', async () => {
+    const repo = { markRead: jest.fn() };
+    const res = await request(makeApp(repo)).post('/api/v1/alerts/mark-read?navMode=house');
+
+    expect(res.status).toBe(204);
+    expect(repo.markRead).toHaveBeenCalledWith('house');
+  });
+
+  it('returns 400 when navMode is missing', async () => {
+    const repo = { markRead: jest.fn() };
+    const res = await request(makeApp(repo)).post('/api/v1/alerts/mark-read');
+
+    expect(res.status).toBe(400);
   });
 });
 

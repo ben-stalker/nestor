@@ -4,7 +4,7 @@
 **Sprint:** 3 — Calendar Core + Home Skeleton
 **Estimate:** S (1d)
 **Priority:** P1
-**Status:** pending
+**Status:** complete
 
 ---
 
