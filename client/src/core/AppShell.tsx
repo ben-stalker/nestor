@@ -5,6 +5,8 @@ import clsx from 'clsx';
 import { useOrientation } from './hooks/useOrientation';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { APP_SETTINGS_KEY } from './hooks/useAppSettings';
+import useAudioChime from '../alerts/useAudioChime';
+import { unlockAudioContext } from '../alerts/audioChime';
 import NavBar from './NavBar';
 import FilterPanel from './FilterPanel';
 import KioskOverlay from './KioskOverlay';
@@ -15,6 +17,14 @@ export default function AppShell() {
   const orientation = useOrientation();
   const { lastMessage } = useWebSocket();
   const queryClient = useQueryClient();
+
+  useAudioChime();
+
+  useEffect(() => {
+    const unlock = () => unlockAudioContext();
+    window.addEventListener('pointerdown', unlock, { once: true });
+    return () => window.removeEventListener('pointerdown', unlock);
+  }, []);
 
   useEffect(() => {
     if (lastMessage?.event === 'settings:updated') {

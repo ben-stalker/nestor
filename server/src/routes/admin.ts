@@ -14,6 +14,10 @@ import type { OctopusSyncService } from '../services/OctopusSyncService';
 const ActivateKioskSchema = z.object({ profileId: z.string().min(1) });
 const PinSchema = z.object({ pin: z.string().min(1) });
 const BrightnessSchema = z.object({ level: z.number().int().min(0).max(100) });
+const AudioChimeSchema = z.object({
+  audio_chime_categories: z.record(z.string(), z.boolean()).optional(),
+  audio_chime_volume: z.number().min(0).max(1).optional(),
+});
 
 export default function createAdminRouter(
   settingsRepo: AppSettingsRepository = new AppSettingsRepository(getDb()),
@@ -136,6 +140,30 @@ export default function createAdminRouter(
       const message = err instanceof Error ? err.message : String(err);
       res.status(500).json({ error: message });
     }
+  });
+
+  // PATCH /api/v1/admin/audio-chime — save audio chime category toggles and volume.
+  router.patch('/audio-chime', (req, res) => {
+    const result = AudioChimeSchema.safeParse(req.body);
+    if (!result.success) {
+      res.status(400).json({
+        error: 'Validation failed',
+        code: 'VALIDATION_ERROR',
+        details: result.error.flatten(),
+      });
+      return;
+    }
+    const updates: Record<string, unknown> = {};
+    if (result.data.audio_chime_categories !== undefined) {
+      updates.audio_chime_categories = result.data.audio_chime_categories;
+    }
+    if (result.data.audio_chime_volume !== undefined) {
+      updates.audio_chime_volume = result.data.audio_chime_volume;
+    }
+    if (Object.keys(updates).length > 0) {
+      settingsRepo.setMany(updates);
+    }
+    res.status(204).end();
   });
 
   // POST /api/v1/admin/run-octopus-sync — manually trigger the Octopus Energy consumption sync.

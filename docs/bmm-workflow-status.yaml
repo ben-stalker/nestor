@@ -2,7 +2,7 @@ version: "6.0.0"
 project_name: "Nestor"
 project_type: web-app
 project_level: 3
-last_updated: "2026-05-17-epic14"
+last_updated: "2026-05-17-story-14.5"
 
 phases:
   phase_1_analysis:
@@ -155,12 +155,28 @@ phases:
           - STORY-14.1
           - STORY-14.2
           - STORY-14.3
+          - STORY-14.4
+          - STORY-14.5
+          - STORY-14.6
+          - STORY-14-octopus-1
+          - STORY-14-octopus-2
+          - STORY-14-octopus-3
 
 backlog: []
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
 notes: >
+  STORY-14.5 complete (2026-05-17): Audio chime system. audioChime.ts (Web Audio API oscillator
+  synthesis — sawtooth/urgent, triangle/warning, sine/info, ascending arpeggio/success).
+  useAudioChime hook (default export, listens to alert:new WS, checks quiet_hours setting,
+  checks audio_chime_categories per nav_mode_badge, plays at audio_chime_volume).
+  AudioPanel.tsx (admin UI: volume slider with preview buttons, per-module toggle grid).
+  AppShell updated: useAudioChime() mounted, pointerdown unlocks AudioContext on first gesture.
+  HousePage updated: new Notifications tab mounting AudioPanel.
+  Server: audio_chime_categories + audio_chime_volume schemas in settings-keys.ts.
+  PATCH /api/v1/admin/audio-chime route in admin.ts.
+  19 new client tests (586 total, 83 suites). Lint + typecheck clean.
   PRD provided by user (nestor-prd.md). Architecture document generated 2026-05-08.
   STORY-12.1–12.4 complete (2026-05-17): Epic 12 — Contacts Module. Migration 017_contacts.sql
   (contacts table with category CHECK enum: medical/school/pets/home_services/emergency/family/trade/other,

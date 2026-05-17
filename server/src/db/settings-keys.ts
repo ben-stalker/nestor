@@ -91,6 +91,9 @@ export const OctopusTariffCodeSchema = z.string().min(1);
 export const OctopusUnitRateSchema = z.number().nonnegative();
 export const OctopusStandingChargeSchema = z.number().nonnegative();
 
+export const AudioChimeCategoriesSchema = z.record(z.string(), z.boolean());
+export const AudioChimeVolumeSchema = z.number().min(0).max(1);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -134,6 +137,8 @@ export const SETTING_SCHEMAS = {
   octopus_tariff_code: OctopusTariffCodeSchema,
   octopus_unit_rate: OctopusUnitRateSchema,
   octopus_standing_charge: OctopusStandingChargeSchema,
+  audio_chime_categories: AudioChimeCategoriesSchema,
+  audio_chime_volume: AudioChimeVolumeSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;

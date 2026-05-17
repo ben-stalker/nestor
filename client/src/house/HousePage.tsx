@@ -6,6 +6,7 @@ import MeterReadingList from './meter/MeterReadingList';
 import BudgetSummary from './budget/BudgetSummary';
 import ChecklistList from './checklists/ChecklistList';
 import AdultChoreRota from './chores/AdultChoreRota';
+import AudioPanel from '../admin/AudioPanel';
 
 type HouseTab =
   | 'bins'
@@ -14,7 +15,8 @@ type HouseTab =
   | 'meter'
   | 'budget'
   | 'checklists'
-  | 'chores';
+  | 'chores'
+  | 'notifications';
 
 const TABS: Array<{ id: HouseTab; label: string }> = [
   { id: 'bins', label: 'Bins' },
@@ -24,6 +26,7 @@ const TABS: Array<{ id: HouseTab; label: string }> = [
   { id: 'budget', label: 'Budget' },
   { id: 'checklists', label: 'Checklists' },
   { id: 'chores', label: 'Chores' },
+  { id: 'notifications', label: 'Notifications' },
 ];
 
 export default function HousePage() {
@@ -62,6 +65,7 @@ export default function HousePage() {
         {tab === 'budget' && <BudgetSummary />}
         {tab === 'checklists' && <ChecklistList />}
         {tab === 'chores' && <AdultChoreRota />}
+        {tab === 'notifications' && <AudioPanel />}
       </div>
     </main>
   );
