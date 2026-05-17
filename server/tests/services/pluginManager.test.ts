@@ -26,10 +26,19 @@ function makeTempPluginsDir(): string {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'nestor-plugins-'));
 }
 
-function writePlugin(dir: string, id: string, manifest: Record<string, unknown>, indexJs: string): void {
+function writePlugin(
+  dir: string,
+  id: string,
+  manifest: Record<string, unknown>,
+  indexJs: string,
+): void {
   const sub = path.join(dir, id);
   fs.mkdirSync(sub, { recursive: true });
-  fs.writeFileSync(path.join(sub, 'manifest.json'), JSON.stringify({ id, name: id, version: '0.1.0', author: 'T', ...manifest }), 'utf8');
+  fs.writeFileSync(
+    path.join(sub, 'manifest.json'),
+    JSON.stringify({ id, name: id, version: '0.1.0', author: 'T', ...manifest }),
+    'utf8',
+  );
   fs.writeFileSync(path.join(sub, 'index.js'), indexJs, 'utf8');
 }
 
@@ -81,12 +90,7 @@ describe('PluginManager', () => {
 
   it('marks plugin as error and removes capabilities when init throws', async () => {
     const dir = makeTempPluginsDir();
-    writePlugin(
-      dir,
-      'chaos',
-      {},
-      `module.exports = { init() { throw new Error('explode'); } };`,
-    );
+    writePlugin(dir, 'chaos', {}, `module.exports = { init() { throw new Error('explode'); } };`);
     scanPluginsDirectory(dir);
     const { manager } = makeManager();
     const ok = await manager.enablePlugin('chaos');
@@ -177,12 +181,7 @@ describe('PluginManager', () => {
 
   it('getSetting/setSetting round-trip through plugin settings repo', async () => {
     const dir = makeTempPluginsDir();
-    writePlugin(
-      dir,
-      'setty',
-      {},
-      `module.exports = { init(ctx) { ctx.setSetting('k', 'v'); } };`,
-    );
+    writePlugin(dir, 'setty', {}, `module.exports = { init(ctx) { ctx.setSetting('k', 'v'); } };`);
     scanPluginsDirectory(dir);
     const { manager, pluginSettingsRepo } = makeManager();
     await manager.enablePlugin('setty');
@@ -191,12 +190,7 @@ describe('PluginManager', () => {
 
   it('httpRequest enforces rate limit', async () => {
     const dir = makeTempPluginsDir();
-    writePlugin(
-      dir,
-      'rate',
-      {},
-      `module.exports = { init(ctx) { ctx.__test = ctx; } };`,
-    );
+    writePlugin(dir, 'rate', {}, `module.exports = { init(ctx) { ctx.__test = ctx; } };`);
     scanPluginsDirectory(dir);
     const fetchFn = jest.fn(() =>
       Promise.resolve({

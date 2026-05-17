@@ -51,7 +51,9 @@ async function search(ctx, query) {
   });
   if (channelIds.length === 1) params.set('channelId', channelIds[0]);
   try {
-    const res = await ctx.httpRequest(`${YT_SEARCH_URL}?${params.toString()}`, { timeoutMs: 10000 });
+    const res = await ctx.httpRequest(`${YT_SEARCH_URL}?${params.toString()}`, {
+      timeoutMs: 10000,
+    });
     if (!res.ok) return [];
     const data = JSON.parse(res.body);
     const items = (data && data.items) || [];

@@ -97,7 +97,10 @@ export default function createPluginsRouter(deps: PluginsRouterDeps): Router {
       res.status(400).json({ error: 'Invalid body', details: body.error.flatten() });
       return;
     }
-    logger.info({ id: body.data.id, repoUrl: body.data.repoUrl }, 'community-install intent logged');
+    logger.info(
+      { id: body.data.id, repoUrl: body.data.repoUrl },
+      'community-install intent logged',
+    );
     res.status(202).json({ ok: true, message: 'Install request logged' });
   });
 

@@ -4,12 +4,7 @@ import type { AlertSeverity } from '../repositories/AlertRepository';
 import type PluginSettingsRepository from '../repositories/PluginSettingsRepository';
 import type AppSettingsRepository from '../repositories/AppSettingsRepository';
 import logger from '../utils/logger';
-import {
-  pluginRegistry,
-  listPlugins,
-  markStatus,
-  getPlugin,
-} from './pluginLoader';
+import { pluginRegistry, listPlugins, markStatus, getPlugin } from './pluginLoader';
 import {
   widgetRegistry,
   navModeRegistry,
@@ -162,10 +157,7 @@ export class PluginManager {
         if (usedAlertKeys.has(key)) {
           const existing = alertRepo
             .listActive()
-            .find(
-              (a) =>
-                a.type === type && a.message.includes(`[${key}]`),
-            );
+            .find((a) => a.type === type && a.message.includes(`[${key}]`));
           if (existing) return;
         }
         usedAlertKeys.add(key);

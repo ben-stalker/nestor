@@ -22,7 +22,8 @@ export default function AudioPanel() {
   const queryClient = useQueryClient();
 
   const savedCategories = (settings?.audio_chime_categories ?? {}) as Record<string, boolean>;
-  const savedVolume = typeof settings?.audio_chime_volume === 'number' ? settings.audio_chime_volume : 0.5;
+  const savedVolume =
+    typeof settings?.audio_chime_volume === 'number' ? settings.audio_chime_volume : 0.5;
 
   const [volume, setVolume] = useState(savedVolume);
 
@@ -127,7 +128,9 @@ export default function AudioPanel() {
       </div>
 
       {!isAdmin && (
-        <p className="text-caption text-secondary">Admin access required to change audio settings.</p>
+        <p className="text-caption text-secondary">
+          Admin access required to change audio settings.
+        </p>
       )}
     </div>
   );

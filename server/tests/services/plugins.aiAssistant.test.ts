@@ -14,7 +14,10 @@ interface TestCtx {
   settings: Record<string, string>;
   fetchResponse?: { ok: boolean; status: number; body: string };
   getSetting: (k: string) => string | undefined;
-  httpRequest: (url: string, opts?: unknown) => Promise<{ ok: boolean; status: number; body: string; headers: Record<string, string> }>;
+  httpRequest: (
+    url: string,
+    opts?: unknown,
+  ) => Promise<{ ok: boolean; status: number; body: string; headers: Record<string, string> }>;
   logger: { info: (m: string) => void; warn: (m: string) => void; error: (m: string) => void };
 }
 

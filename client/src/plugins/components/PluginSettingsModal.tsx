@@ -98,7 +98,10 @@ export default function PluginSettingsModal({ plugin, onClose }: Props) {
           )}
           {plugin.settingsFields.map((field) => (
             <div key={field.key} className="flex flex-col gap-1">
-              <label htmlFor={`plugin-setting-${field.key}`} className="text-caption font-medium text-secondary">
+              <label
+                htmlFor={`plugin-setting-${field.key}`}
+                className="text-caption font-medium text-secondary"
+              >
                 {field.label}
               </label>
               {renderInput(field, values[field.key] ?? '', (v) =>

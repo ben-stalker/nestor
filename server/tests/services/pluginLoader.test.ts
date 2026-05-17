@@ -83,7 +83,11 @@ describe('pluginLoader', () => {
     writeManifest(dir, 'a', { id: 'a', name: 'A', version: '0.1.0', author: 'X' });
     writeManifest(dir, 'b', { id: 'b', name: 'B', version: '0.1.0', author: 'X' });
     scanPluginsDirectory(dir);
-    expect(listPlugins().map((p) => p.manifest.id).sort()).toEqual(['a', 'b']);
+    expect(
+      listPlugins()
+        .map((p) => p.manifest.id)
+        .sort(),
+    ).toEqual(['a', 'b']);
   });
 
   it('markStatus updates status and error message', () => {

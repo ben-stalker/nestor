@@ -22,7 +22,9 @@ function CommandRow({ cmd }: { cmd: VoiceCommand }) {
   const matched = cmd.matched_handler != null;
 
   return (
-    <div className={`voice-cmd-row ${matched ? 'voice-cmd-row--matched' : 'voice-cmd-row--unmatched'}`}>
+    <div
+      className={`voice-cmd-row ${matched ? 'voice-cmd-row--matched' : 'voice-cmd-row--unmatched'}`}
+    >
       <button
         type="button"
         className="voice-cmd-row__header"
@@ -31,7 +33,9 @@ function CommandRow({ cmd }: { cmd: VoiceCommand }) {
       >
         <span className="voice-cmd-row__ts">{formatTs(cmd.created_at)}</span>
         <span className="voice-cmd-row__transcript">{cmd.transcript}</span>
-        <span className={`voice-cmd-row__badge ${matched ? 'voice-cmd-row__badge--match' : 'voice-cmd-row__badge--miss'}`}>
+        <span
+          className={`voice-cmd-row__badge ${matched ? 'voice-cmd-row__badge--match' : 'voice-cmd-row__badge--miss'}`}
+        >
           {matched ? cmd.matched_handler : 'unmatched'}
         </span>
         {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}

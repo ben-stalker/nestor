@@ -5,7 +5,9 @@ const idx = path.join(__dirname, '..', '..', '..', 'plugins', 'youtube-player', 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, import/no-dynamic-require, global-require
 const yt = require(idx) as {
   _internal: {
-    parseCuratedTiles: (raw?: string) => { videoId: string; title: string; thumbnailUrl: string | null }[];
+    parseCuratedTiles: (
+      raw?: string,
+    ) => { videoId: string; title: string; thumbnailUrl: string | null }[];
     parseAllowedProfiles: (raw?: string) => string[];
     parseChannelIds: (raw?: string) => string[];
     search: (ctx: unknown, q: string) => Promise<unknown[]>;
@@ -21,11 +23,7 @@ describe('youtube-player plugin', () => {
 
   it('parseCuratedTiles keeps valid entries', () => {
     const tiles = yt._internal.parseCuratedTiles(
-      JSON.stringify([
-        { title: 'A', videoId: 'aaa' },
-        { videoId: 'bbb' },
-        { title: 'No video' },
-      ]),
+      JSON.stringify([{ title: 'A', videoId: 'aaa' }, { videoId: 'bbb' }, { title: 'No video' }]),
     );
     expect(tiles).toHaveLength(2);
     expect(tiles[0].videoId).toBe('aaa');
@@ -33,7 +31,11 @@ describe('youtube-player plugin', () => {
   });
 
   it('parseAllowedProfiles splits on commas and newlines', () => {
-    expect(yt._internal.parseAllowedProfiles('alice,bob\ncharlie')).toEqual(['alice', 'bob', 'charlie']);
+    expect(yt._internal.parseAllowedProfiles('alice,bob\ncharlie')).toEqual([
+      'alice',
+      'bob',
+      'charlie',
+    ]);
   });
 
   it('parseChannelIds splits and trims', () => {

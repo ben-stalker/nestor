@@ -21,18 +21,29 @@ const NAV_MODES = [
 ];
 
 const MONTH_NAMES: Record<string, number> = {
-  jan: 0, january: 0,
-  feb: 1, february: 1,
-  mar: 2, march: 2,
-  apr: 3, april: 3,
+  jan: 0,
+  january: 0,
+  feb: 1,
+  february: 1,
+  mar: 2,
+  march: 2,
+  apr: 3,
+  april: 3,
   may: 4,
-  jun: 5, june: 5,
-  jul: 6, july: 6,
-  aug: 7, august: 7,
-  sep: 8, september: 8,
-  oct: 9, october: 9,
-  nov: 10, november: 10,
-  dec: 11, december: 11,
+  jun: 5,
+  june: 5,
+  jul: 6,
+  july: 6,
+  aug: 7,
+  august: 7,
+  sep: 8,
+  september: 8,
+  oct: 9,
+  october: 9,
+  nov: 10,
+  november: 10,
+  dec: 11,
+  december: 11,
 };
 
 function isoDate(d: Date): string {
@@ -73,13 +84,14 @@ function parseDatePhrase(phrase: string): string | null {
 export class VoiceRouter {
   // eslint-disable-next-line class-methods-use-this
   route(rawTranscript: string): RouteResult {
-    const transcript = rawTranscript.trim().toLowerCase().replace(/[.,!?]$/, '');
+    const transcript = rawTranscript
+      .trim()
+      .toLowerCase()
+      .replace(/[.,!?]$/, '');
     logger.debug({ transcript }, 'VoiceRouter: routing');
 
     // "go to <mode>" / "open <mode>" / "show <mode>"
-    const gotoM = transcript.match(
-      /^(?:go\s+to|open|switch\s+to|navigate\s+to|show)\s+(.+)$/,
-    );
+    const gotoM = transcript.match(/^(?:go\s+to|open|switch\s+to|navigate\s+to|show)\s+(.+)$/);
     if (gotoM) {
       const target = gotoM[1].trim();
       const mode = NAV_MODES.find((m) => target.includes(m));

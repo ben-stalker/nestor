@@ -86,14 +86,19 @@ app.post('/internal/voice/tts', requireToken, (req, res) => {
 });
 
 // Training: upload audio sample
-app.post('/internal/voice/wakeword/samples', requireToken, express.raw({ type: 'audio/*', limit: '5mb' }), (req, res, next) => {
-  const buf = req.body as Buffer;
-  const filename = path.join(SAMPLES_DIR, `sample-${randomBytes(4).toString('hex')}.wav`);
-  mkdir(SAMPLES_DIR, { recursive: true })
-    .then(() => writeFile(filename, buf))
-    .then(() => res.status(204).end())
-    .catch(next);
-});
+app.post(
+  '/internal/voice/wakeword/samples',
+  requireToken,
+  express.raw({ type: 'audio/*', limit: '5mb' }),
+  (req, res, next) => {
+    const buf = req.body as Buffer;
+    const filename = path.join(SAMPLES_DIR, `sample-${randomBytes(4).toString('hex')}.wav`);
+    mkdir(SAMPLES_DIR, { recursive: true })
+      .then(() => writeFile(filename, buf))
+      .then(() => res.status(204).end())
+      .catch(next);
+  },
+);
 
 // Training: invoke training script
 app.post('/internal/voice/wakeword/train', requireToken, (_req, res) => {
@@ -120,10 +125,14 @@ function captureAudio(seconds: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const outPath = path.join(os.tmpdir(), `nestor-capture-${randomBytes(4).toString('hex')}.wav`);
     const proc = spawn('arecord', [
-      '-d', String(seconds),
-      '-f', 'S16_LE',
-      '-r', '16000',
-      '-c', '1',
+      '-d',
+      String(seconds),
+      '-f',
+      'S16_LE',
+      '-r',
+      '16000',
+      '-c',
+      '1',
       outPath,
     ]);
     proc.on('error', reject);
@@ -186,7 +195,9 @@ async function main(): Promise<void> {
 
   const wakeWord = new WakeWordRunner({
     modelPath: WAKEWORD_MODEL,
-    onWake: () => { void handleWake(); },
+    onWake: () => {
+      void handleWake();
+    },
   });
 
   wakeWord.on('exit', () => {

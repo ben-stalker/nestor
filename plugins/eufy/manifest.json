@@ -8,8 +8,18 @@
   "settingsFields": [
     { "key": "username", "label": "Eufy account username", "type": "text" },
     { "key": "password", "label": "Eufy account password", "type": "password" },
-    { "key": "enable_doorbell_alerts", "label": "Doorbell ring alerts", "type": "toggle", "default": true },
-    { "key": "enable_vacuum_status", "label": "Show vacuum status widget", "type": "toggle", "default": true }
+    {
+      "key": "enable_doorbell_alerts",
+      "label": "Doorbell ring alerts",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "key": "enable_vacuum_status",
+      "label": "Show vacuum status widget",
+      "type": "toggle",
+      "default": true
+    }
   ],
   "apiRisk": "unofficial",
   "entry": "index.js"

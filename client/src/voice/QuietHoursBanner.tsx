@@ -31,7 +31,9 @@ export default function QuietHoursBanner() {
   return (
     <div className="quiet-hours-banner" role="status" aria-live="polite">
       <Moon size={14} className="quiet-hours-banner__icon" />
-      <span>Quiet hours active ({qh.start}–{qh.end}) — audio chimes and TTS muted</span>
+      <span>
+        Quiet hours active ({qh.start}–{qh.end}) — audio chimes and TTS muted
+      </span>
     </div>
   );
 }

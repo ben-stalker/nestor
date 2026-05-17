@@ -90,7 +90,11 @@ export function listPlugins(): PluginRegistryEntry[] {
   return Array.from(pluginRegistry.values());
 }
 
-export function markStatus(id: string, status: PluginRegistryEntry['status'], errorMessage?: string): void {
+export function markStatus(
+  id: string,
+  status: PluginRegistryEntry['status'],
+  errorMessage?: string,
+): void {
   const entry = pluginRegistry.get(id);
   if (!entry) return;
   entry.status = status;

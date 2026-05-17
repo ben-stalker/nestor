@@ -90,9 +90,7 @@ describe('POST /internal/voice/command', () => {
   it('returns 401 when token is set and not provided', async () => {
     settingsRepo.set('voice_internal_token', 'secret-token');
     const app = makeApp(settingsRepo, voiceCmdRepo);
-    const res = await request(app)
-      .post('/internal/voice/command')
-      .send({ transcript: 'test' });
+    const res = await request(app).post('/internal/voice/command').send({ transcript: 'test' });
     expect(res.status).toBe(401);
   });
 
@@ -124,9 +122,7 @@ describe('POST /internal/voice/status', () => {
     const received: unknown[] = [];
     eventBus.on('voice:status', (p) => received.push(p));
 
-    const res = await request(app)
-      .post('/internal/voice/status')
-      .send({ status: 'listening' });
+    const res = await request(app).post('/internal/voice/status').send({ status: 'listening' });
 
     expect(res.status).toBe(204);
     expect(received).toHaveLength(1);
@@ -137,9 +133,7 @@ describe('POST /internal/voice/status', () => {
     const settingsRepo = new AppSettingsRepository(db);
     const voiceCmdRepo = new VoiceCommandRepository(db);
     const app = makeApp(settingsRepo, voiceCmdRepo);
-    const res = await request(app)
-      .post('/internal/voice/status')
-      .send({ status: 'unknown' });
+    const res = await request(app).post('/internal/voice/status').send({ status: 'unknown' });
     expect(res.status).toBe(400);
   });
 });

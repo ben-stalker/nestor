@@ -9,10 +9,7 @@ import AlertRepository from '../../src/repositories/AlertRepository';
 import AppSettingsRepository from '../../src/repositories/AppSettingsRepository';
 import PluginSettingsRepository from '../../src/repositories/PluginSettingsRepository';
 import { PluginManager } from '../../src/services/pluginManager';
-import {
-  clearPluginRegistry,
-  scanPluginsDirectory,
-} from '../../src/services/pluginLoader';
+import { clearPluginRegistry, scanPluginsDirectory } from '../../src/services/pluginLoader';
 import {
   widgetRegistry,
   navModeRegistry,
@@ -24,7 +21,11 @@ import createPluginsRouter from '../../src/routes/plugins';
 
 const MIGRATIONS_DIR = path.join(__dirname, '..', '..', 'migrations');
 
-function noopRequireAdminPin(_req: express.Request, _res: express.Response, next: express.NextFunction): void {
+function noopRequireAdminPin(
+  _req: express.Request,
+  _res: express.Response,
+  next: express.NextFunction,
+): void {
   next();
 }
 
@@ -137,9 +138,7 @@ describe('plugins routes', () => {
     writePlugin(dir, 'delta', `module.exports = { init() {} };`);
     scanPluginsDirectory(dir);
     const { app, pluginSettingsRepo } = makeRig();
-    const res = await request(app)
-      .put('/api/v1/plugins/delta/settings')
-      .send({ api_key: 'abc' });
+    const res = await request(app).put('/api/v1/plugins/delta/settings').send({ api_key: 'abc' });
     expect(res.status).toBe(204);
     expect(pluginSettingsRepo.get('delta', 'api_key')).toBe('abc');
   });

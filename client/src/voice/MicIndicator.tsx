@@ -31,15 +31,11 @@ export default function MicIndicator() {
       {state === 'processing' && (
         <Loader2 size={16} className="mic-indicator__icon mic-indicator__icon--spin" />
       )}
-      {state === 'offline' && (
-        <MicOff size={16} className="mic-indicator__icon" />
-      )}
+      {state === 'offline' && <MicOff size={16} className="mic-indicator__icon" />}
       {state !== 'processing' && state !== 'offline' && (
         <Mic size={16} className="mic-indicator__icon" />
       )}
-      {isActive && (
-        <span className="mic-indicator__label">{STATE_LABELS[state]}</span>
-      )}
+      {isActive && <span className="mic-indicator__label">{STATE_LABELS[state]}</span>}
     </div>
   );
 }

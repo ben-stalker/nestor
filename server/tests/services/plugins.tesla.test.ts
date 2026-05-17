@@ -33,7 +33,9 @@ interface TestCtx {
   speak: (text: string) => void;
   getSetting: (k: string) => string | undefined;
   setSetting: (k: string, v: string) => void;
-  httpRequest: (url: string) => Promise<{ ok: boolean; status: number; body: string; headers: Record<string, string> }>;
+  httpRequest: (
+    url: string,
+  ) => Promise<{ ok: boolean; status: number; body: string; headers: Record<string, string> }>;
   registerWidget: (w: unknown) => void;
   logger: { info: (m: string) => void; warn: (m: string) => void; error: (m: string) => void };
 }

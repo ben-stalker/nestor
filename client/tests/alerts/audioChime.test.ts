@@ -32,8 +32,16 @@ class MockAudioContext {
     return Promise.resolve();
   });
 
-  createOscillator(): FakeOscillator & { connect: (_n: FakeGainNode) => void; start: () => void; stop: () => void } {
-    const osc: FakeOscillator & { connect: (_n: FakeGainNode) => void; start: () => void; stop: () => void } = {
+  createOscillator(): FakeOscillator & {
+    connect: (_n: FakeGainNode) => void;
+    start: () => void;
+    stop: () => void;
+  } {
+    const osc: FakeOscillator & {
+      connect: (_n: FakeGainNode) => void;
+      start: () => void;
+      stop: () => void;
+    } = {
       type: 'sine' as OscillatorType,
       frequency: { value: 0 },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -265,7 +273,9 @@ describe('quiet hours logic', () => {
     const end = endH * 60;
 
     if (start < end) {
-      expect(isQuietHours({ enabled: true, start: `${hh(startH)}:00`, end: `${hh(endH)}:00` })).toBe(true);
+      expect(
+        isQuietHours({ enabled: true, start: `${hh(startH)}:00`, end: `${hh(endH)}:00` }),
+      ).toBe(true);
     }
   });
 
@@ -279,7 +289,9 @@ describe('quiet hours logic', () => {
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     if (start < end && !(nowMinutes >= start && nowMinutes < end)) {
-      expect(isQuietHours({ enabled: true, start: `${hh(farH)}:00`, end: `${hh(endH)}:00` })).toBe(false);
+      expect(isQuietHours({ enabled: true, start: `${hh(farH)}:00`, end: `${hh(endH)}:00` })).toBe(
+        false,
+      );
     }
   });
 });

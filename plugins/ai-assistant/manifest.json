@@ -7,7 +7,12 @@
   "capabilities": ["voice_handler", "settings_panel"],
   "settingsFields": [
     { "key": "gemini_api_key", "label": "Gemini API key", "type": "password" },
-    { "key": "enable_disclosure_dialog", "label": "Show disclosure before first use", "type": "toggle", "default": true }
+    {
+      "key": "enable_disclosure_dialog",
+      "label": "Show disclosure before first use",
+      "type": "toggle",
+      "default": true
+    }
   ],
   "apiRisk": "community",
   "entry": "index.js"

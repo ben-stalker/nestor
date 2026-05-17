@@ -66,7 +66,11 @@ describe('GET /api/v1/admin/voice-commands', () => {
 
   it('returns inserted commands', async () => {
     voiceCmdRepo.insert({ transcript: 'go to calendar', matched_handler: 'nav:goto:calendar' });
-    voiceCmdRepo.insert({ transcript: 'what time is it', matched_handler: 'builtin:time', response: '10:30' });
+    voiceCmdRepo.insert({
+      transcript: 'what time is it',
+      matched_handler: 'builtin:time',
+      response: '10:30',
+    });
 
     const app = makeApp(settingsRepo, profileRepo, voiceCmdRepo);
     const res = await request(app).get('/api/v1/admin/voice-commands');

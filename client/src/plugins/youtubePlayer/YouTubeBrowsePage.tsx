@@ -74,11 +74,7 @@ export default function YouTubeBrowsePage() {
               data-testid={`youtube-tile-${tile.videoId}`}
             >
               {tile.thumbnailUrl ? (
-                <img
-                  src={tile.thumbnailUrl}
-                  alt=""
-                  className="aspect-video w-full object-cover"
-                />
+                <img src={tile.thumbnailUrl} alt="" className="aspect-video w-full object-cover" />
               ) : (
                 <div className="aspect-video w-full bg-neutral-200" aria-hidden="true" />
               )}

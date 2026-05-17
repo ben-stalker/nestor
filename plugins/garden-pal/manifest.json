@@ -7,7 +7,12 @@
   "capabilities": ["calendar_source", "sidebar_filter", "home_screen_widget", "alert_source"],
   "settingsFields": [
     { "key": "api_key", "label": "Garden Pal API key", "type": "password" },
-    { "key": "base_url", "label": "Garden Pal base URL", "type": "text", "default": "https://api.gardenpal.example.com" }
+    {
+      "key": "base_url",
+      "label": "Garden Pal base URL",
+      "type": "text",
+      "default": "https://api.gardenpal.example.com"
+    }
   ],
   "apiRisk": "community",
   "entry": "index.js"

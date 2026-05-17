@@ -1,14 +1,11 @@
 import apiFetch from '../api/client';
-import type {
-  PluginInfo,
-  PluginRegistrySnapshot,
-  CommunityIndexResponse,
-} from './types';
+import type { PluginInfo, PluginRegistrySnapshot, CommunityIndexResponse } from './types';
 
 export const PLUGINS_QUERY_KEY = ['plugins'] as const;
 export const PLUGIN_REGISTRIES_QUERY_KEY = ['plugin-registries'] as const;
 export const PLUGIN_COMMUNITY_QUERY_KEY = ['plugin-community'] as const;
-export const pluginSettingsQueryKey = (id: string): readonly unknown[] => ['plugin-settings', id] as const;
+export const pluginSettingsQueryKey = (id: string): readonly unknown[] =>
+  ['plugin-settings', id] as const;
 
 export function listPlugins(): Promise<PluginInfo[]> {
   return apiFetch<PluginInfo[]>('/api/v1/plugins');

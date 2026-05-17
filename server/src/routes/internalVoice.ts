@@ -51,9 +51,14 @@ export default function createInternalVoiceRouter(
     const start = Date.now();
     const { matchedHandler, response } = voiceRouter.route(transcript);
 
-    const loggedDurationMs = durationMs ?? (Date.now() - start);
+    const loggedDurationMs = durationMs ?? Date.now() - start;
 
-    voiceCmdRepo.insert({ transcript, matched_handler: matchedHandler, response, duration_ms: loggedDurationMs });
+    voiceCmdRepo.insert({
+      transcript,
+      matched_handler: matchedHandler,
+      response,
+      duration_ms: loggedDurationMs,
+    });
 
     eventBus.emit('voice:command', { transcript, matchedHandler });
 

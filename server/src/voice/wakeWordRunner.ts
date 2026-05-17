@@ -5,8 +5,7 @@ import { EventEmitter } from 'events';
 import logger from '../utils/logger';
 
 const OWWW_SCRIPT =
-  process.env.OWW_SCRIPT ??
-  path.join(os.homedir(), '.nestor', 'voice', 'owww', 'detect.py');
+  process.env.OWW_SCRIPT ?? path.join(os.homedir(), '.nestor', 'voice', 'owww', 'detect.py');
 
 export interface WakeWordRunnerOptions {
   modelPath: string;

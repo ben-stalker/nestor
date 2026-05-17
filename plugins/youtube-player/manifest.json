@@ -6,11 +6,27 @@
   "description": "Curated and optionally searchable YouTube tiles played in a full-screen youtube-nocookie iframe.",
   "capabilities": ["nav_mode", "home_screen_widget", "settings_panel"],
   "settingsFields": [
-    { "key": "youtube_api_key", "label": "YouTube Data API key (optional, enables search)", "type": "password" },
+    {
+      "key": "youtube_api_key",
+      "label": "YouTube Data API key (optional, enables search)",
+      "type": "password"
+    },
     { "key": "search_enabled", "label": "Allow search", "type": "toggle", "default": false },
-    { "key": "allowed_channel_ids", "label": "Allowed channel IDs (one per line)", "type": "textarea" },
-    { "key": "allowed_profiles", "label": "Profiles allowed to use this (comma separated)", "type": "textarea" },
-    { "key": "curated_tiles", "label": "Curated tiles as JSON array [{title,videoId,thumbnailUrl}]", "type": "textarea" }
+    {
+      "key": "allowed_channel_ids",
+      "label": "Allowed channel IDs (one per line)",
+      "type": "textarea"
+    },
+    {
+      "key": "allowed_profiles",
+      "label": "Profiles allowed to use this (comma separated)",
+      "type": "textarea"
+    },
+    {
+      "key": "curated_tiles",
+      "label": "Curated tiles as JSON array [{title,videoId,thumbnailUrl}]",
+      "type": "textarea"
+    }
   ],
   "apiRisk": "community",
   "entry": "index.js"

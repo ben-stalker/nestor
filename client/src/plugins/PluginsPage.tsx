@@ -15,10 +15,20 @@ type Tab = 'installed' | 'community';
 
 function StatusBadge({ status }: { status: PluginInfo['status'] }) {
   if (status === 'enabled')
-    return <span className="rounded-full bg-green-100 px-2 py-0.5 text-caption text-green-800">Enabled</span>;
+    return (
+      <span className="rounded-full bg-green-100 px-2 py-0.5 text-caption text-green-800">
+        Enabled
+      </span>
+    );
   if (status === 'error')
-    return <span className="rounded-full bg-red-100 px-2 py-0.5 text-caption text-red-800">Error</span>;
-  return <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-caption text-secondary">Disabled</span>;
+    return (
+      <span className="rounded-full bg-red-100 px-2 py-0.5 text-caption text-red-800">Error</span>
+    );
+  return (
+    <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-caption text-secondary">
+      Disabled
+    </span>
+  );
 }
 
 function InstalledTab() {
@@ -64,9 +74,7 @@ function InstalledTab() {
               <div className="flex flex-col items-end gap-2">
                 <button
                   type="button"
-                  onClick={() =>
-                    enabled ? disable.mutate(plugin.id) : enable.mutate(plugin.id)
-                  }
+                  onClick={() => (enabled ? disable.mutate(plugin.id) : enable.mutate(plugin.id))}
                   className={`rounded-button px-3 py-1 text-caption font-medium ${
                     enabled
                       ? 'bg-neutral-100 text-secondary hover:bg-neutral-200'
@@ -114,7 +122,8 @@ function CommunityTab() {
   if (!data || !data.configured) {
     return (
       <p className="p-4 text-secondary">
-        Community plugin index URL not configured. Set <code>community_plugin_index_url</code> in app settings.
+        Community plugin index URL not configured. Set <code>community_plugin_index_url</code> in
+        app settings.
       </p>
     );
   }
@@ -187,7 +196,11 @@ export default function PluginsPage() {
       <header>
         <h1 className="text-h1 font-semibold text-primary">Plugins</h1>
       </header>
-      <div role="tablist" aria-label="Plugin tabs" className="flex gap-2 border-b border-neutral-200">
+      <div
+        role="tablist"
+        aria-label="Plugin tabs"
+        className="flex gap-2 border-b border-neutral-200"
+      >
         <button
           type="button"
           role="tab"

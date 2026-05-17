@@ -40,11 +40,7 @@ describe('VoiceRouter — navigation commands', () => {
     expect(navGotos[0].mode).toBe(expectedMode);
   });
 
-  it.each([
-    ['back to home'],
-    ['go home'],
-    ['home'],
-  ])('"%s" → nav:goto:home', (transcript) => {
+  it.each([['back to home'], ['go home'], ['home']])('"%s" → nav:goto:home', (transcript) => {
     const result = router.route(transcript);
     expect(result.matchedHandler).toBe('nav:goto:home');
     expect(navGotos[0].mode).toBe('home');
