@@ -133,4 +133,11 @@ db.prepare(
 db.prepare(`INSERT INTO vehicles(nickname,type,active) VALUES('Family Car','car',1)`).run();
 
 db.close();
-console.log('[seed-ci] DB seeded at', DB_PATH, '— admin:', adminProfileId, 'child:', childProfileId);
+console.log(
+  '[seed-ci] DB seeded at',
+  DB_PATH,
+  '— admin:',
+  adminProfileId,
+  'child:',
+  childProfileId,
+);

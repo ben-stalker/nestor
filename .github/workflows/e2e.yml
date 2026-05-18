@@ -22,7 +22,7 @@ jobs:
 
       - name: Start server
         run: |
-          NESTOR_DB_PATH=/tmp/e2e-test.db NESTOR_PORT=3000 NODE_ENV=test \
+          NESTOR_DB_PATH=/tmp/e2e-test.db NESTOR_PORT=3000 NODE_ENV=production \
             node server/dist/index.js > /tmp/server.log 2>&1 &
           echo $! > /tmp/server.pid
           echo "Server PID: $(cat /tmp/server.pid)"

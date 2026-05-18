@@ -49,7 +49,7 @@ export default defineConfig({
         env: {
           NESTOR_DB_PATH: '/tmp/e2e-test.db',
           NESTOR_PORT: '3000',
-          NODE_ENV: 'test',
+          NODE_ENV: 'production',
         },
       },
 });
