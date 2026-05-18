@@ -43,6 +43,9 @@ jobs:
 
       - run: npx playwright install chromium --with-deps
 
+      - name: Verify server still healthy
+        run: curl -sf http://localhost:3000/health
+
       - name: Run E2E tests
         run: npx playwright test
         env:
