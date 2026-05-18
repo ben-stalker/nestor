@@ -37,13 +37,13 @@ export default defineConfig({
   ],
 
   /* Start the server before running tests.
-   * In CI we use the pre-compiled output (faster startup).
-   * Locally we use tsx for convenience. */
+   * In CI the server is started explicitly by the workflow (see e2e.yml)
+   * so we just reuse the existing process.  Locally tsx is used for convenience. */
   webServer: {
-    command: process.env.CI ? 'node server/dist/index.js' : 'npx tsx server/src/index.ts',
+    command: 'npx tsx server/src/index.ts',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 90_000,
+    reuseExistingServer: !process.env.CI || !!process.env.NESTOR_E2E_SERVER_RUNNING,
+    timeout: 60_000,
     env: {
       NESTOR_DB_PATH: '/tmp/e2e-test.db',
       NESTOR_PORT: '3000',

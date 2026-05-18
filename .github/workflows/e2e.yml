@@ -14,10 +14,48 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build
+
+      - name: Seed E2E database
+        run: node scripts/seed-lhci.cjs
+        env:
+          NESTOR_DB_PATH: /tmp/e2e-test.db
+
+      - name: Start server
+        run: |
+          NESTOR_DB_PATH=/tmp/e2e-test.db NESTOR_PORT=3000 NODE_ENV=test \
+            node server/dist/index.js > /tmp/server.log 2>&1 &
+          echo $! > /tmp/server.pid
+          echo "Server PID: $(cat /tmp/server.pid)"
+
+          # Wait up to 30s for server to accept connections
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/health > /dev/null 2>&1; then
+              echo "Server ready after ${i}s"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "=== Server log (startup failed) ==="
+              cat /tmp/server.log
+              exit 1
+            fi
+            sleep 1
+          done
+
       - run: npx playwright install chromium --with-deps
-      - run: npx playwright test
+
+      - name: Run E2E tests
+        run: npx playwright test
         env:
           CI: true
+          NESTOR_E2E_SERVER_RUNNING: 'true'
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f /tmp/server.pid ]; then
+            kill "$(cat /tmp/server.pid)" 2>/dev/null || true
+          fi
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
