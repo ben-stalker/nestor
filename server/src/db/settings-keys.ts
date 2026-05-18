@@ -129,6 +129,10 @@ export const WfhScheduleSchema = z.record(
 export const ScreensaverFolderSchema = z.string();
 export const ScreensaverIntervalSecondsSchema = z.number().int().min(5).max(300);
 
+// Setup wizard
+export const WizardStateSchema = z.record(z.string(), z.unknown());
+export const DisplayRotationSchema = z.enum(['normal', 'right', 'inverted', 'left']);
+
 export const SETTING_SCHEMAS = {
   location: LocationSchema,
   orientation: OrientationSchema,
@@ -192,6 +196,8 @@ export const SETTING_SCHEMAS = {
   wfh_schedule: WfhScheduleSchema,
   screensaver_folder: ScreensaverFolderSchema,
   screensaver_interval_seconds: ScreensaverIntervalSecondsSchema,
+  wizard_state: WizardStateSchema,
+  display_rotation: DisplayRotationSchema,
 } as const;
 
 export type KnownSettingKey = keyof typeof SETTING_SCHEMAS;

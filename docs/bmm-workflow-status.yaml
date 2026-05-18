@@ -202,14 +202,46 @@ phases:
           - STORY-18.7
           - STORY-18.8
           - STORY-18.9
+          - STORY-19.1
+          - STORY-19.2
+          - STORY-19.3
+          - STORY-19.4
+          - STORY-19.5
+          - STORY-19.6
+          - STORY-19.7
+          - STORY-19.8
+          - STORY-19.9
+          - STORY-19.10
 
 backlog:
   - STORY-18.5  # blocked on STORY-20.4 (Playwright setup)
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
-last_updated: "2026-05-18-epic-18"
+last_updated: "2026-05-18-epic-19"
 notes: >
+  EPIC-19 complete (2026-05-18): Setup Wizard & Installation. 10 stories (19.1–19.10).
+  Client: SetupWizard (10-step shell, WizardProgress, StepShell). Steps: LanguageStep
+  (8-language grid, browser auto-detect), LocaleStep (timezone/date/currency/temperature),
+  ProfilesStep (CRUD with inline form, ≥1 admin gate), CalendarsStep (Google OAuth device
+  flow + QR, Apple/Yahoo basic auth), DisplayStep (idle timeout, night mode), OrientationStep
+  (auto-detect portrait/landscape), VoiceStep (hardware check via /api/v1/voice/status),
+  FeaturesStep (nav-mode toggles, ≥1 required), PluginsStep (Phase 2 placeholder), DoneStep
+  (completed/skipped summary + Finish). App.tsx gated with AppGate component on setup_complete.
+  Server: UpdateService (checkForUpdate, applyUpdate via git pull+build+systemctl),
+  BackupService (exportAll all tables, importAll transactional with schema_version validation),
+  system.ts enhanced — POST /update requires adminPin, POST /rollback (501 stub),
+  GET /backup exports all tables + photos manifest, POST /restore handles new/legacy formats,
+  POST /factory-reset sets setup_complete=false. settings-keys.ts: wizard_state + display_rotation
+  schemas added. Install scripts: install/install.sh (idempotent, Ubuntu 22+, Node 20 via nvm,
+  apt deps, nestor user, clone+build, USB audio detect, orientation detect, service install),
+  install/uninstall.sh, install/services/{nestor-server,nestor-kiosk,nestor-voice}.service
+  ({{NESTOR_USER}}/{{INSTALL_DIR}} placeholders), install/scripts/install-services.sh
+  (--voice flag), install/scripts/start-kiosk.sh (health poll + unclutter + onboard + Chromium
+  kiosk flags), install/scripts/rotate-display.sh (auto-detect display+touchscreen, 4 CTMs,
+  --dry-run), install/DISPLAY-ROTATION.md, install/kiosk-init.sh updated to use rotate-display.sh.
+  29 new server tests (1166 total, 92 suites), 29 new client tests (664 total, 98 files).
+  Lint + typecheck clean.
   EPIC-18 complete (2026-05-18): Internationalisation & Accessibility. 8 stories
   (18.1–18.4, 18.6–18.9); STORY-18.5 deferred to Epic 20 (Playwright dependency).
   i18next + react-i18next client bootstrap with English base translations

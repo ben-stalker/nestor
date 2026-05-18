@@ -1,6 +1,6 @@
 # STORY-19.10: Robust screen rotation for kiosk displays
 
-**Status:** backlog
+**Status:** complete
 
 ## Overview
 

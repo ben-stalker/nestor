@@ -1,0 +1,18 @@
+[Unit]
+Description=Nestor Voice Pipeline
+After=nestor-server.service
+Requires=nestor-server.service
+
+[Service]
+Type=simple
+User={{NESTOR_USER}}
+WorkingDirectory={{INSTALL_DIR}}
+ExecStart=/usr/bin/node {{INSTALL_DIR}}/server/dist/voice/process.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+EnvironmentFile=-/etc/nestor.env
+
+[Install]
+WantedBy=multi-user.target

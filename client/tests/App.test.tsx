@@ -11,6 +11,11 @@ vi.mock('../src/api/client', () => ({
   default: vi.fn(() => Promise.resolve({})),
 }));
 
+vi.mock('../src/core/hooks/useAppSettings', () => ({
+  useAppSettings: () => ({ data: { setup_complete: true }, isLoading: false }),
+  APP_SETTINGS_KEY: ['app-settings'],
+}));
+
 beforeEach(() => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,

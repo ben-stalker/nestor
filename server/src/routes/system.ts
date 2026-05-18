@@ -1,69 +1,97 @@
 import { execFile } from 'child_process';
+import type { RequestHandler } from 'express';
 import type Database from 'better-sqlite3';
 import { Router } from 'express';
-import { z } from 'zod';
 import { getDb } from '../db/connection';
 import AppSettingsRepository from '../repositories/AppSettingsRepository';
+import ProfileRepository from '../repositories/ProfileRepository';
+import { BackupService } from '../services/BackupService';
+import { UpdateService } from '../services/UpdateService';
+import createRequireAdminPin from '../middleware/requireAdminPin';
 import logger from '../utils/logger';
-
-// Version string — injected by the build or read from env; avoids runtime require().
-const APP_VERSION = process.env.NESTOR_VERSION ?? 'unknown';
-
-const ImportSchema = z.object({ settings: z.record(z.string(), z.unknown()).optional() });
 
 export default function createSystemRouter(
   settingsRepo: AppSettingsRepository = new AppSettingsRepository(getDb()),
   db: Database.Database = getDb(),
+  requireAdminPin: RequestHandler = createRequireAdminPin(new ProfileRepository(getDb())),
 ): Router {
   const router = Router();
+  const updateService = new UpdateService(settingsRepo);
 
   // GET /api/v1/system/version — app version + update availability
   router.get('/api/v1/system/version', (_req, res) => {
-    const updateAvailable = settingsRepo.get<string | null>('update_available_version') ?? null;
-    res.json({ version: APP_VERSION, updateAvailable });
+    const { current, available, hasUpdate } = updateService.checkForUpdate();
+    res.json({ version: current, updateAvailable: available, hasUpdate });
   });
 
-  // POST /api/v1/system/update — trigger git pull + restart (best-effort)
-  router.post('/api/v1/system/update', (_req, res) => {
-    res.status(202).json({ message: 'Update initiated' });
-    execFile(
-      'sh',
-      ['-c', 'git pull --rebase && npm run build && systemctl restart nestor-server'],
-      (err) => {
-        if (err) logger.warn({ err }, 'system update script failed');
-      },
-    );
+  // POST /api/v1/system/update — trigger git pull + restart (admin pin required)
+  router.post('/api/v1/system/update', requireAdminPin, (_req, res) => {
+    res.status(202).json({ status: 'updating' });
+    UpdateService.applyUpdate();
   });
 
-  // GET /api/v1/system/backup — export full settings as JSON download
-  router.get('/api/v1/system/backup', (_req, res) => {
-    const settings = settingsRepo.getAll();
-    const payload = JSON.stringify(
-      { version: 1, exported_at: new Date().toISOString(), settings },
-      null,
-      2,
-    );
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Disposition', `attachment; filename="nestor-backup-${Date.now()}.json"`);
-    res.send(payload);
-  });
-
-  // POST /api/v1/system/restore — import settings from JSON backup
-  router.post('/api/v1/system/restore', (req, res) => {
-    const result = ImportSchema.safeParse(req.body);
-    if (!result.success) {
-      res.status(400).json({ error: 'Invalid backup file', details: result.error.flatten() });
+  // POST /api/v1/system/rollback — stub rollback endpoint
+  router.post('/api/v1/system/rollback', requireAdminPin, (_req, res) => {
+    const result = UpdateService.rollback();
+    if (result.status === 'not_implemented') {
+      res.status(501).json({ status: 'not_implemented' });
       return;
     }
-    if (result.data.settings) {
+    res.status(202).json({ status: 'rolling_back' });
+  });
+
+  // GET /api/v1/system/backup — export all tables as JSON download
+  router.get('/api/v1/system/backup', (_req, res) => {
+    const payload = BackupService.exportAll(db);
+    // Also include legacy `settings` key for backwards compat
+    const body = { ...payload, settings: settingsRepo.getAll() };
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="nestor-backup-${Date.now()}.json"`);
+    res.send(JSON.stringify(body, null, 2));
+  });
+
+  // POST /api/v1/system/restore — import from JSON backup
+  router.post('/api/v1/system/restore', (req, res) => {
+    const body = req.body as unknown;
+
+    // New-format backup: has schema_version + tables
+    if (
+      typeof body === 'object' &&
+      body !== null &&
+      'schema_version' in (body as Record<string, unknown>)
+    ) {
       try {
-        settingsRepo.setMany(result.data.settings);
+        BackupService.importAll(db, body);
+      } catch (err) {
+        res.status(400).json({ error: 'Invalid backup file', details: String(err) });
+        return;
+      }
+      res.status(204).end();
+      return;
+    }
+
+    // Legacy-format backup: only has `settings` key
+    if (
+      typeof body === 'object' &&
+      body !== null &&
+      'settings' in (body as Record<string, unknown>)
+    ) {
+      const { settings } = body as Record<string, unknown>;
+      if (typeof settings !== 'object' || settings === null) {
+        res.status(400).json({ error: 'Invalid backup file: settings must be an object' });
+        return;
+      }
+      try {
+        settingsRepo.setMany(settings as Record<string, unknown>);
       } catch (err) {
         res.status(422).json({ error: 'Failed to restore settings', details: String(err) });
         return;
       }
+      res.status(204).end();
+      return;
     }
-    res.status(204).end();
+
+    res.status(400).json({ error: 'Invalid backup file' });
   });
 
   // POST /api/v1/system/factory-reset — wipe the database completely
@@ -75,6 +103,8 @@ export default function createSystemRouter(
       tables.forEach(({ name }) => {
         db.prepare(`DELETE FROM ${name}`).run();
       });
+      // Mark setup as not complete
+      settingsRepo.set('setup_complete', false);
       logger.warn('Factory reset executed — all data wiped');
       res.status(204).end();
     } catch (err) {

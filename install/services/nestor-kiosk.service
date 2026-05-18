@@ -1,0 +1,16 @@
+[Unit]
+Description=Nestor Kiosk Browser
+After=nestor-server.service graphical.target
+Requires=nestor-server.service
+
+[Service]
+Type=simple
+User={{NESTOR_USER}}
+Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStart={{INSTALL_DIR}}/install/scripts/start-kiosk.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

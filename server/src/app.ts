@@ -218,7 +218,7 @@ export default function createApp(): Express {
     createOctopusRouter(settingsRepo, cryptoService, requireAdminPin, octopusConsumptionRepo),
   );
 
-  app.use(createSystemRouter(settingsRepo, db));
+  app.use(createSystemRouter(settingsRepo, db, requireAdminPin));
 
   const voiceCmdRepo = new VoiceCommandRepository(db);
   app.use('/api/v1/voice', createVoiceRouter());

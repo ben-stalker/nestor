@@ -13,18 +13,12 @@ gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-tim
 gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled true
 
 # Rotate display to portrait (right edge at top)
-DISPLAY_NAME=$(xrandr | awk '/ connected/{print $1; exit}')
-echo "[$(date)] rotating display: $DISPLAY_NAME"
-xrandr --output "$DISPLAY_NAME" --rotate right
-
-# Apply touch coordinate transformation AFTER xrandr rotation.
-# CTM maps raw landscape ABS coords to portrait screen coords.
-# Derived from corner touches: portrait_x=ABS_Y, portrait_y=1-ABS_X
-sleep 1
-xinput set-prop "Melfas LGDisplay Incell Touch" \
-  "Coordinate Transformation Matrix" \
-  0 1 0 -1 0 1 0 0 1
-echo "[$(date)] touch CTM applied"
+# Uses the hardware-agnostic rotate-display.sh which auto-detects the display
+# and touchscreen device names — no hardcoded identifiers needed.
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+echo "[$(date)] rotating display to portrait (right)..."
+bash "$SCRIPT_DIR/scripts/rotate-display.sh" right
+echo "[$(date)] display rotation complete"
 
 # Wait for Nestor server then launch Chromium in kiosk mode
 echo "[$(date)] waiting for Nestor server..."

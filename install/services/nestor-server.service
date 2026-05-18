@@ -1,0 +1,19 @@
+[Unit]
+Description=Nestor Household Dashboard Server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User={{NESTOR_USER}}
+WorkingDirectory={{INSTALL_DIR}}
+ExecStart=/usr/bin/node {{INSTALL_DIR}}/server/dist/index.js
+Restart=always
+RestartSec=5
+WatchdogSec=30
+StandardOutput=journal
+StandardError=journal
+EnvironmentFile=-/etc/nestor.env
+
+[Install]
+WantedBy=multi-user.target
