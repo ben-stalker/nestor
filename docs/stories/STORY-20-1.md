@@ -4,7 +4,7 @@
 **Sprint:** 1 — Foundations
 **Estimate:** S (1d)
 **Priority:** P1
-**Status:** pending
+**Status:** done
 
 ---
 

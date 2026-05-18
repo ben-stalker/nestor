@@ -212,13 +212,24 @@ phases:
           - STORY-19.8
           - STORY-19.9
           - STORY-19.10
+          - STORY-20.1
+          - STORY-20.2
+          - STORY-20.3
+          - STORY-20.4
+          - STORY-20.5
+          - STORY-20.6
+          - STORY-20.7
+          - STORY-20.8
+          - STORY-20.10
+          - STORY-20.11
 
 backlog:
-  - STORY-18.5  # blocked on STORY-20.4 (Playwright setup)
+  - STORY-18.5  # deferred to post-v1.0 — Playwright E2E a11y sweep
+  - STORY-20.9  # in-progress: awaiting 30-day hardware soak run
 
 current_phase: phase_4_implementation
-recommended_next: dev_stories
-last_updated: "2026-05-18-epic-19"
+recommended_next: release_v1
+last_updated: "2026-05-18-epic-20"
 notes: >
   EPIC-19 complete (2026-05-18): Setup Wizard & Installation. 10 stories (19.1–19.10).
   Client: SetupWizard (10-step shell, WizardProgress, StepShell). Steps: LanguageStep

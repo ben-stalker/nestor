@@ -1,45 +1,61 @@
 # Nestor
 
-A self-hosted family dashboard for the home.
+Nestor is a self-hosted household dashboard for your home — touchscreen kiosk UI, family calendar, meal planner, voice commands, and more.
 
-> Full documentation coming in a later release. See `docs/` for architecture and planning docs.
+## Features
 
-## Getting Started
+- **Calendar sync** — Google Calendar (OAuth2 CalDAV), Apple iCloud CalDAV, Yahoo CalDAV
+- **Family profiles** — per-person profiles with optional PIN protection
+- **Voice commands** — wake word detection via OpenWakeWord, speech-to-text via Whisper, text-to-speech via Piper (fully offline)
+- **Meal planning** — weekly planner, recipe library with web import
+- **Finance tracker** — bills, subscriptions, and spending commitments
+- **Shopping lists** — household shopping and ad-hoc lists
+- **Pets & vehicles** — pet profiles, EV charging status, journey time tracker
+- **Board** — household messages and whiteboard
+- **Bin schedules** — waste and recycling collection reminders
+- **Contacts** — household contact list
+- **EV & Octopus Energy** — Tesla plugin (battery, range, charging alerts), Octopus Energy tariff tracker
+- **Plugin system** — extend Nestor with brand-specific integrations without touching core
 
-Requirements: Node 20 LTS (see `.nvmrc`)
+## Hardware
+
+Tested and documented for:
+
+| Hardware                                                               | Notes                      |
+| ---------------------------------------------------------------------- | -------------------------- |
+| Intel NUC 7th-gen i3 + iiyama ProLite T2454MSC (24", portrait-mounted) | Primary reference platform |
+| Raspberry Pi 5 8 GB + official 7" touchscreen                          | Lower-cost option          |
+
+USB audio (e.g. Jabra Speak 410/510) required for voice features. See [docs/hardware.md](docs/hardware.md).
+
+## Install
+
+### Single-command install (Ubuntu 22+, requires root)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/benstalker/nestor/main/install/install.sh | sudo bash
+```
+
+After installation, open a browser at `http://localhost:3000` to run the Setup Wizard.
+
+### Development
 
 ```bash
 npm install
-npm run build
+npm run dev
 ```
 
-## Kiosk Hardware Setup (NUC)
+Requires Node 20 LTS (see `.nvmrc`). Use `nvm use` to switch automatically.
 
-Scripts for deploying Nestor as a touchscreen kiosk are in `install/`. Tested hardware:
+## Documentation
 
-- **NUC**: Intel NUC7i3DNK
-- **Display**: iiyama ProLite T2454MSC (24" touch, portrait-mounted, right edge up)
-- **Audio**: JABRA Speak 510 USB speakerphone
-
-Run `sudo bash install/setup-nuc.sh` on a fresh Ubuntu 24.04 Desktop install.
-
-### Touchscreen notes (iiyama ProLite T2454MSC)
-
-The touch controller identifies as `Melfas LGDisplay Incell Touch` (USB `1fd2:8102`).
-
-**Driver**: must use `xf86-input-evdev`, not libinput. With libinput the device is registered as an XI2 TOUCHSCREEN type and cursor does not respond to touch. The file `install/90-touch-rotation.conf` forces evdev for this device.
-
-**Portrait rotation + coordinate mapping**: the display is rotated at runtime via `xrandr --rotate right` in `kiosk-init.sh`. Because evdev maps raw ABS coordinates to the post-xrandr logical screen, a Coordinate Transformation Matrix (CTM) must be applied _after_ `xrandr` to remap touch axes to the rotated display:
-
-```
-xinput set-prop "Melfas LGDisplay Incell Touch" \
-  "Coordinate Transformation Matrix" \
-  0 1 0 -1 0 1 0 0 1
-```
-
-This maps portrait X → raw ABS_Y and portrait Y → (1 − raw ABS_X), matching the physical orientation where the monitor's right landscape edge is at the top in portrait mode. The `sleep 1` before the CTM in `kiosk-init.sh` ensures xrandr has finished before the matrix is applied.
-
-**Do not** use evdev `SwapAxes`/`InvertY` in `xorg.conf.d` — this conflicts with the runtime xrandr rotation and produces incorrect motion direction.
+- [Installation guide](docs/install.md)
+- [Hardware setup](docs/hardware.md)
+- [Plugin development](docs/plugin-dev.md)
+- [Transport adapters](docs/plugins/transport-adapters.md)
+- [Translations](docs/translations.md)
+- [Contributing](CONTRIBUTING.md)
+- [Architecture](docs/architecture-nestor-2026-05-08.md)
 
 ## License
 

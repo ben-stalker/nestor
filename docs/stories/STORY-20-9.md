@@ -4,7 +4,7 @@
 **Sprint:** 10 — MVP cut completion
 **Estimate:** XS (calendar wait — small effort)
 **Priority:** P1
-**Status:** pending
+**Status:** in_progress (awaiting 30-day hardware run)
 
 ---
 

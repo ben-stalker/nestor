@@ -1,6 +1,6 @@
 {
   "name": "@nestor/client",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -36,6 +36,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.5.0",
     "jsdom": "^29.1.1",
+    "msw": "^2.14.6",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.3.0",
     "vite": "^8.0.11",

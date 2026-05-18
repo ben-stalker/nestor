@@ -10,6 +10,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: [
       './tsconfig.json',
+      './tsconfig.e2e.json',
       './server/tsconfig.json',
       './server/tsconfig.test.json',
       './client/tsconfig.json',
@@ -134,6 +135,32 @@ module.exports = {
       files: ['**/*.config.ts', '**/*.config.js', '**/tests/**/*.ts', '**/tests/**/*.tsx'],
       rules: {
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      },
+    },
+    {
+      files: ['e2e/**/*.ts', 'scripts/**/*.ts', 'playwright.config.ts'],
+      rules: {
+        'import/no-extraneous-dependencies': [
+          'error',
+          {
+            devDependencies: true,
+            packageDir: [__dirname, `${__dirname}/server`, `${__dirname}/client`],
+          },
+        ],
+        'no-console': 'off',
+        'import/prefer-default-export': 'off',
+        'no-restricted-syntax': 'off',
+        'no-continue': 'off',
+        'no-cond-assign': 'off',
+        'no-await-in-loop': 'off',
+        '@typescript-eslint/require-await': 'off',
+        'no-promise-executor-return': 'off',
+      },
+    },
+    {
+      files: ['client/tests/mocks/**/*.ts'],
+      rules: {
+        'import/prefer-default-export': 'off',
       },
     },
   ],

@@ -1,0 +1,32 @@
+{
+  "id": "my-plugin",
+  "name": "My Plugin",
+  "version": "0.1.0",
+  "author": "Your Name",
+  "description": "Short description shown in Admin → Plugins.",
+  "capabilities": ["home_screen_widget", "alert_source", "tts_announcements", "settings_panel"],
+  "settingsFields": [
+    { "key": "api_key", "label": "API key", "type": "password" },
+    { "key": "device_id", "label": "Device ID", "type": "text" },
+    {
+      "key": "refresh_interval",
+      "label": "Refresh interval (minutes)",
+      "type": "number",
+      "default": 10
+    },
+    {
+      "key": "enable_alerts",
+      "label": "Enable alerts",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "key": "enable_tts",
+      "label": "Speak announcements",
+      "type": "toggle",
+      "default": false
+    }
+  ],
+  "apiRisk": "community",
+  "entry": "index.js"
+}

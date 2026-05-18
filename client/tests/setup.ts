@@ -1,1 +1,7 @@
 import '@testing-library/jest-dom';
+import { afterAll, afterEach, beforeAll } from 'vitest';
+import { mswServer } from './mocks/server';
+
+beforeAll(() => mswServer.listen({ onUnhandledRequest: 'warn' }));
+afterEach(() => mswServer.resetHandlers());
+afterAll(() => mswServer.close());

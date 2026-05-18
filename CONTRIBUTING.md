@@ -8,11 +8,27 @@ Thank you for your interest in contributing!
 2. Run `npm install` from the repo root
 3. Use `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` to validate changes
 
+## Story files
+
+Each story in an epic has a corresponding file at `docs/stories/STORY-<epic>-<n>.md` (e.g. `docs/stories/STORY-20-1.md`). The file describes the tasks for that story and is updated with progress as work proceeds. Create a story file before starting implementation and mark tasks done as you go.
+
 ## Code Style
 
 - ESLint (Airbnb base + TypeScript) and Prettier are enforced via pre-commit hooks
 - Single quotes, 2-space indent, trailing commas, LF line endings
 - No `console.log` in committed code (use proper logging)
+
+## Tests
+
+Three test suites must pass before opening a PR:
+
+| Suite                   | Runner     | Command                           |
+| ----------------------- | ---------- | --------------------------------- |
+| Server unit/integration | Jest       | `npm run test --workspace=server` |
+| Client unit/component   | Vitest     | `npm run test --workspace=client` |
+| End-to-end              | Playwright | `npm run test:e2e`                |
+
+Run `npm run test` from the repo root to execute all suites.
 
 ## Pull Requests
 

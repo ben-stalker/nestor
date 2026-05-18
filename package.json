@@ -1,6 +1,6 @@
 {
   "name": "nestor",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "server",
@@ -13,9 +13,13 @@
     "typecheck": "tsc -b --noEmit",
     "test": "npm run test -ws --if-present",
     "build": "npm run build -ws --if-present",
+    "e2e": "playwright test",
+    "e2e:report": "playwright show-report",
     "prepare": "husky"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^25.6.2",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",

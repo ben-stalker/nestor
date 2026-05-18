@@ -33,3 +33,17 @@ jobs:
 
       - name: Test
         run: npm run test
+
+      - name: Coverage (server)
+        run: npx jest --coverage --coverageDirectory=../coverage/server
+        working-directory: server
+        env:
+          NODE_ENV: test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14

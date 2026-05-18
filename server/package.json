@@ -1,6 +1,6 @@
 {
   "name": "@nestor/server",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -47,30 +47,5 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/**/*.test.ts"
-    ],
-    "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
-    },
-    "transform": {
-      "^.+\\.tsx?$": [
-        "ts-jest",
-        {
-          "tsconfig": {
-            "module": "CommonJS",
-            "moduleResolution": "node",
-            "types": [
-              "jest",
-              "node"
-            ]
-          }
-        }
-      ]
-    }
   }
 }
