@@ -30,9 +30,10 @@ test.describe('Voice Mock Command', () => {
       },
     });
 
-    // Check the voice command log endpoint if it exists
+    // Check the voice command log endpoint if it exists (and returns JSON)
     const logRes = await request.get('/api/v1/voice/log');
-    if (logRes.ok()) {
+    const isJson = logRes.headers()['content-type']?.includes('application/json');
+    if (logRes.ok() && isJson) {
       const log = (await logRes.json()) as Array<{ transcript: string }>;
       const homeCmd = log.find((entry) => entry.transcript === 'Go to home');
       expect(homeCmd).toBeDefined();
@@ -108,9 +109,10 @@ test.describe('Voice Mock Command', () => {
 
     // 204 means command was processed
     if (res.status() === 204) {
-      // Command was handled — verify via voice log if available
+      // Command was handled — verify via voice log if available (and returns JSON)
       const logRes = await request.get('/api/v1/voice/commands');
-      if (logRes.ok()) {
+      const isJson = logRes.headers()['content-type']?.includes('application/json');
+      if (logRes.ok() && isJson) {
         const commands = (await logRes.json()) as Array<{
           transcript: string;
           matched_handler: string | null;

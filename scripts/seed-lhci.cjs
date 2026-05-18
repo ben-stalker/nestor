@@ -81,14 +81,46 @@ upsert('language', 'en');
 upsert('locale', 'en-GB');
 upsert('timezone', 'Europe/London');
 
-// Admin profile with PIN "0000"
+// Admin profile with PIN "0000" — all permissions granted
 const pinHash = bcrypt.hashSync('0000', 10);
+const ALL_PERMISSIONS = [
+  'view_calendar',
+  'add_calendar_event',
+  'edit_calendar_event',
+  'delete_calendar_event',
+  'view_food',
+  'add_recipe',
+  'add_to_shopping',
+  'tick_shopping',
+  'clear_shopping',
+  'view_vehicles',
+  'book_vehicle',
+  'manage_vehicles',
+  'view_chores',
+  'complete_chore',
+  'manage_chores',
+  'view_health_log',
+  'add_health_log',
+  'view_finance',
+  'manage_finance',
+  'view_house',
+  'manage_house',
+  'view_pets',
+  'manage_pets',
+  'view_board',
+  'post_board_message',
+  'view_contacts',
+  'manage_contacts',
+  'manage_settings',
+  'manage_plugins',
+];
+const adminPerms = JSON.stringify(Object.fromEntries(ALL_PERMISSIONS.map((k) => [k, true])));
 const adminResult = db
   .prepare(
     `INSERT INTO profiles(name,type,colour,pin_hash,permissions_json,text_size,simplified_nav,feed_alert_hours,conversion_rate,created_at)
-     VALUES(?,'admin','#4f46e5',?,'{}','default',0,4,0,?)`,
+     VALUES(?,'admin','#4f46e5',?,?,'default',0,4,0,?)`,
   )
-  .run('Admin', pinHash, Date.now());
+  .run('Admin', pinHash, adminPerms, Date.now());
 const adminProfileId = adminResult.lastInsertRowid;
 
 // Child profile (no PIN)

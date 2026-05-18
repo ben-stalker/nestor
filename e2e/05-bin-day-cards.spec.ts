@@ -32,7 +32,7 @@ test.describe('Bin Day Cards', () => {
 
   test('bin schedule exists in DB and can be retrieved via API', async ({ request }) => {
     // Verify the seeded bin schedule is accessible via API
-    const res = await request.get('/api/v1/bins');
+    const res = await request.get('/api/v1/bin-schedules');
     if (res.ok()) {
       const data = (await res.json()) as Array<{ name: string; day_of_week: number }>;
       const generalWaste = data.find((b) => b.name === 'General Waste');
@@ -43,7 +43,7 @@ test.describe('Bin Day Cards', () => {
 
   test('can add a bin schedule via admin settings', async ({ page, request }) => {
     // Verify we can POST a new bin schedule
-    const res = await request.post('/api/v1/bins', {
+    const res = await request.post('/api/v1/bin-schedules', {
       data: {
         name: 'Recycling',
         colour: '#22c55e',
@@ -62,7 +62,7 @@ test.describe('Bin Day Cards', () => {
       const bin = (await res.json()) as { id: number };
 
       // Verify it appears in the list
-      const listRes = await request.get('/api/v1/bins');
+      const listRes = await request.get('/api/v1/bin-schedules');
       if (listRes.ok()) {
         const bins = (await listRes.json()) as Array<{ name: string }>;
         expect(bins.some((b) => b.name === 'Recycling')).toBe(true);
@@ -73,7 +73,7 @@ test.describe('Bin Day Cards', () => {
       await page.waitForSelector('[data-testid="home-page"]', { timeout: 10_000 });
 
       // Clean up
-      await request.delete(`/api/v1/bins/${bin.id}`);
+      await request.delete(`/api/v1/bin-schedules/${bin.id}`);
     }
   });
 });

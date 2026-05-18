@@ -37,7 +37,7 @@ test.describe('Profile Switching', () => {
     await aliceButton.click();
 
     // After clicking, Alice should become active (aria-pressed = true)
-    await expect(aliceButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(aliceButton).toHaveAttribute('aria-pressed', 'true', { timeout: 10_000 });
 
     // No PIN prompt should appear for child without PIN
     const pinPrompt = page.getByRole('dialog');

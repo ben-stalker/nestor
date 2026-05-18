@@ -8,6 +8,13 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Vehicle Booking', () => {
   test.beforeEach(async ({ page }) => {
+    // Pre-select admin profile (id=1) so API calls include x-profile-id and pass permission checks
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        'nestor-app',
+        JSON.stringify({ state: { activeProfileId: '1' }, version: 0 }),
+      );
+    });
     await page.goto('/vehicles');
     await page.waitForLoadState('networkidle');
   });
