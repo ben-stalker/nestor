@@ -22,25 +22,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build client
-        run: npm run build --workspace=@nestor/client
+      - name: Build (server + client)
+        run: npm run build
 
-      - name: Seed e2e database
-        run: |
-          NESTOR_DB_PATH=/tmp/lhci.db node -e "
-            const { runMigrations } = require('./server/dist/db/migrationRunner');
-            const Database = require('better-sqlite3');
-            const path = require('path');
-            const db = new Database('/tmp/lhci.db');
-            runMigrations(db, path.join(__dirname, 'server/migrations'));
-            db.prepare(\"INSERT INTO app_settings(key,value) VALUES('setup_complete','true') ON CONFLICT(key) DO UPDATE SET value=excluded.value\").run();
-            db.close();
-          " || true
+      - name: Seed Lighthouse database
+        run: node scripts/seed-lhci.cjs
+        env:
+          NESTOR_DB_PATH: /tmp/lhci.db
 
       - name: Run Lighthouse CI
         run: npx @lhci/cli autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          NESTOR_DB_PATH: /tmp/lhci.db
 
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4

@@ -7,8 +7,8 @@
         "http://localhost:3000/family",
         "http://localhost:3000/admin"
       ],
-      "startServerCommand": "npm run preview:e2e --workspace=@nestor/client",
-      "startServerReadyPattern": "Local",
+      "startServerCommand": "NESTOR_DB_PATH=/tmp/lhci.db NESTOR_PORT=3000 node server/dist/index.js",
+      "startServerReadyPattern": "Server listening",
       "startServerReadyTimeout": 30000,
       "numberOfRuns": 3
     },
