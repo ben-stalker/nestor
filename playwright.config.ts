@@ -25,8 +25,9 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
-  /* Global setup to seed the test database */
-  globalSetup: './e2e/global-setup.ts',
+  /* Global setup seeds the DB locally.  In CI the workflow runs
+   * scripts/seed-lhci.cjs BEFORE starting the server, so we skip this. */
+  globalSetup: process.env.NESTOR_E2E_SERVER_RUNNING ? undefined : './e2e/global-setup.ts',
 
   /* Only Chromium for E2E */
   projects: [
