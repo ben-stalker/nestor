@@ -135,9 +135,110 @@
   --base-font-size: 26px;
 }
 
-/* ─── Simplified nav (hide labels) ──────────────────────────────────────── */
+/* ─── Simplified nav ─────────────────────────────────────────────────────── */
 [data-simplified-nav='true'] .nav-label {
   display: none;
+}
+
+/* ─── Colour-blind safe palettes (Wong / Okabe-Ito) ─────────────────────── */
+/*
+ * Profile colours are remapped to universally distinguishable palettes.
+ * All places that use profile colours reference CSS variables, so the swap is instant.
+ * Sources:
+ *   Wong (2011) - https://www.nature.com/articles/nmeth.1618
+ *   Okabe & Ito (2008) - https://jfly.uni-koeln.de/color/
+ */
+
+/* Deuteranopia / Protanopia — red-green colour vision deficiency */
+[data-colour-blind='deuteranopia'],
+[data-colour-blind='protanopia'] {
+  --color-profile-1: #e69f00; /* orange */
+  --color-profile-2: #56b4e9; /* sky blue */
+  --color-profile-3: #009e73; /* bluish green */
+  --color-profile-4: #f0e442; /* yellow */
+  --color-profile-5: #0072b2; /* blue */
+  --color-profile-6: #d55e00; /* vermillion */
+  --color-profile-7: #cc79a7; /* reddish purple */
+  --color-profile-8: #000000; /* black */
+  --color-profile-9: #e69f00;
+  --color-profile-10: #56b4e9;
+  --color-profile-11: #009e73;
+  --color-profile-12: #f0e442;
+  /* Mode accents */
+  --color-mode-family: #d55e00;
+  --color-mode-home: #e69f00;
+  --color-mode-finance: #009e73;
+  --color-mode-ev: #0072b2;
+  --color-alert-urgent: #d55e00;
+  --color-alert-warning: #e69f00;
+  --color-alert-info: #0072b2;
+  --color-alert-success: #009e73;
+}
+
+/* Tritanopia — blue-yellow colour vision deficiency */
+[data-colour-blind='tritanopia'] {
+  --color-profile-1: #d55e00; /* vermillion */
+  --color-profile-2: #cc79a7; /* reddish purple */
+  --color-profile-3: #009e73; /* bluish green */
+  --color-profile-4: #56b4e9; /* sky blue */
+  --color-profile-5: #e69f00; /* orange */
+  --color-profile-6: #000000; /* black */
+  --color-profile-7: #0072b2; /* blue */
+  --color-profile-8: #f0e442; /* yellow */
+  --color-profile-9: #d55e00;
+  --color-profile-10: #cc79a7;
+  --color-profile-11: #009e73;
+  --color-profile-12: #56b4e9;
+  --color-mode-home: #e69f00;
+  --color-mode-family: #d55e00;
+  --color-mode-finance: #009e73;
+  --color-mode-ev: #0072b2;
+  --color-alert-urgent: #d55e00;
+  --color-alert-warning: #e69f00;
+  --color-alert-info: #0072b2;
+  --color-alert-success: #009e73;
+}
+
+/* ─── High contrast mode ─────────────────────────────────────────────────── */
+[data-high-contrast='true'] {
+  --color-primary: #000000;
+  --color-secondary: #1a1a1a;
+  --color-muted: #4a4a4a;
+  --color-surface: #ffffff;
+  --color-surface-elev: #f0f0f0;
+  --color-border: #000000;
+  --color-warm: #ffffff;
+  --color-warm-dark: #000000;
+}
+
+[data-high-contrast='true'][data-theme='dark'] {
+  --color-primary: #ffffff;
+  --color-secondary: #e0e0e0;
+  --color-muted: #b0b0b0;
+  --color-surface: #000000;
+  --color-surface-elev: #1a1a1a;
+  --color-border: #ffffff;
+}
+
+[data-high-contrast='true'] button,
+[data-high-contrast='true'] [role='button'],
+[data-high-contrast='true'] a {
+  outline-offset: 2px;
+}
+
+[data-high-contrast='true'] :focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ─── Global reduced motion (app-setting, complements OS prefers-reduced-motion) */
+[data-reduced-motion='true'] *,
+[data-reduced-motion='true'] *::before,
+[data-reduced-motion='true'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* ─── Filter panel ───────────────────────────────────────────────────────── */
@@ -152,7 +253,7 @@
   gap: 0.5rem;
   padding: 0.75rem 0.25rem;
   overflow-y: auto;
-  border-right: 1px solid var(--color-surface-elev);
+  border-inline-end: 1px solid var(--color-surface-elev);
 }
 
 .filter-panel--landscape {
@@ -438,7 +539,7 @@
 }
 
 .home-header__datetime {
-  text-align: right;
+  text-align: end;
 }
 
 .home-header__date {
@@ -634,7 +735,7 @@
 
 .day-card--focal {
   align-items: flex-start;
-  text-align: left;
+  text-align: start;
   padding: 0.875rem 1rem;
   min-height: 14rem;
   border-color: var(--color-mode-home);
@@ -715,8 +816,8 @@
   display: flex;
   align-items: baseline;
   gap: 0.375rem;
-  border-left: 3px solid var(--color-secondary);
-  padding-left: 0.375rem;
+  border-inline-start: 3px solid var(--color-secondary);
+  padding-inline-start: 0.375rem;
   font-size: var(--text-caption);
 }
 
@@ -833,7 +934,7 @@
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  border-left: 3px solid var(--color-secondary);
+  border-inline-start: 3px solid var(--color-secondary);
   padding: 0.5rem 0.5rem 0.5rem 0.75rem;
   background: var(--color-surface-elev);
   border-radius: 0 0.5rem 0.5rem 0;
@@ -1009,7 +1110,7 @@
   border-radius: 0.75rem;
   background: var(--color-surface-elev);
   width: 100%;
-  text-align: left;
+  text-align: start;
   border: none;
   cursor: pointer;
   transition: background 120ms ease;
@@ -1165,7 +1266,7 @@
   flex-direction: column;
   flex-shrink: 0;
   width: 3.5rem;
-  border-right: 1px solid var(--color-surface-elev);
+  border-inline-end: 1px solid var(--color-surface-elev);
   background: var(--color-surface);
 }
 
@@ -1205,7 +1306,7 @@
   border-radius: 0.375rem;
   border: none;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   overflow: hidden;
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
   transition: opacity 120ms ease;
@@ -1375,7 +1476,7 @@
 .week-header__gutter {
   width: 3.5rem;
   flex-shrink: 0;
-  border-right: 1px solid var(--color-surface-elev);
+  border-inline-end: 1px solid var(--color-surface-elev);
 }
 
 .week-header__cell {
@@ -1385,7 +1486,7 @@
   align-items: center;
   padding: 0.375rem 0.125rem;
   font-size: var(--text-caption);
-  border-left: 1px solid var(--color-surface-elev);
+  border-inline-start: 1px solid var(--color-surface-elev);
   min-width: 0;
 }
 
@@ -1426,7 +1527,7 @@
 .week-column {
   position: relative;
   flex: 1;
-  border-left: 1px solid var(--color-surface-elev);
+  border-inline-start: 1px solid var(--color-surface-elev);
   cursor: pointer;
   background: repeating-linear-gradient(
     to bottom,
@@ -1447,7 +1548,7 @@
     color-mix(in srgb, var(--color-mode-calendar) 15%, var(--color-surface-elev)) 63px,
     color-mix(in srgb, var(--color-mode-calendar) 15%, var(--color-surface-elev)) 64px
   );
-  border-left-color: var(--color-mode-calendar);
+  border-inline-start-color: var(--color-mode-calendar);
 }
 
 /* ─── Custody event stripe ──────────────────────────────────────────────── */
@@ -1826,7 +1927,7 @@
   padding: 0;
   background: var(--color-surface-elev);
   color: var(--color-alert-error);
-  margin-right: auto;
+  margin-inline-end: auto;
 }
 
 /* ─── Recurrence picker ──────────────────────────────────────────────────── */
@@ -2032,7 +2133,7 @@
   background: var(--color-surface);
   border: none;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   font-size: 0.875rem;
 }
 

@@ -194,13 +194,38 @@ phases:
           - STORY-17.8
           - STORY-17.9
           - STORY-17.10
+          - STORY-18.1
+          - STORY-18.2
+          - STORY-18.3
+          - STORY-18.4
+          - STORY-18.6
+          - STORY-18.7
+          - STORY-18.8
+          - STORY-18.9
 
-backlog: []
+backlog:
+  - STORY-18.5  # blocked on STORY-20.4 (Playwright setup)
 
 current_phase: phase_4_implementation
 recommended_next: dev_stories
-last_updated: "2026-05-17-epic-17"
+last_updated: "2026-05-18-epic-18"
 notes: >
+  EPIC-18 complete (2026-05-18): Internationalisation & Accessibility. 8 stories
+  (18.1–18.4, 18.6–18.9); STORY-18.5 deferred to Epic 20 (Playwright dependency).
+  i18next + react-i18next client bootstrap with English base translations
+  (client/public/locales/en/translation.json, 10 namespaces). Server i18next-fs-backend
+  for alert/TTS messages. Locale-aware format helpers (format.ts: formatDate/Time/Currency/
+  Number/Temperature/Distance/Volume) synced from app_settings. eslint-plugin-i18next
+  no-literal-string rule (warn mode, 1327 existing warnings, will escalate to error in
+  Epic 20). High-contrast/reduced-motion/colour-blind CSS data-attribute rules. applyProfile
+  Settings extended with globalSettings param; ProfileProvider passes app_settings.
+  Wong/Okabe-Ito colour-blind palettes (deuteranopia/protanopia/tritanopia) as CSS var
+  overrides. CSS logical properties throughout index.css (border-inline-start/end,
+  padding-inline-start/end, text-align: start/end). Simplified nav: 88×88 buttons,
+  4 core modes, activated by profile.simplified_nav or app_settings.simplified_nav_global.
+  French translation file (fr/translation.json, all 10 namespaces). CONTRIBUTING.md updated
+  with i18n, format helpers, and RTL sections. Server+client tests: 1148+662=1810 total.
+  Lint clean (0 errors). Prettier clean. Typecheck clean.
   EPIC-17 complete (2026-05-17): Admin & Settings. 10 stories (17.1–17.10).
   AdminPage shell with left-rail nav, search, lazy-loaded section panels,
   admin-PIN gate. Panels: ProfilesPanel (CRUD, permission matrix, colour picker),
