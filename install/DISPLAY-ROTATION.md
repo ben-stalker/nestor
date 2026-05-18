@@ -6,12 +6,12 @@ runtime, so no device names need to be hardcoded anywhere.
 
 ## Supported rotations
 
-| Value      | Physical orientation          | Coordinate Transformation Matrix (CTM) |
-|------------|-------------------------------|----------------------------------------|
-| `normal`   | Landscape (default)           | `1 0 0  0 1 0  0 0 1`                 |
-| `right`    | Portrait — right edge at top  | `0 1 0  -1 0 1  0 0 1`                |
-| `inverted` | Upside-down landscape         | `-1 0 1  0 -1 1  0 0 1`               |
-| `left`     | Portrait — left edge at top   | `0 -1 1  1 0 0  0 0 1`                |
+| Value      | Physical orientation         | Coordinate Transformation Matrix (CTM) |
+| ---------- | ---------------------------- | -------------------------------------- |
+| `normal`   | Landscape (default)          | `1 0 0  0 1 0  0 0 1`                  |
+| `right`    | Portrait — right edge at top | `0 1 0  -1 0 1  0 0 1`                 |
+| `inverted` | Upside-down landscape        | `-1 0 1  0 -1 1  0 0 1`                |
+| `left`     | Portrait — left edge at top  | `0 -1 1  1 0 0  0 0 1`                 |
 
 The CTM is a 3x3 matrix that maps raw touch coordinates (which always come from
 the sensor in its physical orientation) onto the rotated logical screen.

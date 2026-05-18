@@ -4,14 +4,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import apiFetch from '../../api/client';
 import type { Profile } from '../../api/profiles';
 
-const PROFILE_COLOURS = [
-  '#6366f1',
-  '#ec4899',
-  '#ef4444',
-  '#f97316',
-  '#22c55e',
-  '#3b82f6',
-];
+const PROFILE_COLOURS = ['#6366f1', '#ec4899', '#ef4444', '#f97316', '#22c55e', '#3b82f6'];
 
 const PROFILE_TYPES = ['admin', 'teen', 'child'] as const;
 type BasicProfileType = (typeof PROFILE_TYPES)[number];
@@ -54,7 +47,9 @@ export default function ProfilesStep({ onNext }: ProfilesStepProps) {
 
   const deleteMut = useMutation({
     mutationFn: (id: number) => apiFetch(`/api/v1/profiles/${id}`, { method: 'DELETE' }),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: ['profiles'] }); },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['profiles'] });
+    },
   });
 
   const hasAdmin = profiles.some((p) => p.type === 'admin');

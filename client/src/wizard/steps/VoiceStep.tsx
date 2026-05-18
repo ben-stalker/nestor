@@ -96,7 +96,9 @@ export default function VoiceStep({ onNext, onSkip }: VoiceStepProps) {
         </button>
         <button
           type="button"
-          onClick={() => { void handleNext(); }}
+          onClick={() => {
+            void handleNext();
+          }}
           disabled={saving}
           className="px-5 py-2.5 bg-neutral-900 text-white rounded-button font-medium transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >

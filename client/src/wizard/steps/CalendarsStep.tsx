@@ -55,7 +55,9 @@ export default function CalendarsStep({ onNext, onSkip }: CalendarsStepProps) {
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => apiFetch(`/api/v1/calendar/accounts/${id}`, { method: 'DELETE' }),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: ['calendar-accounts'] }); },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['calendar-accounts'] });
+    },
   });
 
   const googleStartMut = useMutation({
@@ -231,7 +233,9 @@ export default function CalendarsStep({ onNext, onSkip }: CalendarsStepProps) {
 
       {showBasicForm && (
         <form
-          onSubmit={(e) => { void handleBasicSubmit(e); }}
+          onSubmit={(e) => {
+            void handleBasicSubmit(e);
+          }}
           className="border border-neutral-200 rounded-2xl p-4 space-y-3 bg-neutral-50"
         >
           <h3 className="text-body font-semibold text-primary">Add Apple / Yahoo Calendar</h3>
@@ -254,7 +258,9 @@ export default function CalendarsStep({ onNext, onSkip }: CalendarsStepProps) {
           </div>
 
           <div>
-            <label className="block text-caption font-medium text-secondary mb-1">Username / Email</label>
+            <label className="block text-caption font-medium text-secondary mb-1">
+              Username / Email
+            </label>
             <input
               className="w-full border border-neutral-200 rounded-xl px-3 py-2 text-body outline-none focus:ring-2 focus:ring-mode-calendar bg-white"
               value={basicForm.username}
@@ -266,7 +272,9 @@ export default function CalendarsStep({ onNext, onSkip }: CalendarsStepProps) {
           </div>
 
           <div>
-            <label className="block text-caption font-medium text-secondary mb-1">App password</label>
+            <label className="block text-caption font-medium text-secondary mb-1">
+              App password
+            </label>
             <input
               type="password"
               className="w-full border border-neutral-200 rounded-xl px-3 py-2 text-body outline-none focus:ring-2 focus:ring-mode-calendar bg-white"
@@ -277,9 +285,7 @@ export default function CalendarsStep({ onNext, onSkip }: CalendarsStepProps) {
             />
           </div>
 
-          {basicError && (
-            <p className="text-caption text-red-600">{basicError}</p>
-          )}
+          {basicError && <p className="text-caption text-red-600">{basicError}</p>}
 
           <div className="flex gap-2 pt-1">
             <button

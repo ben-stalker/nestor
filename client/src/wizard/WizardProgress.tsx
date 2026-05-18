@@ -20,11 +20,7 @@ export default function WizardProgress({ current, total, steps }: WizardProgress
           const isCompleted = idx < current;
           const isCurrent = idx === current;
           return (
-            <div
-              key={step}
-              className="flex-1 flex flex-col items-center gap-1"
-              title={step}
-            >
+            <div key={step} className="flex-1 flex flex-col items-center gap-1" title={step}>
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-caption font-semibold transition-colors ${
                   isCompleted || isCurrent

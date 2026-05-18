@@ -83,7 +83,9 @@ export default function DoneStep({ skippedSteps, onFinish }: DoneStepProps) {
       <div className="pt-2 flex justify-end">
         <button
           type="button"
-          onClick={() => { void handleFinish(); }}
+          onClick={() => {
+            void handleFinish();
+          }}
           disabled={saving}
           className="px-6 py-3 bg-neutral-900 text-white rounded-button font-semibold text-body transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >

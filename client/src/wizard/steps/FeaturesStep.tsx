@@ -19,9 +19,7 @@ interface FeaturesStepProps {
 }
 
 export default function FeaturesStep({ onNext }: FeaturesStepProps) {
-  const [enabled, setEnabled] = useState<Set<string>>(
-    new Set(NAV_MODES.map((m) => m.id)),
-  );
+  const [enabled, setEnabled] = useState<Set<string>>(new Set(NAV_MODES.map((m) => m.id)));
   const [saving, setSaving] = useState(false);
 
   function toggle(id: string) {
@@ -76,7 +74,13 @@ export default function FeaturesStep({ onNext }: FeaturesStepProps) {
                 }`}
               >
                 {isEnabled && (
-                  <svg viewBox="0 0 12 12" className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    viewBox="0 0 12 12"
+                    className="w-2.5 h-2.5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <polyline points="1,6 4,10 11,2" />
                   </svg>
                 )}
@@ -96,7 +100,9 @@ export default function FeaturesStep({ onNext }: FeaturesStepProps) {
       <div className="pt-2 flex justify-end">
         <button
           type="button"
-          onClick={() => { void handleNext(); }}
+          onClick={() => {
+            void handleNext();
+          }}
           disabled={!canProceed || saving}
           className="px-5 py-2.5 bg-neutral-900 text-white rounded-button font-medium transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >

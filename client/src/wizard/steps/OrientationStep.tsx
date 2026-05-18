@@ -70,7 +70,9 @@ export default function OrientationStep({ onNext }: OrientationStepProps) {
       <div className="pt-2 flex justify-end">
         <button
           type="button"
-          onClick={() => { void handleNext(); }}
+          onClick={() => {
+            void handleNext();
+          }}
           disabled={saving}
           className="px-5 py-2.5 bg-neutral-900 text-white rounded-button font-medium transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
