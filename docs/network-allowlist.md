@@ -14,6 +14,11 @@ Nestor is a local-first application (NFR-001). All outbound network calls must b
 | `apidata.googleusercontent.com` | Google user profile data | STORY-4.5 | Used during OAuth flow |
 | `caldav.icloud.com` | Apple iCloud CalDAV sync | STORY-4.6 | User-initiated; polled per sync interval |
 | `caldav.calendar.yahoo.com` | Yahoo Calendar CalDAV sync | STORY-4.6 | User-initiated; polled per sync interval |
+| `api.octopus.energy` | Octopus Energy EV tariff lookup | STORY-11.x | User-initiated; requires user-supplied API key |
+| `www.youtube-nocookie.com` | CSP `frame-src` for embedded media | STORY-20.6 | Not fetched — appears in Content-Security-Policy header value only |
+| `tailscale.com` | Documentation link in System panel | STORY-17.x | Anchor `href` — not fetched by server |
+| `docs.syncthing.net` | Documentation link in System panel | STORY-17.x | Anchor `href` — not fetched by server |
+| `i.pravatar.cc` | Placeholder avatar in UI component gallery | STORY-20.10 | Dev/gallery only; not reachable in production builds |
 
 ## Intentional Exemptions (not in allow-list)
 

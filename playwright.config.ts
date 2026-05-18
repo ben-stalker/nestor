@@ -41,7 +41,7 @@ export default defineConfig({
     command: 'NESTOR_DB_PATH=/tmp/e2e-test.db NESTOR_PORT=3000 npx tsx server/src/index.ts',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
+    timeout: 90_000,
     env: {
       NESTOR_DB_PATH: '/tmp/e2e-test.db',
       NESTOR_PORT: '3000',

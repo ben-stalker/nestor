@@ -17,6 +17,11 @@ const ALLOWED_HOSTS = [
   'apidata.googleusercontent.com', // Google user data
   'caldav.icloud.com', // Apple CalDAV
   'caldav.calendar.yahoo.com', // Yahoo CalDAV
+  'api.octopus.energy', // Octopus Energy EV tariff API
+  'www.youtube-nocookie.com', // CSP frame-src for embedded media
+  'tailscale.com', // docs link shown in SystemPanel
+  'docs.syncthing.net', // docs link shown in SystemPanel
+  'i.pravatar.cc', // avatar placeholder in UI gallery (dev only)
   'localhost', // internal dev/test
   '127.0.0.1', // internal
   '0.0.0.0', // bind address
