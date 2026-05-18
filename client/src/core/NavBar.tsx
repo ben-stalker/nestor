@@ -5,12 +5,16 @@ import clsx from 'clsx';
 import { useQuery } from '@tanstack/react-query';
 import { useOrientation } from './hooks/useOrientation';
 import { useAppSettings } from './hooks/useAppSettings';
+import { useActiveProfile } from './hooks/useActiveProfile';
 import useAppStore from '../store/appStore';
 import Modal from '../shared/ui/Modal';
 import apiFetch from '../api/client';
 import { DEFAULT_NAV_MODES, NAV_MODE_MAP, NAV_MODE_PERMISSION } from './navModes';
 import type { NavMode } from './navModes';
 import { useBadgeCounts, useMarkRead } from '../hooks/useAlerts';
+
+/** Core modes shown in simplified-nav mode (profile-curated set). */
+const SIMPLIFIED_MODE_IDS = ['home', 'calendar', 'board', 'contacts'] as const;
 
 const SEVERITY_COLOR: Record<string, string> = {
   error: 'bg-alert-urgent',
@@ -21,10 +25,11 @@ const SEVERITY_COLOR: Record<string, string> = {
 interface NavButtonProps {
   mode: NavMode;
   compact?: boolean;
+  simplified?: boolean;
   onClick?: () => void;
 }
 
-function NavButton({ mode, compact = false, onClick }: NavButtonProps) {
+function NavButton({ mode, compact = false, simplified = false, onClick }: NavButtonProps) {
   const badge = useAppStore((s) => s.badgeCounts[mode.id] ?? 0);
   const severity = useAppStore((s) => s.badgeSeverities[mode.id] ?? 'error');
   const badgeColor = SEVERITY_COLOR[severity] ?? 'bg-alert-urgent';
@@ -45,8 +50,12 @@ function NavButton({ mode, compact = false, onClick }: NavButtonProps) {
       onClick={handleClick}
       className={({ isActive }) =>
         clsx(
-          'relative flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-2 transition-colors',
-          compact ? 'text-[11px]' : 'text-caption',
+          'relative flex flex-col items-center justify-center gap-0.5 rounded-xl transition-colors',
+          simplified
+            ? 'min-h-[88px] min-w-[88px] px-3 py-3 text-body'
+            : 'min-h-11 min-w-11 px-2 py-2',
+          // eslint-disable-next-line no-nested-ternary
+          compact ? 'text-[11px]' : simplified ? 'text-body' : 'text-caption',
           isActive ? 'font-semibold' : 'text-secondary',
         )
       }
@@ -55,7 +64,7 @@ function NavButton({ mode, compact = false, onClick }: NavButtonProps) {
       {({ isActive }) => (
         <>
           <span className="relative">
-            <mode.Icon size={28} strokeWidth={1.5} />
+            <mode.Icon size={simplified ? 36 : 28} strokeWidth={1.5} />
             {badge > 0 && (
               <span
                 className={clsx(
@@ -68,7 +77,10 @@ function NavButton({ mode, compact = false, onClick }: NavButtonProps) {
               </span>
             )}
           </span>
-          <span className="leading-none" style={isActive ? { color: accentColor } : undefined}>
+          <span
+            className="nav-label leading-none"
+            style={isActive ? { color: accentColor } : undefined}
+          >
             {mode.label}
           </span>
           {isActive && (
@@ -102,6 +114,7 @@ function BadgeCountsSyncer() {
 export default function NavBar() {
   const orientation = useOrientation();
   const { data: settings } = useAppSettings();
+  const activeProfile = useActiveProfile();
   const [moreOpen, setMoreOpen] = useState(false);
 
   const kioskProfileId = settings?.kiosk_lock ?? null;
@@ -114,8 +127,13 @@ export default function NavBar() {
     staleTime: 60_000,
   });
 
-  const enabledIds: string[] = settings?.enabled_nav_modes ?? DEFAULT_NAV_MODES.map((m) => m.id);
-  const layout = settings?.nav_layout ?? 'scrollable';
+  const isSimplified =
+    Boolean(activeProfile?.simplified_nav) || Boolean(settings?.simplified_nav_global);
+
+  const enabledIds: string[] = isSimplified
+    ? [...SIMPLIFIED_MODE_IDS]
+    : (settings?.enabled_nav_modes ?? DEFAULT_NAV_MODES.map((m) => m.id));
+  const layout = isSimplified ? 'scrollable' : (settings?.nav_layout ?? 'scrollable');
 
   const allModes = enabledIds.flatMap((id) => {
     const mode = NAV_MODE_MAP.get(id);
@@ -136,19 +154,24 @@ export default function NavBar() {
       <>
         <BadgeCountsSyncer />
         <nav
-          className="rail flex flex-col overflow-y-auto border-r border-surface-elev bg-surface py-2"
+          className="rail flex flex-col overflow-y-auto border-inline-end border-surface-elev bg-surface py-2"
           aria-label="Main navigation"
         >
           {modes.map((mode) => (
-            <NavButton key={mode.id} mode={mode} compact />
+            <NavButton
+              key={mode.id}
+              mode={mode}
+              compact={!isSimplified}
+              simplified={isSimplified}
+            />
           ))}
         </nav>
       </>
     );
   }
 
-  // Portrait hamburger: 4 visible + More sheet
-  if (layout === 'hamburger') {
+  // Portrait hamburger: 4 visible + More sheet (not used in simplified mode)
+  if (layout === 'hamburger' && !isSimplified) {
     const visible = modes.slice(0, 4);
     const overflow = modes.slice(4);
     return (
@@ -186,7 +209,7 @@ export default function NavBar() {
     );
   }
 
-  // Portrait single / double / scrollable
+  // Portrait single / double / scrollable (and simplified)
   const layoutClass: Record<string, string> = {
     double: 'grid grid-cols-5 grid-rows-2',
     single: 'flex justify-around',
@@ -194,7 +217,7 @@ export default function NavBar() {
   };
   const navClass = clsx(
     'navbar border-t border-surface-elev bg-surface px-2 py-1',
-    layoutClass[layout] ?? 'flex overflow-x-auto',
+    isSimplified ? 'flex justify-around gap-1' : (layoutClass[layout] ?? 'flex overflow-x-auto'),
   );
 
   return (
@@ -202,7 +225,7 @@ export default function NavBar() {
       <BadgeCountsSyncer />
       <nav className={navClass} aria-label="Main navigation">
         {modes.map((mode) => (
-          <NavButton key={mode.id} mode={mode} />
+          <NavButton key={mode.id} mode={mode} simplified={isSimplified} />
         ))}
       </nav>
     </>

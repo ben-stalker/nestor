@@ -6,6 +6,8 @@ import AppSettingsRepository from './repositories/AppSettingsRepository';
 import ChecklistRepository from './repositories/ChecklistRepository';
 import logger from './utils/logger';
 import { createWsServer } from './ws/server';
+import { setServerLanguage } from './i18n';
+import eventBus from './core/eventBus';
 
 const PORT = Number(process.env.NESTOR_PORT ?? 3000);
 
@@ -32,6 +34,16 @@ const wsServer = createWsServer(server);
 
 const settingsRepo = new AppSettingsRepository(db);
 registerBuiltinJobs(settingsRepo);
+
+// Keep server language in sync with app_settings.language
+const initialLang = settingsRepo.get('language') as string | null;
+if (initialLang) void setServerLanguage(initialLang);
+eventBus.on('settings:updated', ({ keys }) => {
+  if (keys.includes('language')) {
+    const lang = settingsRepo.get('language') as string | null;
+    if (lang) void setServerLanguage(lang);
+  }
+});
 logger.info({ jobs: Scheduler.list().map((j) => j.name) }, 'Scheduler started');
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
