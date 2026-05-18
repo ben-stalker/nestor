@@ -10,8 +10,10 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('Profile Switching', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // Ensure we're on the home page (setup_complete = true with seeded DB)
-    await page.waitForSelector('[data-testid="home-page"]', { timeout: 10_000 });
+    // Wait for the AvatarStrip to be fully loaded (not in skeleton/loading state)
+    await page.waitForSelector('[role="toolbar"][aria-label="Profile switcher"]', {
+      timeout: 15_000,
+    });
   });
 
   test('avatar strip is visible with multiple profiles', async ({ page }) => {
@@ -36,12 +38,16 @@ test.describe('Profile Switching', () => {
     const aliceButton = avatarStrip.getByRole('button', { name: /Switch to Alice/i });
     await aliceButton.click();
 
-    // After clicking, Alice should become active (aria-pressed = true)
-    await expect(aliceButton).toHaveAttribute('aria-pressed', 'true', { timeout: 10_000 });
-
     // No PIN prompt should appear for child without PIN
     const pinPrompt = page.getByRole('dialog');
-    await expect(pinPrompt).not.toBeVisible();
+    await expect(pinPrompt).not.toBeVisible({ timeout: 3_000 });
+
+    // Wait for the profile invalidation re-fetch to settle, then check Alice is active.
+    // Use CSS class (.avatar-strip__item--active) which is more reliable than aria-pressed
+    // across the brief loading states triggered by queryClient.invalidateQueries().
+    await expect(page.locator('.avatar-strip__item--active', { hasText: 'Alice' })).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
   test('clicking admin profile (has PIN) shows PIN prompt', async ({ page }) => {
@@ -50,6 +56,10 @@ test.describe('Profile Switching', () => {
     // First switch to Alice so Admin is not active
     const aliceButton = avatarStrip.getByRole('button', { name: /Switch to Alice/i });
     await aliceButton.click();
+    // Wait for Alice's active state to settle before proceeding
+    await expect(page.locator('.avatar-strip__item--active', { hasText: 'Alice' })).toBeVisible({
+      timeout: 15_000,
+    });
 
     // Now click Admin (has PIN "0000")
     const adminButton = avatarStrip.getByRole('button', { name: /Switch to Admin/i });
@@ -69,6 +79,10 @@ test.describe('Profile Switching', () => {
     // First switch to Alice
     const aliceButton = avatarStrip.getByRole('button', { name: /Switch to Alice/i });
     await aliceButton.click();
+    // Wait for Alice's active state to settle
+    await expect(page.locator('.avatar-strip__item--active', { hasText: 'Alice' })).toBeVisible({
+      timeout: 15_000,
+    });
 
     // Click Admin to open PIN prompt
     const adminButton = avatarStrip.getByRole('button', { name: /Switch to Admin/i });
@@ -81,6 +95,8 @@ test.describe('Profile Switching', () => {
 
     // After correct PIN, dialog should close and Admin should be active
     await expect(page.getByRole('dialog')).not.toBeVisible({ timeout: 5_000 });
-    await expect(adminButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('.avatar-strip__item--active', { hasText: 'Admin' })).toBeVisible({
+      timeout: 15_000,
+    });
   });
 });

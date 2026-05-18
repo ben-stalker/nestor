@@ -24,7 +24,7 @@ test.describe('Chore → Reward Flow', () => {
     await page.waitForLoadState('networkidle');
 
     // Alice (seeded child) should appear in the family hub
-    await expect(page.getByText('Alice')).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByText('Alice').first()).toBeVisible({ timeout: 5_000 });
   });
 
   test('completing a chore via API increases star balance', async ({ request }) => {
