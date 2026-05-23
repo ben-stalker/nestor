@@ -59,7 +59,7 @@ jobs:
             kill "$(cat /tmp/server.pid)" 2>/dev/null || true
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-traces
