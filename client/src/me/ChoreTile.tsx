@@ -41,19 +41,53 @@ export default function ChoreTile({ chore, profileId, completedToday = false }: 
   const done = completedToday || mutation.isSuccess;
 
   return (
-    <div className={`chore-tile${done ? ' chore-tile--done' : ''}`}>
-      <div className="chore-tile__info">
-        <span className="chore-tile__name">{chore.name}</span>
+    <motion.div
+      className={`chore-tile${done ? ' chore-tile--done' : ''}`}
+      layout={!prefersReduced}
+      animate={
+        done && !prefersReduced
+          ? { opacity: [1, 0.85, 1], transition: { duration: 0.4 } }
+          : {}
+      }
+    >
+      <div className="chore-tile__info" style={{ position: 'relative' }}>
+        <span
+          className="chore-tile__name"
+          style={{ position: 'relative', display: 'inline-block' }}
+        >
+          {chore.name}
+          {/* Animated strikethrough line */}
+          {done && !prefersReduced && (
+            <motion.span
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: '50%',
+                height: '2px',
+                background: 'currentColor',
+                opacity: 0.5,
+                transformOrigin: 'left',
+              }}
+              initial={{ width: '0%' }}
+              animate={{
+                width: '100%',
+                transition: { duration: 0.35, ease: [0.0, 0.0, 0.2, 1] as [number, number, number, number] },
+              }}
+            />
+          )}
+        </span>
         <span className="chore-tile__points">{chore.points} pts</span>
       </div>
 
-      <button
+      <motion.button
         type="button"
         className="chore-tile__check"
         disabled={done || mutation.isPending}
         aria-label={done ? `${chore.name} done` : `Complete ${chore.name}`}
         aria-pressed={done}
         onClick={() => mutation.mutate()}
+        whileTap={prefersReduced ? undefined : { scale: 0.92 }}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28">
           <path
@@ -65,11 +99,11 @@ export default function ChoreTile({ chore, profileId, completedToday = false }: 
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {showBurst && <BurstAnimation onDone={() => setShowBurst(false)} />}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

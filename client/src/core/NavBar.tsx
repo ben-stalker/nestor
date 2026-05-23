@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MoreHorizontal } from 'lucide-react';
 import clsx from 'clsx';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { useOrientation } from './hooks/useOrientation';
 import { useAppSettings } from './hooks/useAppSettings';
@@ -65,17 +66,27 @@ function NavButton({ mode, compact = false, simplified = false, onClick }: NavBu
         <>
           <span className="relative">
             <mode.Icon size={simplified ? 36 : 26} strokeWidth={1.5} />
-            {badge > 0 && (
-              <span
-                className={clsx(
-                  'absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white',
-                  badgeColor,
-                )}
-                aria-label={`${badge} unread`}
-              >
-                {badge > 99 ? '99+' : badge}
-              </span>
-            )}
+            <AnimatePresence>
+              {badge > 0 && (
+                <motion.span
+                  key="badge"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{
+                    scale: 1,
+                    opacity: 1,
+                    transition: { type: 'spring' as const, stiffness: 500, damping: 15 },
+                  }}
+                  exit={{ scale: 0, opacity: 0, transition: { duration: 0.15 } }}
+                  className={clsx(
+                    'absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white',
+                    badgeColor,
+                  )}
+                  aria-label={`${badge} unread`}
+                >
+                  {badge > 99 ? '99+' : badge}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </span>
           <span
             className="nav-label leading-none text-[11px]"

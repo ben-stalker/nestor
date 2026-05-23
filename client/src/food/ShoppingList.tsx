@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getShoppingItems,
@@ -213,15 +214,17 @@ export default function ShoppingList() {
             Awaiting Approval
           </h2>
           <div className="rounded-card border border-surface-elev divide-y divide-surface-elev">
-            {pendingApproval.map((item) => (
-              <ShoppingItemRow
-                key={item.id}
-                item={item}
-                onTick={handleTick}
-                onApprove={(id) => approveMutation.mutate(id)}
-                onDecline={(id) => declineMutation.mutate(id)}
-              />
-            ))}
+            <AnimatePresence initial={false}>
+              {pendingApproval.map((item) => (
+                <ShoppingItemRow
+                  key={item.id}
+                  item={item}
+                  onTick={handleTick}
+                  onApprove={(id) => approveMutation.mutate(id)}
+                  onDecline={(id) => declineMutation.mutate(id)}
+                />
+              ))}
+            </AnimatePresence>
           </div>
         </section>
       )}
@@ -235,9 +238,11 @@ export default function ShoppingList() {
               {cat}
             </h2>
             <div className="rounded-card border border-surface-elev divide-y divide-surface-elev">
-              {catItems.map((item) => (
-                <ShoppingItemRow key={item.id} item={item} onTick={handleTick} />
-              ))}
+              <AnimatePresence initial={false}>
+                {catItems.map((item) => (
+                  <ShoppingItemRow key={item.id} item={item} onTick={handleTick} />
+                ))}
+              </AnimatePresence>
             </div>
           </section>
         );
@@ -261,9 +266,11 @@ export default function ShoppingList() {
             </button>
           </div>
           <div className="rounded-card border border-surface-elev divide-y divide-surface-elev">
-            {tickedItems.map((item) => (
-              <ShoppingItemRow key={item.id} item={item} onTick={handleTick} />
-            ))}
+            <AnimatePresence initial={false}>
+              {tickedItems.map((item) => (
+                <ShoppingItemRow key={item.id} item={item} onTick={handleTick} />
+              ))}
+            </AnimatePresence>
           </div>
         </section>
       )}

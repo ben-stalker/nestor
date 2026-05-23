@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import AppShell from './core/AppShell';
 import HomePage from './features/home';
 import CalendarPage from './calendar';
@@ -17,6 +18,7 @@ import PluginsPage from './plugins/PluginsPage';
 import YouTubeBrowsePage from './plugins/youtubePlayer/YouTubeBrowsePage';
 import AdminPage from './admin/AdminPage';
 import { useActiveProfile } from './core/hooks/useActiveProfile';
+import PageTransition from './shared/PageTransition';
 
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
 
@@ -34,45 +36,171 @@ function MeRoute() {
   return <MePage profile={profile} />;
 }
 
-export default function Router() {
+/**
+ * AnimatedRoutes — renders Routes inside AnimatePresence so that
+ * PageTransition wrappers can animate out on route change.
+ */
+function AnimatedRoutes() {
+  const location = useLocation();
+
   return (
-    <Routes>
-      {import.meta.env.DEV && (
-        <Route
-          path="/ui"
-          element={
-            <Suspense fallback={null}>
-              <UIGallery />
-            </Suspense>
-          }
-        />
-      )}
-      <Route element={<AppShell />}>
-        <Route index element={<HomeRedirect />} />
-        <Route path="/me" element={<MeRoute />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/food" element={<FoodPage />} />
-        <Route path="/vehicles" element={<VehiclePage />} />
-        <Route path="/family" element={<FamilyHub />} />
-        <Route path="/house" element={<HousePage />} />
-        <Route path="/finance" element={<FinancePage />} />
-        <Route path="/pets" element={<PetsPage />} />
-        <Route path="/ev" element={<EvPage />} />
-        <Route path="/board" element={<BoardPage />} />
-        <Route path="/contacts" element={<ContactsPage />} />
-        <Route path="/admin/plugins" element={<PluginsPage />} />
-        <Route path="/admin/:section" element={<AdminPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/plugins/youtube-player" element={<YouTubeBrowsePage />} />
-        <Route
-          path="*"
-          element={
-            <main className="flex min-h-screen items-center justify-center bg-warm text-primary">
-              <p className="text-body text-secondary">Page not found</p>
-            </main>
-          }
-        />
-      </Route>
-    </Routes>
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        {import.meta.env.DEV && (
+          <Route
+            path="/ui"
+            element={
+              <Suspense fallback={null}>
+                <UIGallery />
+              </Suspense>
+            }
+          />
+        )}
+        <Route element={<AppShell />}>
+          <Route
+            index
+            element={
+              <PageTransition>
+                <HomeRedirect />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/me"
+            element={
+              <PageTransition>
+                <MeRoute />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <PageTransition>
+                <CalendarPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/food"
+            element={
+              <PageTransition>
+                <FoodPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/vehicles"
+            element={
+              <PageTransition>
+                <VehiclePage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/family"
+            element={
+              <PageTransition>
+                <FamilyHub />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/house"
+            element={
+              <PageTransition>
+                <HousePage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/finance"
+            element={
+              <PageTransition>
+                <FinancePage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/pets"
+            element={
+              <PageTransition>
+                <PetsPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/ev"
+            element={
+              <PageTransition>
+                <EvPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/board"
+            element={
+              <PageTransition>
+                <BoardPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/contacts"
+            element={
+              <PageTransition>
+                <ContactsPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/admin/plugins"
+            element={
+              <PageTransition>
+                <PluginsPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/admin/:section"
+            element={
+              <PageTransition>
+                <AdminPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <PageTransition>
+                <AdminPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/plugins/youtube-player"
+            element={
+              <PageTransition>
+                <YouTubeBrowsePage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <PageTransition>
+                <main className="flex min-h-screen items-center justify-center bg-warm text-primary">
+                  <p className="text-body text-secondary">Page not found</p>
+                </main>
+              </PageTransition>
+            }
+          />
+        </Route>
+      </Routes>
+    </AnimatePresence>
   );
+}
+
+export default function Router() {
+  return <AnimatedRoutes />;
 }

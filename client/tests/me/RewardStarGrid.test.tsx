@@ -18,6 +18,16 @@ vi.mock('framer-motion', () => ({
     div: ({ children, ...rest }: React.HTMLAttributes<HTMLDivElement>) => (
       <div {...rest}>{children}</div>
     ),
+    button: ({
+      children,
+      whileTap: _whileTap,
+      ...rest
+    }: React.ButtonHTMLAttributes<HTMLButtonElement> & { whileTap?: unknown }) => (
+      <button {...rest}>{children}</button>
+    ),
+    span: ({ children, ...rest }: React.HTMLAttributes<HTMLSpanElement>) => (
+      <span {...rest}>{children}</span>
+    ),
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));

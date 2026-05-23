@@ -30,7 +30,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={clsx(
-        'inline-flex items-center justify-center gap-2 rounded-button font-medium transition-opacity',
+        'inline-flex items-center justify-center gap-2 rounded-button font-medium',
+        'transition-[opacity,transform] duration-75',
+        'active:scale-[0.97]',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         variantMap[variant],
         sizeMap[size],

@@ -47,7 +47,16 @@ vi.mock('../../src/house/api', () => ({
 }));
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} /> },
+  motion: {
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
+    button: ({
+      whileTap: _whileTap,
+      ...props
+    }: React.ButtonHTMLAttributes<HTMLButtonElement> & { whileTap?: unknown }) => (
+      <button {...props} />
+    ),
+    span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props} />,
+  },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 

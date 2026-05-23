@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { LayoutGroup } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { RotateCcw } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useWeather } from '../../../hooks/useWeather';
 import { useDaySummary } from '../../../hooks/useDaySummary';
 import useFiltersStore from '../../../store/filtersStore';
 import useAppStore from '../../../store/appStore';
+import useReducedMotion from '../../../hooks/useReducedMotion';
 import type { DayData } from './types';
 import DayCard from './DayCard';
 import DayViewModal from './DayViewModal';
@@ -51,10 +52,13 @@ function localDateStr(d: Date): string {
 
 export default function DayCarousel({ start, end }: DayCarouselProps) {
   const { data: weather } = useWeather();
+  const reducedMotion = useReducedMotion();
   const today = todayDate();
   const [focalDate, setFocalDate] = useState<Date>(today);
   const [dayViewDay, setDayViewDay] = useState<DayData | null>(null);
   const [quickAddDay, setQuickAddDay] = useState<DayData | null>(null);
+  // Swipe tracking
+  const swipeStartX = useRef<number | null>(null);
 
   const activeProfileId = useAppStore((s) => s.activeProfileId);
   const getProfileFilters = useFiltersStore((s) => s.getProfileFilters);
@@ -92,17 +96,62 @@ export default function DayCarousel({ start, end }: DayCarouselProps) {
     setFocalDate(today);
   }
 
+  // Swipe handlers — advance/retreat the focal day
+  function handlePointerDown(e: React.PointerEvent<HTMLElement>) {
+    swipeStartX.current = e.clientX;
+  }
+
+  function handlePointerUp(e: React.PointerEvent<HTMLElement>) {
+    if (swipeStartX.current === null) return;
+    const delta = e.clientX - swipeStartX.current;
+    swipeStartX.current = null;
+    const THRESHOLD = 60;
+    if (Math.abs(delta) < THRESHOLD) return;
+
+    const allDays = buildDays(start, end);
+    const focalIdx = allDays.findIndex((d) => isSameDay(d.date, focalDate));
+    if (delta < 0 && focalIdx < allDays.length - 1) {
+      setFocalDate(allDays[focalIdx + 1].date);
+    } else if (delta > 0 && focalIdx > 0) {
+      setFocalDate(allDays[focalIdx - 1].date);
+    }
+  }
+
+  const backToTodayVariants = reducedMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+    : {
+        initial: { opacity: 0, scale: 0.8 },
+        animate: {
+          opacity: 1,
+          scale: [1, 1.06, 1],
+          transition: { duration: 0.4, times: [0, 0.5, 1] },
+        },
+        exit: { opacity: 0, scale: 0.8, transition: { duration: 0.15 } },
+      };
+
   return (
-    <section className="day-carousel" aria-label="Day carousel" data-testid="day-carousel">
+    <section
+      className="day-carousel"
+      aria-label="Day carousel"
+      data-testid="day-carousel"
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+    >
       <LayoutGroup>
         <div className="day-carousel__track" role="list">
           {days.map((day) => {
             const focal = isSameDay(day.date, focalDate);
             return (
-              <div
+              <motion.div
                 key={`${day.date.getFullYear()}-${day.date.getMonth()}-${day.date.getDate()}`}
                 className="day-carousel__item"
                 role="listitem"
+                layout={!reducedMotion}
+                transition={
+                  reducedMotion
+                    ? { duration: 0 }
+                    : { type: 'spring', stiffness: 300, damping: 30 }
+                }
                 style={{ flex: focal ? '0 0 50%' : '0 0 12%' }}
               >
                 <DayCard
@@ -113,23 +162,29 @@ export default function DayCarousel({ start, end }: DayCarouselProps) {
                   onClick={() => handleCardClick(day)}
                   onLongPress={() => setQuickAddDay(day)}
                 />
-              </div>
+              </motion.div>
             );
           })}
         </div>
       </LayoutGroup>
 
-      {!isOnToday && (
-        <button
-          className="day-carousel__back-to-today"
-          onClick={handleBackToToday}
-          aria-label="Back to today"
-          data-testid="back-to-today"
-        >
-          <RotateCcw className="size-3.5" />
-          <span>Back to Today</span>
-        </button>
-      )}
+      <AnimatePresence>
+        {!isOnToday && (
+          <motion.button
+            className="day-carousel__back-to-today"
+            onClick={handleBackToToday}
+            aria-label="Back to today"
+            data-testid="back-to-today"
+            variants={backToTodayVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <RotateCcw className="size-3.5" />
+            <span>Back to Today</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {createPortal(
         <>

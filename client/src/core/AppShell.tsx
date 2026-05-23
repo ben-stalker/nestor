@@ -14,6 +14,7 @@ import FilterPanel from './FilterPanel';
 import KioskOverlay from './KioskOverlay';
 import GuestOverlay from './GuestOverlay';
 import IdleOverlay from './IdleOverlay';
+import ScreensaverOverlay from '../features/screensaver/ScreensaverOverlay';
 import { setFormatLocale, setFormatTemperatureUnit, setFormatCurrency } from '../utils/format';
 import { setLanguage } from '../i18n';
 
@@ -55,6 +56,7 @@ export default function AppShell() {
       <KioskOverlay />
       <GuestOverlay />
       <IdleOverlay />
+      <ScreensaverOverlay />
     </div>
   );
 }

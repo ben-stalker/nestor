@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+import useReducedMotion from '../hooks/useReducedMotion';
 import type { ShoppingItem } from './types';
 
 interface ShoppingItemRowProps {
@@ -13,17 +15,38 @@ export default function ShoppingItemRow({
   onApprove,
   onDecline,
 }: ShoppingItemRowProps) {
+  const rm = useReducedMotion();
   const isTicked = item.ticked === 1;
 
   return (
-    <div
+    <motion.div
+      layout={!rm}
+      initial={rm ? { opacity: 0 } : { opacity: 0, y: -10 }}
+      animate={
+        rm
+          ? { opacity: 1 }
+          : { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 20, stiffness: 300 } }
+      }
+      exit={
+        rm
+          ? { opacity: 0 }
+          : {
+              opacity: 0,
+              height: 0,
+              paddingTop: 0,
+              paddingBottom: 0,
+              overflow: 'hidden',
+              transition: { duration: 0.2 },
+            }
+      }
       className={`flex items-center gap-3 py-2 px-1 ${isTicked ? 'opacity-50' : ''}`}
       data-testid="shopping-item-row"
     >
-      <button
+      <motion.button
         type="button"
         onClick={() => onTick(item.id, !isTicked)}
         aria-label={isTicked ? `Untick ${item.name}` : `Tick ${item.name}`}
+        whileTap={rm ? undefined : { scale: 0.9 }}
         className={`size-5 flex-shrink-0 rounded border-2 flex items-center justify-center transition-colors ${
           isTicked
             ? 'border-accent bg-accent text-white'
@@ -43,7 +66,7 @@ export default function ShoppingItemRow({
             <polyline points="2,6 5,9 10,3" />
           </svg>
         )}
-      </button>
+      </motion.button>
 
       <span className={`flex-1 text-body text-primary ${isTicked ? 'line-through' : ''}`}>
         {item.name}
@@ -77,6 +100,6 @@ export default function ShoppingItemRow({
           Decline
         </button>
       )}
-    </div>
+    </motion.div>
   );
 }
