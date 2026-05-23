@@ -222,6 +222,20 @@ phases:
           - STORY-20.8
           - STORY-20.10
           - STORY-20.11
+          - STORY-21.1
+          - STORY-21.2
+          - STORY-21.3
+          - STORY-21.4
+          - STORY-21.5
+          - STORY-21.6
+          - STORY-22.1
+          - STORY-22.2
+          - STORY-22.3
+          - STORY-22.4
+          - STORY-22.5
+          - STORY-22.6
+          - STORY-22.7
+          - STORY-22.8
 
 backlog:
   - STORY-18.5  # deferred to post-v1.0 — Playwright E2E a11y sweep
@@ -229,8 +243,34 @@ backlog:
 
 current_phase: phase_4_implementation
 recommended_next: release_v1
-last_updated: "2026-05-18-epic-20"
+last_updated: "2026-05-23-epic-22"
 notes: >
+  EPIC-22 complete (2026-05-23): Animations & Micro-interactions. 8 stories (22.1–22.8).
+  Motion foundation (client/src/shared/motion.ts): duration tokens fast/default/slow, easing
+  presets (spring damping=20/stiffness=300, easeOut, easeIn), motionSafe() reduced-motion helper,
+  shared variants (slideUp/Right/Left, fadeIn, scalePress, pageEnter). docs/motion.md added.
+  Page transitions: AnimatePresence mode="wait" in router.tsx keyed by pathname, PageTransition
+  wrapper (x:30→0 entry 200ms, x:-30 exit 150ms). Modal upgraded to framer-motion spring
+  slide-up. DayCarousel: pointer swipe (≥60px), layout spring on focal-day change,
+  AnimatePresence on Back-to-Today pulse. ShoppingItemRow + ShoppingList: spring entry
+  (y:-10→0), height-collapse exit, AnimatePresence on list groups. ChoreTile: animated
+  strikethrough, whileTap scale. RewardStarGrid: 8-particle gold burst, 60-piece confetti
+  shower (reducedMotion→static ✓), AnimatedStar component. AlertsStrip: spring slide-down
+  entry, height-collapse exit. NavBar badge: AnimatePresence + spring bounce (stiffness=500,
+  damping=15). Button: active:scale-[0.97]. CSS keyframes: shake, stroke-draw, coin-flip,
+  ken-burns, pulse-ring. ScreensaverOverlay: 5-min idle, Playfair Display clock, Ken Burns
+  radial gradient, 500ms fade-in/300ms fade-out, integrated into AppShell.
+  EPIC-21 complete (2026-05-23): Visual Redesign — Warm Cozyla Theme. 6 stories (21.1–21.6).
+  client/src/styles/tokens.css: --color-bg (#F5F0EB), --color-surface (#FFF), --color-text-primary
+  (#1C1C1E), --color-text-secondary (#6B6B6B), --color-border (#E8E3DE), --shadow-card,
+  --radius-card (20px), --radius-button (12px). @fontsource/playfair-display installed (400/700),
+  .font-playfair utility class. Mode accent colours updated: calendar=#3B7DD8, food=#E07B54,
+  family=#7B6FD4, house=#3D9E8C, finance=#5B6EAE, pets=#C9943A, ev=#3DA5D9, board=#C46BAB.
+  HomeHeader uses font-playfair for time, alert pills. Calendar segmented pill toggle.
+  FoodPage terracotta accent via .food-page CSS scope. NavBar 72px height, rounded-t-2xl,
+  accent dot indicator, warm red badge pills. Card component defaults shadow+border tokens.
+  All screens (vehicles, house, finance, pets, ev, board, admin, wizard) get mode class +
+  bg-[var(--color-bg)]. 691 tests passing, typecheck clean, lint clean.
   EPIC-19 complete (2026-05-18): Setup Wizard & Installation. 10 stories (19.1–19.10).
   Client: SetupWizard (10-step shell, WizardProgress, StepShell). Steps: LanguageStep
   (8-language grid, browser auto-detect), LocaleStep (timezone/date/currency/temperature),
