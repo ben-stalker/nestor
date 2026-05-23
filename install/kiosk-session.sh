@@ -31,12 +31,23 @@ openbox &
 # Hide cursor when idle
 unclutter -idle 3 &
 
+# On-screen keyboard: auto-show when a text field is focused via AT-SPI.
+# Google Chrome (deb) exposes accessibility unlike the snap build.
+if command -v onboard >/dev/null 2>&1; then
+  gsettings set org.onboard.auto-show enabled true
+  gsettings set org.onboard start-minimized true
+  gsettings set org.onboard layout 'Compact'
+  onboard &
+fi
+
 # Wait for Nestor server to be ready
 until curl -sf http://localhost:3000 > /dev/null 2>&1; do
   sleep 1
 done
 
-# Launch Chromium fullscreen kiosk — exec replaces this shell
+# Launch Chrome fullscreen kiosk — exec replaces this shell.
+# --force-renderer-accessibility exposes the DOM to AT-SPI so onboard
+# can detect focused text fields and auto-show.
 exec google-chrome \
   --password-store=basic \
   --kiosk \
@@ -48,5 +59,5 @@ exec google-chrome \
   --disable-pinch \
   --overscroll-history-navigation=0 \
   --touch-events=enabled \
-  --enable-virtual-keyboard \
+  --force-renderer-accessibility \
   http://localhost:3000
