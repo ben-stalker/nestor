@@ -37,7 +37,7 @@ until curl -sf http://localhost:3000 > /dev/null 2>&1; do
 done
 
 # Launch Chromium fullscreen kiosk — exec replaces this shell
-exec chromium-browser \
+exec google-chrome \
   --kiosk \
   --no-first-run \
   --disable-infobars \

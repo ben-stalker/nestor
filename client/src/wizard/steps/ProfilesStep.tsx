@@ -43,6 +43,9 @@ export default function ProfilesStep({ onNext }: ProfilesStepProps) {
       setForm(defaultForm());
       setError('');
     },
+    onError: (err: unknown) => {
+      setError(err instanceof Error ? err.message : 'Failed to add profile');
+    },
   });
 
   const deleteMut = useMutation({

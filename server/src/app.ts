@@ -150,10 +150,12 @@ export default function createApp(): Express {
 
   app.use(healthRouter);
   app.use(clientErrorsRouter);
-  app.use(
-    '/api/v1/profiles',
-    createProfilesRouter(profileRepo, undefined, [kioskLock, requireAdminPin]),
-  );
+  // During the setup wizard no admin PIN exists yet, so bypass auth until setup completes.
+  const profilesGuard: express.RequestHandler = (req, res, next) => {
+    if (!settingsRepo.get('setup_complete')) return next();
+    return kioskLock(req, res, () => requireAdminPin(req, res, next));
+  };
+  app.use('/api/v1/profiles', createProfilesRouter(profileRepo, undefined, profilesGuard));
   app.use('/api/v1/settings', createSettingsRouter(settingsRepo));
   app.use(
     '/api/v1/admin',
