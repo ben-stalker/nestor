@@ -31,15 +31,6 @@ openbox &
 # Hide cursor when idle
 unclutter -idle 3 &
 
-# On-screen keyboard: always visible, floats above the kiosk window.
-# Auto-show is disabled so it stays put regardless of AT-SPI/focus state.
-if command -v onboard >/dev/null 2>&1; then
-  gsettings set org.onboard.auto-show enabled false
-  gsettings set org.onboard start-minimized false
-  gsettings set org.onboard layout 'Compact'
-  onboard &
-fi
-
 # Wait for Nestor server to be ready
 until curl -sf http://localhost:3000 > /dev/null 2>&1; do
   sleep 1
@@ -56,4 +47,5 @@ exec chromium-browser \
   --disable-pinch \
   --overscroll-history-navigation=0 \
   --touch-events=enabled \
+  --enable-virtual-keyboard \
   http://localhost:3000
