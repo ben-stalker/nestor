@@ -38,6 +38,7 @@ done
 
 # Launch Chromium fullscreen kiosk — exec replaces this shell
 exec google-chrome \
+  --password-store=basic \
   --kiosk \
   --no-first-run \
   --disable-infobars \
