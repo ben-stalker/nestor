@@ -10,22 +10,18 @@ xset -dpms
 DISPLAY_NAME=$(xrandr | awk '/ connected/{print $1; exit}')
 xrandr --output "$DISPLAY_NAME" --rotate right
 
-# Persistently enforce touch CTM in background.
-# The Melfas controller re-enumerates ~3x on boot, each time resetting the matrix.
-# This loop watches for ID changes and reapplies immediately.
+# Persistently enforce touch CTM — reapply every 5 s to handle Melfas
+# re-enumeration which can reset the matrix even without changing device ID.
 (
-  last_id=""
   while true; do
     id=$(xinput list 2>/dev/null \
       | grep -i 'melfas\|incell' \
       | grep -o 'id=[0-9]*' | head -1 | cut -d= -f2)
-    if [[ -n "$id" && "$id" != "$last_id" ]]; then
+    if [[ -n "$id" ]]; then
       xinput set-prop "$id" "Coordinate Transformation Matrix" \
-        0 1 0 -1 0 1 0 0 1 2>/dev/null \
-        && echo "[$(date)] touch CTM applied to id=$id"
-      last_id="$id"
+        0 1 0 -1 0 1 0 0 1 2>/dev/null
     fi
-    sleep 1
+    sleep 5
   done
 ) &
 
@@ -34,6 +30,15 @@ openbox &
 
 # Hide cursor when idle
 unclutter -idle 3 &
+
+# On-screen keyboard: always visible, floats above the kiosk window.
+# Auto-show is disabled so it stays put regardless of AT-SPI/focus state.
+if command -v onboard >/dev/null 2>&1; then
+  gsettings set org.onboard.auto-show enabled false
+  gsettings set org.onboard start-minimized false
+  gsettings set org.onboard layout 'Compact'
+  onboard &
+fi
 
 # Wait for Nestor server to be ready
 until curl -sf http://localhost:3000 > /dev/null 2>&1; do
