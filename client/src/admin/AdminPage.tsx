@@ -143,9 +143,9 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="flex h-screen bg-warm overflow-hidden">
+    <div className="flex h-screen bg-[var(--color-bg)] overflow-hidden">
       {/* Left rail */}
-      <aside className="w-56 shrink-0 flex flex-col border-r border-neutral-200 bg-white overflow-hidden">
+      <aside className="w-56 shrink-0 flex flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200">
           <span className="text-body font-semibold text-primary">Settings</span>
           <button

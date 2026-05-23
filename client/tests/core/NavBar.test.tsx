@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -5,6 +6,17 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import NavBar from '../../src/core/NavBar';
 import useAppStore from '../../src/store/appStore';
 import { useOrientation } from '../../src/core/hooks/useOrientation';
+
+vi.mock('framer-motion', () => ({
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  motion: {
+    span: ({ children, ...props }: ComponentProps<'span'>) => <span {...props}>{children}</span>,
+    div: ({ children, ...props }: ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: ComponentProps<'button'>) => <button {...props}>{children}</button>,
+  },
+  useAnimation: vi.fn(() => ({ start: vi.fn(), stop: vi.fn() })),
+  useMotionValue: vi.fn((v: unknown) => ({ get: () => v, set: vi.fn() })),
+}));
 
 vi.mock('../../src/hooks/useWebSocket', () => ({
   useWebSocket: vi.fn(() => ({ lastMessage: null, readyState: 1, send: vi.fn() })),

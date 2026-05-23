@@ -17,7 +17,7 @@ export default function FinancePage() {
   const [tab, setTab] = useState<FinanceTab>('agreements');
 
   return (
-    <main className="flex flex-col h-full" data-testid="finance-page">
+    <main className="finance-page flex flex-col h-full bg-[var(--color-bg)]" data-testid="finance-page">
       <div
         className="flex overflow-x-auto border-b border-surface-elev"
         role="tablist"

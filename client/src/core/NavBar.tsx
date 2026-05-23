@@ -50,13 +50,13 @@ function NavButton({ mode, compact = false, simplified = false, onClick }: NavBu
       onClick={handleClick}
       className={({ isActive }) =>
         clsx(
-          'relative flex flex-col items-center justify-center gap-0.5 rounded-xl transition-colors',
+          'relative flex flex-col items-center justify-center gap-0.5 rounded-xl transition-colors pb-1',
           simplified
             ? 'min-h-[88px] min-w-[88px] px-3 py-3 text-body'
             : 'min-h-11 min-w-11 px-2 py-2',
           // eslint-disable-next-line no-nested-ternary
           compact ? 'text-[11px]' : simplified ? 'text-body' : 'text-caption',
-          isActive ? 'font-semibold' : 'text-secondary',
+          isActive ? 'font-semibold' : 'text-[color:var(--color-secondary)]',
         )
       }
       style={({ isActive }) => (isActive ? { color: accentColor } : undefined)}
@@ -64,7 +64,7 @@ function NavButton({ mode, compact = false, simplified = false, onClick }: NavBu
       {({ isActive }) => (
         <>
           <span className="relative">
-            <mode.Icon size={simplified ? 36 : 28} strokeWidth={1.5} />
+            <mode.Icon size={simplified ? 36 : 26} strokeWidth={1.5} />
             {badge > 0 && (
               <span
                 className={clsx(
@@ -78,14 +78,14 @@ function NavButton({ mode, compact = false, simplified = false, onClick }: NavBu
             )}
           </span>
           <span
-            className="nav-label leading-none"
+            className="nav-label leading-none text-[11px]"
             style={isActive ? { color: accentColor } : undefined}
           >
             {mode.label}
           </span>
           {isActive && (
             <span
-              className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full"
+              className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full"
               style={{ backgroundColor: accentColor }}
             />
           )}
@@ -178,7 +178,7 @@ export default function NavBar() {
       <>
         <BadgeCountsSyncer />
         <nav
-          className="navbar flex items-center justify-around border-t border-surface-elev bg-surface px-2 py-1"
+          className="navbar flex items-center justify-around bg-surface px-2 py-1"
           aria-label="Main navigation"
         >
           {visible.map((mode) => (
@@ -216,7 +216,7 @@ export default function NavBar() {
     scrollable: 'flex overflow-x-auto',
   };
   const navClass = clsx(
-    'navbar border-t border-surface-elev bg-surface px-2 py-1',
+    'navbar bg-surface px-2 py-1',
     isSimplified ? 'flex justify-around gap-1' : (layoutClass[layout] ?? 'flex overflow-x-auto'),
   );
 

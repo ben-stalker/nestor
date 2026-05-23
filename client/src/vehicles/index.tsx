@@ -11,7 +11,7 @@ export default function VehiclePage() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto p-4">
+    <main className="vehicles-page flex-1 overflow-y-auto p-4 bg-[var(--color-bg)]">
       <VehicleList onSelect={(v) => setSelected(v)} />
     </main>
   );

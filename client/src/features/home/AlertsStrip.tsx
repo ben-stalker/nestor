@@ -1,5 +1,7 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
 import { useAlerts, useDismissAlert } from '../../hooks/useAlerts';
+import useReducedMotion from '../../hooks/useReducedMotion';
 import type { Alert, AlertSeverity } from '../../api/alerts';
 
 function SeverityIcon({ severity, className }: { severity: AlertSeverity; className?: string }) {
@@ -17,9 +19,31 @@ function severityClass(severity: AlertSeverity): string {
 interface AlertItemProps {
   alert: Alert;
   onDismiss: (id: number) => void;
+  reducedMotion: boolean;
 }
 
-function AlertItem({ alert, onDismiss }: AlertItemProps) {
+function AlertItem({ alert, onDismiss, reducedMotion }: AlertItemProps) {
+  const itemVariants = reducedMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1, transition: { duration: 0.1 } },
+        exit: { opacity: 0, transition: { duration: 0.1 } },
+      }
+    : {
+        initial: { y: -20, opacity: 0 },
+        animate: {
+          y: 0,
+          opacity: 1,
+          transition: { type: 'spring' as const, damping: 22, stiffness: 350 },
+        },
+        exit: {
+          y: -20,
+          opacity: 0,
+          height: 0,
+          transition: { duration: 0.15, ease: [0.4, 0.0, 1, 1] as [number, number, number, number] },
+        },
+      };
+
   const content = (
     <>
       <SeverityIcon severity={alert.severity} className="alerts-strip__icon" />
@@ -28,7 +52,13 @@ function AlertItem({ alert, onDismiss }: AlertItemProps) {
   );
 
   return (
-    <div
+    <motion.div
+      key={alert.id}
+      variants={itemVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      layout={!reducedMotion}
       className={`alerts-strip__item ${severityClass(alert.severity)}`}
       role="status"
       data-testid={`alert-item-${alert.id}`}
@@ -48,21 +78,24 @@ function AlertItem({ alert, onDismiss }: AlertItemProps) {
       >
         <X className="size-4" aria-hidden="true" />
       </button>
-    </div>
+    </motion.div>
   );
 }
 
 export default function AlertsStrip() {
   const { data: alerts } = useAlerts();
   const { mutate: dismiss } = useDismissAlert();
+  const rm = useReducedMotion();
 
   if (!alerts || alerts.length === 0) return null;
 
   return (
     <section className="alerts-strip" aria-label="Alerts" data-testid="alerts-strip">
-      {alerts.map((alert) => (
-        <AlertItem key={alert.id} alert={alert} onDismiss={dismiss} />
-      ))}
+      <AnimatePresence initial={false}>
+        {alerts.map((alert) => (
+          <AlertItem key={alert.id} alert={alert} onDismiss={dismiss} reducedMotion={rm} />
+        ))}
+      </AnimatePresence>
     </section>
   );
 }

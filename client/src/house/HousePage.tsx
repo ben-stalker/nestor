@@ -37,7 +37,7 @@ export default function HousePage() {
   const [tab, setTab] = useState<HouseTab>('bins');
 
   return (
-    <main className="flex flex-col h-full" data-testid="house-page">
+    <main className="house-page flex flex-col h-full bg-[var(--color-bg)]" data-testid="house-page">
       <div
         className="flex overflow-x-auto border-b border-surface-elev"
         role="tablist"

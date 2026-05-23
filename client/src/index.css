@@ -5,35 +5,53 @@
 @import '@fontsource/inter/700.css';
 @import '@fontsource/inter/800.css';
 
+/* Playfair Display — for large date/time numerals */
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/700.css';
+
+/* Epic 21 design tokens */
+@import './styles/tokens.css';
+
 @import 'tailwindcss';
 
 /* ─── Design-system tokens ───────────────────────────────────────────────── */
 @theme {
-  /* Font family */
+  /* Font families */
   --font-sans: 'Inter', system-ui, sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
 
-  /* Background tokens */
-  --color-warm: #fbf5ec;
+  /* Background tokens — Epic 21 warm cream */
+  --color-warm: #f5f0eb;
   --color-warm-dark: #2c2a27;
   --color-surface: #ffffff;
   --color-surface-elev: #f5f0e8;
 
-  /* Text tokens */
-  --color-primary: #1c1917;
-  --color-secondary: #57534e;
+  /* Semantic aliases for Epic 21 tokens */
+  --color-bg: #f5f0eb;
+  --color-border: #e8e3de;
+
+  /* Generic accent — defaults to home amber; overridden per-route via data attrs */
+  --color-accent: #f5a623;
+
+  /* Text tokens — Epic 21 */
+  --color-primary: #1c1c1e;
+  --color-secondary: #6b6b6b;
   --color-muted: #a8a29e;
 
-  /* Mode accent colours (one per nav mode) */
+  /* Card shadow */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  /* Mode accent colours — Epic 21 spec */
   --color-mode-home: #f5a623;
-  --color-mode-calendar: #4a90d9;
-  --color-mode-food: #e8621a;
+  --color-mode-calendar: #3b7dd8;
+  --color-mode-food: #e07b54;
   --color-mode-vehicles: #5b8db8;
-  --color-mode-family: #e84545;
-  --color-mode-house: #8b6914;
-  --color-mode-finance: #2e7d32;
-  --color-mode-pets: #8b4513;
-  --color-mode-ev: #00897b;
-  --color-mode-board: #546e7a;
+  --color-mode-family: #7b6fd4;
+  --color-mode-house: #3d9e8c;
+  --color-mode-finance: #5b6eae;
+  --color-mode-pets: #c9943a;
+  --color-mode-ev: #3da5d9;
+  --color-mode-board: #c46bab;
 
   /* Profile colours (12, vibrant but accessible) */
   --color-profile-1: #ff6b6b;
@@ -62,9 +80,9 @@
   --text-body: 1.125rem;
   --text-caption: 0.875rem;
 
-  /* Radii */
-  --radius-card: 24px;
-  --radius-button: 16px;
+  /* Radii — Epic 21 spec */
+  --radius-card: 20px;
+  --radius-button: 12px;
 }
 
 /* ─── Runtime overridable custom properties ──────────────────────────────── */
@@ -75,18 +93,21 @@
 
 [data-theme='dark'] {
   --color-warm: #2c2a27;
+  --color-bg: #2c2a27;
   --color-surface: #1c1917;
   --color-surface-elev: #292524;
+  --color-border: #3a3530;
   --color-primary: #fafaf9;
   --color-secondary: #d6d3d1;
   --color-muted: #78716c;
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* ─── App shell layout ───────────────────────────────────────────────────── */
 .app-shell {
   display: grid;
   min-block-size: 100vh;
-  background: var(--color-warm);
+  background: var(--color-bg, var(--color-warm));
 }
 
 /* Portrait: 88px filter sidebar left, main right, navbar full-width bottom */
@@ -519,16 +540,16 @@
   min-height: 0;
   flex: 1;
   overflow-y: auto;
+  background: var(--color-bg, var(--color-warm));
 }
 
 .home-header {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  align-items: center;
+  align-items: start;
   gap: 0.75rem;
-  padding: 1rem 1.25rem 0.75rem;
-  background: var(--color-surface);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 8%, transparent);
+  padding: 1.25rem 1.25rem 1rem;
+  background: var(--color-bg, var(--color-warm));
 }
 
 .home-header__greeting-label {
@@ -545,13 +566,14 @@
 .home-header__date {
   font-size: var(--text-caption);
   color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
+  text-align: right;
 }
 
 .home-header__time {
+  font-family: var(--font-playfair);
   font-size: var(--text-display);
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-primary);
   line-height: 1;
 }
@@ -560,9 +582,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--color-surface-elev);
+  padding: 0.625rem 0.875rem;
+  background: var(--color-surface);
   border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
 }
 
 .home-header__weather-temps {
@@ -685,6 +709,89 @@
   font-weight: 600;
 }
 
+/* ─── Alerts strip ───────────────────────────────────────────────────────── */
+.alerts-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem 0;
+}
+
+.alerts-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  font-size: var(--text-caption);
+  font-weight: 500;
+}
+
+.alerts-strip__item--error {
+  background: color-mix(in srgb, var(--color-alert-urgent) 12%, var(--color-surface));
+  color: var(--color-alert-urgent);
+}
+
+.alerts-strip__item--warning {
+  background: color-mix(in srgb, var(--color-alert-warning) 12%, var(--color-surface));
+  color: #b45309;
+}
+
+.alerts-strip__item--info {
+  background: color-mix(in srgb, var(--color-alert-info) 12%, var(--color-surface));
+  color: var(--color-alert-info);
+}
+
+.alerts-strip__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.alerts-strip__message {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alerts-strip__link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.alerts-strip__content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.alerts-strip__dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.125rem;
+  color: currentColor;
+  opacity: 0.7;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.alerts-strip__dismiss:hover {
+  opacity: 1;
+}
+
 /* ─── Day carousel ───────────────────────────────────────────────────────── */
 .day-carousel {
   position: relative;
@@ -731,6 +838,7 @@
   text-align: center;
   -webkit-user-select: none;
   user-select: none;
+  box-shadow: var(--shadow-card);
 }
 
 .day-card--focal {
@@ -739,6 +847,7 @@
   padding: 0.875rem 1rem;
   min-height: 14rem;
   border-color: var(--color-mode-home);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .day-card--today .day-card__day-num {
@@ -1160,8 +1269,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-surface-elev);
+  background: var(--color-bg, var(--color-warm));
   flex-shrink: 0;
 }
 
@@ -1429,33 +1537,43 @@
   padding: 0.25rem 0.5rem;
 }
 
-/* ─── Calendar view tabs ─────────────────────────────────────────────────── */
+/* ─── Calendar view tabs — segmented pill control ────────────────────────── */
 .calendar-page__view-tabs {
   display: flex;
   gap: 0;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-surface-elev);
+  background: var(--color-bg, var(--color-warm));
   flex-shrink: 0;
+  padding: 0.5rem 1rem;
+}
+
+.calendar-page__view-tabs-inner {
+  display: flex;
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  border-radius: 999px;
+  padding: 0.1875rem;
+  width: 100%;
+  max-width: 16rem;
 }
 
 .calendar-page__view-tab {
   flex: 1;
-  padding: 0.5rem 1rem;
+  padding: 0.375rem 0.75rem;
   font-size: var(--text-caption);
   font-weight: 600;
   color: var(--color-secondary);
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-radius: 999px;
   cursor: pointer;
   transition:
     color 120ms ease,
-    border-color 120ms ease;
+    background 120ms ease;
+  white-space: nowrap;
 }
 
 .calendar-page__view-tab--active {
-  color: var(--color-mode-calendar);
-  border-bottom-color: var(--color-mode-calendar);
+  color: var(--color-surface);
+  background: var(--color-mode-calendar);
 }
 
 /* ─── Week view ──────────────────────────────────────────────────────────── */
@@ -1995,6 +2113,27 @@
   text-align: center;
 }
 
+/* ─── Mode-scoped accent colour ─────────────────────────────────────────── */
+/* Each route's main container gets --color-accent set to its mode colour    */
+.calendar-page  { --color-accent: var(--color-mode-calendar); }
+.food-page      { --color-accent: var(--color-mode-food); }
+.vehicles-page  { --color-accent: var(--color-mode-vehicles); }
+.family-page,
+.family-hub     { --color-accent: var(--color-mode-family); }
+.house-page     { --color-accent: var(--color-mode-house); }
+.finance-page   { --color-accent: var(--color-mode-finance); }
+.pets-page      { --color-accent: var(--color-mode-pets); }
+.ev-page        { --color-accent: var(--color-mode-ev); }
+.board-page     { --color-accent: var(--color-mode-board); }
+
+/* ─── NavBar — Epic 21 redesign ─────────────────────────────────────────── */
+.navbar {
+  height: 72px;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+  border-top: none !important;
+}
+
 /* ─── Voice Pipeline ──────────────────────────────────────────────────────── */
 
 .mic-indicator {
@@ -2193,3 +2332,88 @@
 .voice-cmd-row__latency {
   color: var(--color-muted);
 }
+
+/* ─── EPIC-22 Animation utilities ───────────────────────────────────────────── */
+
+/* Error shake */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  14%       { transform: translateX(-8px); }
+  28%       { transform: translateX(8px); }
+  42%       { transform: translateX(-6px); }
+  57%       { transform: translateX(6px); }
+  71%       { transform: translateX(-4px); }
+  85%       { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Success checkmark draw */
+@keyframes stroke-draw {
+  from { stroke-dashoffset: 20; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.animate-stroke-draw {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: stroke-draw 0.4s ease-out forwards;
+}
+
+/* Toggle thumb spring transition */
+.toggle-thumb {
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Input focus ring */
+input:not([type='checkbox']):not([type='radio']):not([type='range']):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-mode-home), 0 0 0 4px color-mix(in srgb, var(--color-mode-home) 20%, transparent);
+  transition: box-shadow 0.15s ease;
+}
+
+/* Coin flip for reward redeemed */
+@keyframes coin-flip {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.animate-coin-flip {
+  animation: coin-flip 0.6s ease-in-out;
+}
+
+/* Ken Burns effect for screensaver photos */
+@keyframes ken-burns {
+  0%   { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.1) translate(-2%, -1%); }
+}
+
+.animate-ken-burns {
+  animation: ken-burns 8s ease-in-out infinite alternate;
+}
+
+/* Pulsing ring for doorbell notifications */
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Back-to-today pulse (initial appearance) */
+@keyframes badge-pop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-badge-pop {
+  animation: badge-pop 0.4s ease-out forwards;
+}
+

@@ -58,7 +58,7 @@ export default function PetsPage() {
   }
 
   return (
-    <main className="flex h-full" data-testid="pets-page">
+    <main className="pets-page flex h-full bg-[var(--color-bg)]" data-testid="pets-page">
       {/* Left column: pet list (landscape sidebar / portrait full width) */}
       <div
         className={`${

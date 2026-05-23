@@ -75,7 +75,7 @@ export default function HomeHeader() {
 
       <div className="home-header__datetime">
         <p className="home-header__date">{dateStr}</p>
-        <p className="home-header__time" aria-label={`Time: ${timeStr}`}>
+        <p className="home-header__time font-playfair" aria-label={`Time: ${timeStr}`}>
           {timeStr}
         </p>
       </div>

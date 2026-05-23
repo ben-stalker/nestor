@@ -87,33 +87,35 @@ export default function CalendarPage() {
       )}
 
       <div className="calendar-page__view-tabs" role="tablist" aria-label="Calendar view">
-        <button
-          type="button"
-          role="tab"
-          className={`calendar-page__view-tab${view === 'day' ? ' calendar-page__view-tab--active' : ''}`}
-          aria-selected={view === 'day'}
-          onClick={() => setView('day')}
-        >
-          Day
-        </button>
-        <button
-          type="button"
-          role="tab"
-          className={`calendar-page__view-tab${view === 'week' ? ' calendar-page__view-tab--active' : ''}`}
-          aria-selected={view === 'week'}
-          onClick={() => setView('week')}
-        >
-          Week
-        </button>
-        <button
-          type="button"
-          role="tab"
-          className={`calendar-page__view-tab${view === 'month' ? ' calendar-page__view-tab--active' : ''}`}
-          aria-selected={view === 'month'}
-          onClick={() => setView('month')}
-        >
-          Month
-        </button>
+        <div className="calendar-page__view-tabs-inner">
+          <button
+            type="button"
+            role="tab"
+            className={`calendar-page__view-tab${view === 'day' ? ' calendar-page__view-tab--active' : ''}`}
+            aria-selected={view === 'day'}
+            onClick={() => setView('day')}
+          >
+            Day
+          </button>
+          <button
+            type="button"
+            role="tab"
+            className={`calendar-page__view-tab${view === 'week' ? ' calendar-page__view-tab--active' : ''}`}
+            aria-selected={view === 'week'}
+            onClick={() => setView('week')}
+          >
+            Week
+          </button>
+          <button
+            type="button"
+            role="tab"
+            className={`calendar-page__view-tab${view === 'month' ? ' calendar-page__view-tab--active' : ''}`}
+            aria-selected={view === 'month'}
+            onClick={() => setView('month')}
+          >
+            Month
+          </button>
+        </div>
       </div>
 
       {view === 'day' && <DayView date={date} />}

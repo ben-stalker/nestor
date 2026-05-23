@@ -30,11 +30,11 @@ export default function StepShell({
   children,
 }: StepShellProps) {
   return (
-    <div className="fixed inset-0 flex flex-col bg-surface z-50 overflow-hidden">
+    <div className="fixed inset-0 flex flex-col bg-[var(--color-bg)] z-50 overflow-hidden">
       {/* Header */}
-      <div className="flex-none px-6 py-4 border-b border-neutral-100">
+      <div className="flex-none px-6 py-4 border-b border-[var(--color-border)] bg-[var(--color-surface)]">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-8 rounded-xl bg-neutral-900 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-[var(--radius-button)] bg-neutral-900 flex items-center justify-center">
             <span className="text-white font-bold text-caption">N</span>
           </div>
           <span className="text-body font-semibold text-primary">Nestor Setup</span>
@@ -50,7 +50,7 @@ export default function StepShell({
 
       {/* Footer — Back only */}
       {!isFirst && onBack && (
-        <div className="flex-none px-6 py-4 border-t border-neutral-100 flex items-center">
+        <div className="flex-none px-6 py-4 border-t border-[var(--color-border)] bg-[var(--color-surface)] flex items-center">
           <Button variant="ghost" onClick={onBack}>
             Back
           </Button>

@@ -19,7 +19,7 @@ export default function BoardPage() {
   const [tab, setTab] = useState<BoardTab>('messages');
 
   return (
-    <main className="flex flex-col h-full" data-testid="board-page">
+    <main className="board-page flex flex-col h-full bg-[var(--color-bg)]" data-testid="board-page">
       <div
         className="flex overflow-x-auto border-b border-surface-elev"
         role="tablist"

@@ -40,10 +40,10 @@ export default function FoodPage() {
   }
 
   return (
-    <main className="flex flex-col h-full">
+    <main className="food-page flex flex-col h-full bg-[var(--color-bg)]">
       {/* Tab bar */}
       <div
-        className="flex border-b border-surface-elev px-4"
+        className="flex border-b border-[var(--color-border)] px-4 bg-[var(--color-surface)]"
         role="tablist"
         aria-label="Food section"
       >

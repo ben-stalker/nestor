@@ -9,13 +9,13 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 const paddingMap = { sm: 'p-3', md: 'p-5', lg: 'p-7' } as const;
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ padding = 'md', shadow = false, className, children, ...props }, ref) => (
+  ({ padding = 'md', shadow = true, className, children, ...props }, ref) => (
     <div
       ref={ref}
       className={clsx(
-        'rounded-card bg-surface',
+        'rounded-card bg-surface border border-[var(--color-border)]',
         paddingMap[padding],
-        shadow && 'shadow-md',
+        shadow && 'shadow-[var(--shadow-card)]',
         className,
       )}
       {...props}

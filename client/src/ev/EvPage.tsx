@@ -29,8 +29,8 @@ export default function EvPage() {
   });
 
   return (
-    <main className="flex flex-col h-full">
-      <header className="px-4 pt-4 pb-2 border-b border-neutral-100">
+    <main className="ev-page flex flex-col h-full bg-[var(--color-bg)]">
+      <header className="px-4 pt-4 pb-2 border-b border-[var(--color-border)]">
         <div className="flex items-center gap-2 mb-3">
           <Zap size={22} className="text-mode-ev" />
           <h1 className="text-h1 font-bold">EV & Energy</h1>

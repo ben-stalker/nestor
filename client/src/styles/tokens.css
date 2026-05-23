@@ -1,0 +1,52 @@
+/* ─── Nestor Design Tokens — Epic 21: Warm Cozyla-Inspired Theme ─────────── */
+
+:root {
+  /* Background */
+  --color-bg: #f5f0eb;
+  --color-surface: #ffffff;
+  --color-surface-elev: #f5f0e8;
+
+  /* Text */
+  --color-text-primary: #1c1c1e;
+  --color-text-secondary: #6b6b6b;
+
+  /* Border */
+  --color-border: #e8e3de;
+
+  /* Card shadow */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  /* Radii */
+  --radius-card: 20px;
+  --radius-button: 12px;
+
+  /* Mode accents — Epic 21 spec values */
+  --color-mode-calendar: #3b7dd8;
+  --color-mode-food: #e07b54;
+  --color-mode-family: #7b6fd4;
+  --color-mode-house: #3d9e8c;
+  --color-mode-finance: #5b6eae;
+  --color-mode-pets: #c9943a;
+  --color-mode-ev: #3da5d9;
+  --color-mode-board: #c46bab;
+  --color-mode-home: #f5a623;
+
+  /* Playfair Display for large date/time numerals */
+  --font-playfair: 'Playfair Display', Georgia, serif;
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] {
+  --color-bg: #2c2a27;
+  --color-surface: #1c1917;
+  --color-surface-elev: #292524;
+  --color-text-primary: #fafaf9;
+  --color-text-secondary: #d6d3d1;
+  --color-border: #3a3530;
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* ─── Utility class for Playfair Display ─────────────────────────────────── */
+.font-playfair {
+  font-family: var(--font-playfair);
+}
