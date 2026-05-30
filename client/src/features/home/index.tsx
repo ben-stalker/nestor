@@ -1,5 +1,3 @@
-import AvatarStrip from '../../core/AvatarStrip';
-import HomeHeader from './HomeHeader';
 import DayCarousel from './DayCarousel';
 import AlertsStrip from './AlertsStrip';
 import JourneyWidget from './JourneyWidget';
@@ -20,8 +18,6 @@ export default function HomePage() {
   const { start, end } = carouselRange();
   return (
     <main className="home-page" data-testid="home-page">
-      <HomeHeader />
-      <AvatarStrip />
       <AlertsStrip />
       <DayCarousel start={start} end={end} />
       <JourneyWidget />

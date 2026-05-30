@@ -11,6 +11,7 @@ import useVoiceNavigation from '../voice/useVoiceNavigation';
 import MicIndicator from '../voice/MicIndicator';
 import NavBar from './NavBar';
 import FilterPanel from './FilterPanel';
+import TopBar from './TopBar';
 import KioskOverlay from './KioskOverlay';
 import GuestOverlay from './GuestOverlay';
 import IdleOverlay from './IdleOverlay';
@@ -49,6 +50,7 @@ export default function AppShell() {
 
   return (
     <div className={clsx('app-shell', `app-shell--${orientation}`)} data-orientation={orientation}>
+      <TopBar />
       <NavBar />
       <FilterPanel />
       <Outlet />

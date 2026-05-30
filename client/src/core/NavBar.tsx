@@ -224,11 +224,11 @@ export default function NavBar() {
   const layoutClass: Record<string, string> = {
     double: 'grid grid-cols-5 grid-rows-2',
     single: 'flex justify-around',
-    scrollable: 'flex overflow-x-auto',
+    scrollable: 'flex justify-around',
   };
   const navClass = clsx(
-    'navbar bg-surface px-2 py-1',
-    isSimplified ? 'flex justify-around gap-1' : (layoutClass[layout] ?? 'flex overflow-x-auto'),
+    'navbar bg-surface px-1 py-1',
+    isSimplified ? 'flex justify-around gap-1' : (layoutClass[layout] ?? 'flex justify-around'),
   );
 
   return (
