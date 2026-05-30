@@ -71,18 +71,13 @@ export default function FilterPanel() {
           <button
             key={profile.id}
             type="button"
-            aria-label={isPortrait ? profile.name : undefined}
             aria-pressed={active}
             onClick={() => toggleProfile(profileKey, String(profile.id))}
             className={clsx('filter-pill', active && 'filter-pill--active')}
-            style={{ background: `${profile.colour}33`, color: profile.colour }}
+            style={{ background: `${profile.colour}22`, color: profile.colour }}
             title={profile.name}
           >
-            {isPortrait ? (
-              <span aria-hidden="true">{profile.name.slice(0, 2).toUpperCase()}</span>
-            ) : (
-              profile.name
-            )}
+            {profile.name}
           </button>
         );
       })}
@@ -105,22 +100,17 @@ export default function FilterPanel() {
                 <button
                   key={item.id}
                   type="button"
-                  aria-label={isPortrait ? item.label : undefined}
                   aria-pressed={active}
                   onClick={() => togglePluginFilter(profileKey, def.id, item.id)}
                   className={clsx('filter-pill', active && 'filter-pill--active')}
                   style={
                     item.colour
-                      ? { background: `${item.colour}33`, color: item.colour }
+                      ? { background: `${item.colour}22`, color: item.colour }
                       : { background: 'var(--color-surface-elev)', color: 'var(--color-secondary)' }
                   }
                   title={item.label}
                 >
-                  {isPortrait ? (
-                    <span aria-hidden="true">{item.label.slice(0, 2).toUpperCase()}</span>
-                  ) : (
-                    item.label
-                  )}
+                  {item.label}
                 </button>
               );
             })}
