@@ -1,9 +1,9 @@
-/* Inter — self-hosted via @fontsource (Vite bundles into dist) */
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/inter/800.css';
+/* Nunito — self-hosted via @fontsource (Vite bundles into dist) */
+@import '@fontsource/nunito/400.css';
+@import '@fontsource/nunito/500.css';
+@import '@fontsource/nunito/600.css';
+@import '@fontsource/nunito/700.css';
+@import '@fontsource/nunito/800.css';
 
 /* Playfair Display — for large date/time numerals */
 @import '@fontsource/playfair-display/400.css';
@@ -17,90 +17,99 @@
 /* ─── Design-system tokens ───────────────────────────────────────────────── */
 @theme {
   /* Font families */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Nunito', system-ui, sans-serif;
   --font-playfair: 'Playfair Display', Georgia, serif;
 
-  /* Background tokens — Epic 21 warm cream */
-  --color-warm: #f5f0eb;
+  /* Background tokens */
+  --color-warm: #F6F1E8;
   --color-warm-dark: #2c2a27;
-  --color-surface: #ffffff;
-  --color-surface-elev: #f5f0e8;
+  --color-surface: #FFFFFF;
+  --color-surface-elev: #FBF7EE;
 
-  /* Semantic aliases for Epic 21 tokens */
-  --color-bg: #f5f0eb;
-  --color-border: #e8e3de;
+  /* Semantic aliases */
+  --color-bg: #F6F1E8;
+  --color-bg-2: #EFE7D8;
+  --color-border: #E6DDC9;
+  --color-border-2: #D7CCB2;
 
   /* Generic accent — defaults to home amber; overridden per-route via data attrs */
   --color-accent: #f5a623;
 
-  /* Text tokens — Epic 21 */
-  --color-primary: #1c1c1e;
-  --color-secondary: #6b6b6b;
-  --color-muted: #a8a29e;
+  /* Text tokens */
+  --color-primary: #1F1B16;
+  --color-secondary: #4A4439;
+  --color-muted: #8C8576;
 
-  /* Card shadow */
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
+  /* Shadows — warm-tinted dual-layer */
+  --shadow-card: 0 1px 0 rgba(31,27,22,0.04), 0 8px 28px -10px rgba(31,27,22,0.10);
+  --shadow-lift: 0 2px 0 rgba(31,27,22,0.04), 0 18px 40px -12px rgba(31,27,22,0.18);
 
-  /* Mode accent colours — Epic 21 spec */
+  /* Mode accent colours */
   --color-mode-home: #f5a623;
-  --color-mode-calendar: #3b7dd8;
-  --color-mode-food: #e07b54;
-  --color-mode-vehicles: #5b8db8;
-  --color-mode-family: #7b6fd4;
-  --color-mode-house: #3d9e8c;
-  --color-mode-finance: #5b6eae;
-  --color-mode-pets: #c9943a;
-  --color-mode-ev: #3da5d9;
-  --color-mode-board: #c46bab;
+  --color-mode-calendar: #3F7CAC;
+  --color-mode-food: #D86B4A;
+  --color-mode-vehicles: #5B8C6E;
+  --color-mode-family: #7E5BA6;
+  --color-mode-house: #2F8585;
+  --color-mode-finance: #4F4E9F;
+  --color-mode-pets: #E0A93C;
+  --color-mode-ev: #1E8FD6;
+  --color-mode-board: #C75B86;
 
   /* Profile colours (12, vibrant but accessible) */
-  --color-profile-1: #ff6b6b;
-  --color-profile-2: #ffab6e;
-  --color-profile-3: #88c98e;
-  --color-profile-4: #45b7b8;
-  --color-profile-5: #7b9ed9;
-  --color-profile-6: #b39dd9;
-  --color-profile-7: #7b4f9e;
-  --color-profile-8: #e88fa3;
-  --color-profile-9: #d4a96a;
-  --color-profile-10: #d4aa00;
+  --color-profile-1: #D86B4A;
+  --color-profile-2: #E0A93C;
+  --color-profile-3: #5B8C6E;
+  --color-profile-4: #3F7CAC;
+  --color-profile-5: #7E5BA6;
+  --color-profile-6: #2F8585;
+  --color-profile-7: #4F4E9F;
+  --color-profile-8: #C75B86;
+  --color-profile-9: #1E8FD6;
+  --color-profile-10: #D8A33A;
   --color-profile-11: #56b4e9;
   --color-profile-12: #4cc07a;
 
-  /* Alert colours */
-  --color-alert-urgent: #ef4444;
-  --color-alert-warning: #f59e0b;
-  --color-alert-info: #3b82f6;
-  --color-alert-success: #22c55e;
+  /* Alert / severity colours */
+  --color-alert-urgent: #C0392B;
+  --color-alert-warning: #D8A33A;
+  --color-alert-info: #3F7CAC;
+  --color-alert-success: #5B8C6E;
 
-  /* Type scale (CSS custom properties drive runtime text-size overrides) */
+  /* Type scale */
   --text-display: clamp(3rem, 5vw, 4.5rem);
   --text-h1: 2rem;
   --text-h2: 1.5rem;
   --text-body: 1.125rem;
   --text-caption: 0.875rem;
 
-  /* Radii — Epic 21 spec */
-  --radius-card: 20px;
+  /* Radii */
+  --radius-card: 28px;
+  --radius-tile: 20px;
   --radius-button: 12px;
+  --radius-pill: 999px;
 }
 
 /* ─── Runtime overridable custom properties ──────────────────────────────── */
 :root {
   --base-font-size: 18px;
   font-size: var(--base-font-size);
+  font-family: 'Nunito', system-ui, sans-serif;
 }
 
 [data-theme='dark'] {
   --color-warm: #2c2a27;
   --color-bg: #2c2a27;
+  --color-bg-2: #231f1a;
   --color-surface: #1c1917;
   --color-surface-elev: #292524;
   --color-border: #3a3530;
+  --color-border-2: #4a4540;
   --color-primary: #fafaf9;
   --color-secondary: #d6d3d1;
-  --color-muted: #78716c;
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.25);
+  --color-muted: #a8a29e;
+  --shadow-card: 0 1px 0 rgba(0,0,0,0.12), 0 8px 28px -10px rgba(0,0,0,0.30);
+  --shadow-lift: 0 2px 0 rgba(0,0,0,0.12), 0 18px 40px -12px rgba(0,0,0,0.45);
 }
 
 /* ─── App shell layout ───────────────────────────────────────────────────── */
@@ -194,6 +203,11 @@
   --color-alert-warning: #e69f00;
   --color-alert-info: #0072b2;
   --color-alert-success: #009e73;
+  /* Severity aliases */
+  --color-mode-vehicles: #009e73;
+  --color-mode-house: #0072b2;
+  --color-mode-pets: #e69f00;
+  --color-mode-board: #cc79a7;
 }
 
 /* Tritanopia — blue-yellow colour vision deficiency */
@@ -218,6 +232,10 @@
   --color-alert-warning: #e69f00;
   --color-alert-info: #0072b2;
   --color-alert-success: #009e73;
+  --color-mode-vehicles: #009e73;
+  --color-mode-house: #0072b2;
+  --color-mode-pets: #e69f00;
+  --color-mode-board: #cc79a7;
 }
 
 /* ─── High contrast mode ─────────────────────────────────────────────────── */

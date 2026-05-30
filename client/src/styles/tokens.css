@@ -1,35 +1,48 @@
-/* ─── Nestor Design Tokens — Epic 21: Warm Cozyla-Inspired Theme ─────────── */
+/* ─── Nestor Design Tokens ─────────────────────────────────────────────────── */
 
 :root {
   /* Background */
-  --color-bg: #f5f0eb;
-  --color-surface: #ffffff;
-  --color-surface-elev: #f5f0e8;
+  --color-bg: #F6F1E8;
+  --color-bg-2: #EFE7D8;
+  --color-surface: #FFFFFF;
+  --color-surface-elev: #FBF7EE;
 
   /* Text */
-  --color-text-primary: #1c1c1e;
-  --color-text-secondary: #6b6b6b;
+  --color-text-primary: #1F1B16;
+  --color-text-secondary: #4A4439;
+  --color-text-tertiary: #8C8576;
 
   /* Border */
-  --color-border: #e8e3de;
+  --color-border: #E6DDC9;
+  --color-border-2: #D7CCB2;
 
-  /* Card shadow */
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
+  /* Shadows — warm-tinted dual-layer */
+  --shadow-card: 0 1px 0 rgba(31,27,22,0.04), 0 8px 28px -10px rgba(31,27,22,0.10);
+  --shadow-lift: 0 2px 0 rgba(31,27,22,0.04), 0 18px 40px -12px rgba(31,27,22,0.18);
 
   /* Radii */
-  --radius-card: 20px;
+  --radius-card: 28px;
+  --radius-tile: 20px;
   --radius-button: 12px;
+  --radius-pill: 999px;
 
-  /* Mode accents — Epic 21 spec values */
-  --color-mode-calendar: #3b7dd8;
-  --color-mode-food: #e07b54;
-  --color-mode-family: #7b6fd4;
-  --color-mode-house: #3d9e8c;
-  --color-mode-finance: #5b6eae;
-  --color-mode-pets: #c9943a;
-  --color-mode-ev: #3da5d9;
-  --color-mode-board: #c46bab;
+  /* Mode accents */
   --color-mode-home: #f5a623;
+  --color-mode-calendar: #3F7CAC;
+  --color-mode-food: #D86B4A;
+  --color-mode-vehicles: #5B8C6E;
+  --color-mode-family: #7E5BA6;
+  --color-mode-house: #2F8585;
+  --color-mode-finance: #4F4E9F;
+  --color-mode-pets: #E0A93C;
+  --color-mode-ev: #1E8FD6;
+  --color-mode-board: #C75B86;
+
+  /* Alert / severity */
+  --color-alert-urgent: #C0392B;
+  --color-alert-warning: #D8A33A;
+  --color-alert-info: #3F7CAC;
+  --color-alert-success: #5B8C6E;
 
   /* Playfair Display for large date/time numerals */
   --font-playfair: 'Playfair Display', Georgia, serif;
@@ -38,12 +51,16 @@
 /* Dark mode overrides */
 [data-theme='dark'] {
   --color-bg: #2c2a27;
+  --color-bg-2: #231f1a;
   --color-surface: #1c1917;
   --color-surface-elev: #292524;
   --color-text-primary: #fafaf9;
   --color-text-secondary: #d6d3d1;
+  --color-text-tertiary: #a8a29e;
   --color-border: #3a3530;
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.25);
+  --color-border-2: #4a4540;
+  --shadow-card: 0 1px 0 rgba(0,0,0,0.12), 0 8px 28px -10px rgba(0,0,0,0.30);
+  --shadow-lift: 0 2px 0 rgba(0,0,0,0.12), 0 18px 40px -12px rgba(0,0,0,0.45);
 }
 
 /* ─── Utility class for Playfair Display ─────────────────────────────────── */

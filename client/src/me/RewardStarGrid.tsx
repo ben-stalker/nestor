@@ -73,7 +73,7 @@ function StarParticleBurst({ onDone }: { onDone: () => void }) {
 }
 
 // ─── Confetti shower for goal reached ────────────────────────────────────────
-const CONFETTI_COLORS = ['#f5a623', '#3b7dd8', '#22c55e', '#e07b54', '#7b6fd4', '#c46bab'];
+const CONFETTI_COLORS = ['#f5a623', '#3F7CAC', '#5B8C6E', '#D86B4A', '#7E5BA6', '#C75B86'];
 
 function ConfettiShower({ onDone }: { onDone: () => void }) {
   const pieces = Array.from({ length: 60 }, (_, i) => i);
