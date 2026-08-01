@@ -36,7 +36,7 @@ export default class CalendarService {
           all_day: raw.all_day ?? false,
           type: 'default',
           recurring_rule: raw.recurring_rule,
-          notes: raw.notes,
+          notes: raw.notes ? raw.notes.slice(0, 2000) : raw.notes,
           caldav_etag: raw.caldav_etag,
         });
       });

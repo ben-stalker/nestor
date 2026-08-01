@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import type EventRepository from '../repositories/EventRepository';
+import type AppSettingsRepository from '../repositories/AppSettingsRepository';
 
 export type ComingUpCategory = 'countdown' | 'finance' | 'vehicle' | 'birthday' | 'holiday';
 
@@ -79,7 +81,71 @@ export interface DaySummary {
 
 const DateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
-export default function createHomeRouter(): Router {
+function getTimezoneOffsetMs(dateStr: string, timezone: string): number {
+  // Get the UTC offset for midnight on this date in the given timezone
+  const utcDate = new Date(`${dateStr}T00:00:00Z`);
+  const localParts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).formatToParts(utcDate);
+
+  const get = (type: string) => Number(localParts.find((p) => p.type === type)?.value ?? '0');
+  const localMs = Date.UTC(
+    get('year'),
+    get('month') - 1,
+    get('day'),
+    get('hour'),
+    get('minute'),
+    get('second'),
+  );
+  return localMs - utcDate.getTime();
+}
+
+function dayBoundsUtc(dateStr: string, timezone: string): { start: number; end: number } {
+  try {
+    const fmt = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+    // Find UTC ms for midnight and 23:59:59.999 in the target timezone
+    const startLocal = new Date(`${dateStr}T00:00:00`);
+    const endLocal = new Date(`${dateStr}T23:59:59.999`);
+
+    // Validate the timezone is a recognised IANA name (throws otherwise, caught below)
+    fmt.format(startLocal);
+
+    // Use Temporal-style offset calculation: difference between UTC interpretation of the dateStr
+    // and the actual local midnight in UTC.
+    const tzOffset = getTimezoneOffsetMs(dateStr, timezone);
+    return {
+      start: startLocal.getTime() - tzOffset,
+      end: endLocal.getTime() - tzOffset,
+    };
+  } catch {
+    // Fallback: treat as UTC
+    return {
+      start: new Date(`${dateStr}T00:00:00Z`).getTime(),
+      end: new Date(`${dateStr}T23:59:59.999Z`).getTime(),
+    };
+  }
+}
+
+export default function createHomeRouter(
+  eventRepo?: EventRepository,
+  settingsRepo?: AppSettingsRepository,
+): Router {
   const router = Router();
 
   router.get('/api/v1/home/coming-up', (_req, res) => {
@@ -98,9 +164,24 @@ export default function createHomeRouter(): Router {
         return;
       }
 
+      const dateStr = parsed.data;
+      const timezone = settingsRepo?.get<string>('timezone') ?? 'UTC';
+      const { start: dayStart, end: dayEnd } = dayBoundsUtc(dateStr, timezone);
+
+      const rawEvents = eventRepo ? eventRepo.findInRange(dayStart, dayEnd) : [];
+      const events: CalendarEvent[] = rawEvents.map((e) => ({
+        id: e.id,
+        title: e.title,
+        startTime: new Date(e.start_datetime).toISOString(),
+        endTime: e.end_datetime ? new Date(e.end_datetime).toISOString() : undefined,
+        profileId: e.profile_id ?? 0,
+        profileColour: '#888888',
+        allDay: Boolean(e.all_day),
+      }));
+
       const summary: DaySummary = {
-        date: parsed.data,
-        events: [],
+        date: dateStr,
+        events,
         wfhStatuses: [],
         nurseryDrops: [],
         schoolPickups: [],

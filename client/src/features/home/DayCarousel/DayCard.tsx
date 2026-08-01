@@ -222,16 +222,24 @@ export default function DayCard({
 
       {isFocal && (
         <ul className="day-card__events" aria-label="Events">
-          {day.events.length === 0 ? (
+          {(summary?.events ?? []).length === 0 ? (
             <li className="day-card__no-events">No events</li>
           ) : (
-            day.events.map((ev) => (
+            (summary?.events ?? []).map((ev) => (
               <li
                 key={ev.id}
                 className="day-card__event"
                 style={{ borderLeftColor: ev.profileColour }}
               >
-                <span className="day-card__event-time">{ev.startTime}</span>
+                {!ev.allDay && (
+                  <span className="day-card__event-time">
+                    {new Date(ev.startTime).toLocaleTimeString(undefined, {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                    })}
+                  </span>
+                )}
                 <span className="day-card__event-title">{ev.title}</span>
               </li>
             ))
@@ -239,9 +247,9 @@ export default function DayCard({
         </ul>
       )}
 
-      {!isFocal && day.events.length > 0 && (
+      {!isFocal && (summary?.events ?? []).length > 0 && (
         <div className="day-card__event-dots" aria-hidden="true">
-          {day.events.slice(0, 4).map((ev) => (
+          {(summary?.events ?? []).slice(0, 4).map((ev) => (
             <span
               key={ev.id}
               className="day-card__event-dot"

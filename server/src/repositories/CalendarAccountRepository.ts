@@ -19,9 +19,18 @@ interface AccountRow {
   last_sync_error: string | null;
   profile_id: number | null;
   active: number;
+  calendar_names_filter: string | null;
 }
 
 function toAccount(row: AccountRow): CalendarAccount {
+  let calendarNamesFilter: string[] | null = null;
+  if (row.calendar_names_filter) {
+    try {
+      calendarNamesFilter = JSON.parse(row.calendar_names_filter) as string[];
+    } catch {
+      calendarNamesFilter = null;
+    }
+  }
   return {
     id: row.id,
     provider: row.provider as CalendarAccount['provider'],
@@ -32,6 +41,7 @@ function toAccount(row: AccountRow): CalendarAccount {
     last_sync_error: row.last_sync_error,
     profile_id: row.profile_id,
     active: row.active,
+    calendar_names_filter: calendarNamesFilter,
   };
 }
 
@@ -50,8 +60,8 @@ export default class CalendarAccountRepository extends BaseRepository {
     const credentialsEncrypted = encrypt(JSON.stringify(parsed.credentials));
     const result = this.run(
       `INSERT INTO calendar_accounts
-        (provider, display_name, caldav_url, credentials_encrypted, sync_interval_mins, profile_id, active)
-       VALUES (?, ?, ?, ?, ?, ?, 1)`,
+        (provider, display_name, caldav_url, credentials_encrypted, sync_interval_mins, profile_id, active, calendar_names_filter)
+       VALUES (?, ?, ?, ?, ?, ?, 1, ?)`,
       [
         parsed.provider,
         parsed.display_name,
@@ -59,6 +69,7 @@ export default class CalendarAccountRepository extends BaseRepository {
         credentialsEncrypted,
         parsed.sync_interval_mins,
         parsed.profile_id ?? null,
+        parsed.calendar_names_filter ? JSON.stringify(parsed.calendar_names_filter) : null,
       ],
     );
     return this.get(result.lastInsertRowid as number)!;
@@ -95,6 +106,12 @@ export default class CalendarAccountRepository extends BaseRepository {
     if (parsed.active !== undefined) {
       sets.push('active = ?');
       params.push(parsed.active);
+    }
+    if (parsed.calendar_names_filter !== undefined) {
+      sets.push('calendar_names_filter = ?');
+      params.push(
+        parsed.calendar_names_filter ? JSON.stringify(parsed.calendar_names_filter) : null,
+      );
     }
 
     if (sets.length === 0) return existing;

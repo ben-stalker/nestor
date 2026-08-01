@@ -59,6 +59,45 @@ export default function createBasicCalendarRouter(
     }
   });
 
+  // Trigger an immediate sync for an account
+  router.post('/api/v1/calendar/accounts/:id/sync', (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id <= 0) {
+        res.status(400).json({ error: 'Invalid id' });
+        return;
+      }
+      const account = accountRepo.get(id);
+      if (!account) {
+        res.status(404).json({ error: 'Account not found' });
+        return;
+      }
+      void calendarService.syncAccount(id);
+      res.json({ queued: true });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // Update a calendar account (e.g. set calendar_names_filter)
+  router.patch('/api/v1/calendar/accounts/:id', (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id <= 0) {
+        res.status(400).json({ error: 'Invalid id' });
+        return;
+      }
+      const updated = accountRepo.update(id, req.body as Parameters<typeof accountRepo.update>[1]);
+      if (!updated) {
+        res.status(404).json({ error: 'Account not found' });
+        return;
+      }
+      res.json(updated);
+    } catch (err) {
+      next(err);
+    }
+  });
+
   // Create (and first-sync) a Basic-auth CalDAV account
   router.post('/api/v1/calendar/accounts/basic', (req, res, next) => {
     try {

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import AppShell from './core/AppShell';
 import HomePage from './features/home';
@@ -23,10 +23,6 @@ import PageTransition from './shared/PageTransition';
 const UIGallery = lazy(() => import('./shared/ui/__gallery__'));
 
 function HomeRedirect() {
-  const profile = useActiveProfile();
-  if (profile?.type === 'child' || profile?.type === 'toddler') {
-    return <Navigate to="/me" replace />;
-  }
   return <HomePage />;
 }
 

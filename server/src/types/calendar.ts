@@ -28,6 +28,7 @@ export interface CalendarAccount {
   last_sync_error: string | null;
   profile_id: number | null;
   active: number;
+  calendar_names_filter: string[] | null;
 }
 
 export interface CalendarEvent {
@@ -56,6 +57,7 @@ export const AccountInputSchema = z.object({
   credentials: z.record(z.string(), z.unknown()),
   sync_interval_mins: z.number().int().min(1).optional().default(15),
   profile_id: z.number().int().positive().nullable().optional(),
+  calendar_names_filter: z.array(z.string()).nullable().optional(),
 });
 export type AccountInput = z.input<typeof AccountInputSchema>;
 
@@ -66,6 +68,7 @@ export const AccountUpdateSchema = z.object({
   sync_interval_mins: z.number().int().min(1).optional(),
   profile_id: z.number().int().positive().nullable().optional(),
   active: z.number().int().min(0).max(1).optional(),
+  calendar_names_filter: z.array(z.string()).nullable().optional(),
 });
 export type AccountUpdate = z.infer<typeof AccountUpdateSchema>;
 

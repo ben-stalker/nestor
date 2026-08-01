@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
-import { Cloud, Sun, CloudRain, CloudSnow, Zap, Droplets } from 'lucide-react';
+import { Cloud, Sun, CloudRain, CloudSnow, Zap, Droplets, RotateCcw } from 'lucide-react';
 import { useActiveProfile } from './hooks/useActiveProfile';
 import { useWeather } from '../hooks/useWeather';
 import { useAppSettings } from './hooks/useAppSettings';
 import { NAV_MODE_MAP } from './navModes';
 
-function greeting(name: string): string {
+function greeting(): string {
   const h = new Date().getHours();
   if (h < 12) return `Good morning,`;
   if (h < 17) return `Good afternoon,`;
@@ -25,13 +25,12 @@ function WeatherIcon({ code, size = 20 }: { code: number; size?: number }) {
 }
 
 function fmtTemp(celsius: number, unit: 'celsius' | 'fahrenheit'): string {
-  return unit === 'fahrenheit'
-    ? `${Math.round(celsius * 1.8 + 32)}°`
-    : `${Math.round(celsius)}°`;
+  return unit === 'fahrenheit' ? `${Math.round(celsius * 1.8 + 32)}°` : `${Math.round(celsius)}°`;
 }
 
 export default function TopBar() {
   const [now, setNow] = useState(() => new Date());
+  const [refreshing, setRefreshing] = useState(false);
   const location = useLocation();
   const profile = useActiveProfile();
   const { data: weather } = useWeather();
@@ -62,18 +61,14 @@ export default function TopBar() {
   const name = profile?.name ?? '';
 
   const currentMode = [...NAV_MODE_MAP.values()].find((m) =>
-    m.route === '/'
-      ? location.pathname === '/'
-      : location.pathname.startsWith(m.route),
+    m.route === '/' ? location.pathname === '/' : location.pathname.startsWith(m.route),
   );
-  const accentColor = currentMode
-    ? `var(--color-${currentMode.accent})`
-    : 'var(--color-mode-home)';
+  const accentColor = currentMode ? `var(--color-${currentMode.accent})` : 'var(--color-mode-home)';
 
   const precipPct = weather?.daily.precipitation_probability_max?.[0] ?? null;
 
   return (
-    <header className="top-bar">
+    <header className="topbar top-bar">
       {/* Left: N logo + context */}
       <div className="top-bar__left">
         <NavLink to="/" className="top-bar__logo" aria-label="Go to Home">
@@ -85,7 +80,7 @@ export default function TopBar() {
           </span>
           {isHome ? (
             <>
-              <span className="top-bar__greeting">{greeting(name)}</span>
+              <span className="top-bar__greeting">{greeting()}</span>
               {name && <span className="top-bar__name">{name}</span>}
             </>
           ) : (
@@ -109,17 +104,17 @@ export default function TopBar() {
       </div>
 
       {/* Weather chip */}
-      <div className="top-bar__weather">
+      <div className="top-bar__weather" style={{ cursor: 'default' }}>
         {weather ? (
           <>
-            <WeatherIcon code={weather.current.weather_code} size={22} />
+            <WeatherIcon code={weather.current.weather_code} size={32} />
             <div className="top-bar__weather-info">
               <span className="top-bar__weather-temp">
                 {fmtTemp(weather.current.temperature_2m, unit)}
               </span>
               <span className="top-bar__weather-range">
-                ↑{fmtTemp(weather.daily.temperature_2m_max[0], unit)}{' '}
-                ↓{fmtTemp(weather.daily.temperature_2m_min[0], unit)}
+                ↑{fmtTemp(weather.daily.temperature_2m_max[0], unit)} ↓
+                {fmtTemp(weather.daily.temperature_2m_min[0], unit)}
               </span>
               {precipPct != null && (
                 <span className="top-bar__weather-precip">{precipPct}% rain</span>
@@ -130,6 +125,23 @@ export default function TopBar() {
           <span className="top-bar__weather-empty">—</span>
         )}
       </div>
+
+      {/* Refresh button */}
+      <button
+        type="button"
+        className="top-bar__refresh"
+        aria-label="Refresh page"
+        onClick={() => {
+          setRefreshing(true);
+          setTimeout(() => window.location.reload(), 400);
+        }}
+      >
+        <RotateCcw
+          size={18}
+          strokeWidth={2}
+          className={refreshing ? 'top-bar__refresh-icon--spinning' : ''}
+        />
+      </button>
     </header>
   );
 }

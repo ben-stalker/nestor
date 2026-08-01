@@ -2,8 +2,10 @@ import { useState, useRef } from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { RotateCcw } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import { useQueries } from '@tanstack/react-query';
 import { useWeather } from '../../../hooks/useWeather';
-import { useDaySummary } from '../../../hooks/useDaySummary';
+import { daySummaryKey } from '../../../hooks/useDaySummary';
+import { getDaySummary } from '../../../api/home';
 import useFiltersStore from '../../../store/filtersStore';
 import useAppStore from '../../../store/appStore';
 import useReducedMotion from '../../../hooks/useReducedMotion';
@@ -65,8 +67,17 @@ export default function DayCarousel({ start, end }: DayCarouselProps) {
   const filters = activeProfileId ? getProfileFilters(activeProfileId) : null;
   const selectedProfiles = filters?.selectedProfiles ?? [];
 
-  const focalDateStr = localDateStr(focalDate);
-  const { data: focalSummary } = useDaySummary(focalDateStr);
+  const allDates = buildDays(start, end).map((d) => localDateStr(d.date));
+  const summaryResults = useQueries({
+    queries: allDates.map((dateStr) => ({
+      queryKey: daySummaryKey(dateStr),
+      queryFn: () => getDaySummary(dateStr),
+      staleTime: 5 * 60 * 1000,
+    })),
+  });
+  const summaryByDate = Object.fromEntries(
+    allDates.map((dateStr, i) => [dateStr, summaryResults[i].data]),
+  );
 
   const days = buildDays(start, end).map((day, idx) => {
     const weatherDay = weather?.daily;
@@ -148,16 +159,14 @@ export default function DayCarousel({ start, end }: DayCarouselProps) {
                 role="listitem"
                 layout={!reducedMotion}
                 transition={
-                  reducedMotion
-                    ? { duration: 0 }
-                    : { type: 'spring', stiffness: 300, damping: 30 }
+                  reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }
                 }
                 style={{ flex: focal ? '0 0 50%' : '0 0 12%' }}
               >
                 <DayCard
                   day={day}
                   isFocal={focal}
-                  summary={focal ? focalSummary : undefined}
+                  summary={summaryByDate[localDateStr(day.date)]}
                   selectedProfiles={selectedProfiles}
                   onClick={() => handleCardClick(day)}
                   onLongPress={() => setQuickAddDay(day)}

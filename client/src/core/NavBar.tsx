@@ -144,7 +144,7 @@ export default function NavBar() {
   const enabledIds: string[] = isSimplified
     ? [...SIMPLIFIED_MODE_IDS]
     : (settings?.enabled_nav_modes ?? DEFAULT_NAV_MODES.map((m) => m.id));
-  const layout = isSimplified ? 'scrollable' : (settings?.nav_layout ?? 'scrollable');
+  const layout = isSimplified ? 'scrollable' : (settings?.nav_layout ?? 'hamburger');
 
   const allModes = enabledIds.flatMap((id) => {
     const mode = NAV_MODE_MAP.get(id);

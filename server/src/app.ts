@@ -162,7 +162,7 @@ export default function createApp(): Express {
     createAdminRouter(settingsRepo, profileRepo, undefined, octopusSyncService),
   );
   app.use(createWeatherRouter(settingsRepo));
-  app.use(createHomeRouter());
+  app.use(createHomeRouter(eventRepo, settingsRepo));
   app.use(createAlertsRouter(alertRepo));
   app.use(createJourneysRouter(journeyRepo));
   app.use(createCalendarRouter(eventRepo, profileRepo));

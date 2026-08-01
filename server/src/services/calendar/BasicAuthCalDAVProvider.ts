@@ -52,6 +52,7 @@ function parseCalendarObject(obj: { data?: string; etag?: string }): RawEvent[] 
 export async function fetchBasicAuthCalDAV(
   serverUrl: string,
   creds: BasicAuthCredentials,
+  calendarNamesFilter?: string[] | null,
 ): Promise<RawEvent[]> {
   const { createDAVClient } = await import('tsdav');
   const client = await createDAVClient({
@@ -62,8 +63,16 @@ export async function fetchBasicAuthCalDAV(
   });
 
   const calendars = await client.fetchCalendars();
+  const filtered =
+    calendarNamesFilter && calendarNamesFilter.length > 0
+      ? calendars.filter((cal) => {
+          const name = (cal.displayName as string | undefined) ?? '';
+          return calendarNamesFilter.some((f) => name.toLowerCase() === f.toLowerCase());
+        })
+      : calendars;
+
   const objectArrays = await Promise.all(
-    calendars.map((calendar) => client.fetchCalendarObjects({ calendar })),
+    filtered.map((calendar) => client.fetchCalendarObjects({ calendar })),
   );
 
   return objectArrays.flat().flatMap(parseCalendarObject);
@@ -97,7 +106,7 @@ export class BasicAuthCalDAVProvider implements CalendarProvider {
   async pull(account: CalendarAccount): Promise<RawEvent[]> {
     const creds = this.accountRepo.getCredentials(account.id) as unknown as BasicAuthCredentials;
     const serverUrl = account.caldav_url ?? this.defaultServerUrl;
-    return fetchBasicAuthCalDAV(serverUrl, creds);
+    return fetchBasicAuthCalDAV(serverUrl, creds, account.calendar_names_filter);
   }
 
   // eslint-disable-next-line class-methods-use-this
