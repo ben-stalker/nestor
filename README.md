@@ -33,7 +33,7 @@ USB audio (e.g. Jabra Speak 410/510) required for voice features. See [docs/hard
 ### Single-command install (Ubuntu 22+, requires root)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/benstalker/nestor/main/install/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/ben-stalker/nestor/main/install/install.sh | sudo bash
 ```
 
 After installation, open a browser at `http://localhost:3000` to run the Setup Wizard.

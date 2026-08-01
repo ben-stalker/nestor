@@ -6,7 +6,7 @@ set -euo pipefail
 NESTOR_USER="${NESTOR_USER:-nestor}"
 INSTALL_DIR="${INSTALL_DIR:-/opt/nestor}"
 LOG="/tmp/nestor-install.log"
-REPO_URL="${REPO_URL:-https://github.com/benstalker/nestor.git}"
+REPO_URL="${REPO_URL:-https://github.com/ben-stalker/nestor.git}"
 
 trap 'echo "Install failed at line $LINENO. Check $LOG for details."; tail -20 "$LOG"' ERR
 

@@ -10,7 +10,7 @@
 ## Single-command install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/benstalker/nestor/main/install/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/ben-stalker/nestor/main/install/install.sh | sudo bash
 ```
 
 The script:
@@ -30,13 +30,13 @@ Environment variables that customise the install:
 |---|---|---|
 | `NESTOR_USER` | `nestor` | System user to run services |
 | `INSTALL_DIR` | `/opt/nestor` | Directory to clone/run from |
-| `REPO_URL` | `https://github.com/benstalker/nestor.git` | Git repository URL |
+| `REPO_URL` | `https://github.com/ben-stalker/nestor.git` | Git repository URL |
 
 ## Manual install
 
 ```bash
 # Clone
-git clone https://github.com/benstalker/nestor.git /opt/nestor
+git clone https://github.com/ben-stalker/nestor.git /opt/nestor
 cd /opt/nestor
 
 # Install dependencies and build
