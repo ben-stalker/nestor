@@ -1,0 +1,371 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+generated: 11-05-2026 19:54
+last_updated: 11-05-2026 19:54
+project: nestor
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+development_status:
+  epic-1: done
+  1-1-initialise-repository-structure-and-tooling: done
+  1-2-github-repository-and-ci-pipeline: done
+  1-3-sqlite-database-wrapper-and-migration-runner: done
+  1-4-express-server-bootstrap-with-structured-logging: done
+  1-5-repository-pattern-base-app_settings-repository: done
+  1-6-vite-react-tailwind-frontend-bootstrap: done
+  1-7-tanstack-query-zustand-setup: done
+  1-8-aes-256-gcm-encryption-helper-for-credentials-at-rest: done
+  1-9-internal-event-bus: done
+  1-10-websocket-server-scaffold: done
+  1-11-job-scheduler-base: done
+  epic-1-retrospective: optional
+
+  epic-2: done
+  2-1-profiles-schema-and-repository: done
+  2-2-profile-api-endpoints-with-rate-limited-pin-verification: done
+  2-3-profile-and-admin-pin-middleware: done
+  2-4-permission-matrix-defaults-per-profile-type: done
+  2-5-design-system-tokens-and-core-primitives: done
+  2-6-app-shell-with-portrait-landscape-layout: done
+  2-7-bottom-navbar-side-rail-with-mode-buttons: done
+  2-8-profile-context-profile-switcher-avatar-strip: done
+  2-9-sidebar-filter-panel-portrait-top-filter-strip-landscape: done
+  2-10-kiosk-child-mode: done
+  2-11-guest-lock-screen-overlay: done
+  2-12-idle-timer-screen-dim-and-dpms-sleep: done
+  epic-2-retrospective: optional
+
+  epic-3: done
+  3-1-open-meteo-weather-service-cache: done
+  3-2-home-route-layout: done
+  3-3-day-carousel-read-only-render: done
+  3-4-day-card-details-wfh-school-drop-vehicle-pet-markers: done
+  3-5-mini-weather-widget-on-home-header: done
+  3-6-alerts-strip-on-home: done
+  3-7-journey-time-widget: done
+  3-8-plugin-widget-strip-on-home: done
+  3-9-coming-up-widget: done
+  epic-3-retrospective: optional
+
+  epic-4: done
+  4-1-calendar-accounts-and-events-schema: done
+  4-2-local-event-crud-endpoints: done
+  4-3-recurring-event-expansion-via-ical-js: done
+  4-4-calendar-service-module-skeleton-sync-interface: done
+  4-5-google-calendar-caldav-adapter-with-oauth2-qr-pairing: done
+  4-6-apple-icloud-yahoo-caldav-adapters: done
+  4-7-calendar-day-view: done
+  4-8-calendar-week-view: done
+  4-9-calendar-month-view: done
+  4-10-event-detail-modal-quick-add-modal: done
+  4-11-term-dates-ical-subscription: done
+  4-12-custody-schedule-entry-type: done
+  epic-4-retrospective: optional
+
+  epic-5: done
+  5-1-recipes-and-meal_plan-schema-repos: done
+  5-2-recipe-api-endpoints-photo-upload: done
+  5-3-recipe-url-import-via-schema-org-json-ld: done
+  5-4-meal-planner-7-day-grid: done
+  5-5-recipe-library-list-and-detail-views: done
+  5-6-add-recipe-ingredients-to-shopping-list: done
+  5-7-shopping-list-module: done
+  5-8-pantry-tab-placeholder: done
+  5-9-servings-calculator-portion-for-one-mode: done
+  5-10-meal-plan-history-and-rotation-suggestions: done
+  epic-5-retrospective: optional
+
+  epic-6: done
+  6-1-vehicles-bookings-fuel-logs-schema: done
+  6-2-vehicles-crud-ui: done
+  6-3-vehicle-booking-endpoints: done
+  6-4-vehicle-booking-ui: done
+  6-5-fuel-log-mpg-tracking: done
+  6-6-vehicle-reminders-mot-tax-insurance-service: done
+  6-7-transport-adapter-interface-uk-national-rail-stub: done
+  6-8-mileage-log-for-business-travel-freelancer: done
+  epic-6-retrospective: optional
+
+  epic-7: done
+  7-1-chores-completions-reward-redemptions-schema: done
+  7-2-chore-crud-endpoints-complete-endpoint: done
+  7-3-family-hub-page-admin-view: done
+  7-4-child-profile-view-kid-friendly: done
+  7-5-reward-star-grid-streak-tracking: done
+  7-6-health-log-endpoints-ui-general: done
+  7-7-baby-tracking-feeds-nappies-sleep: done
+  7-8-growth-log-percentile-chart: done
+  7-9-nhs-region-vaccination-reminders: done
+  7-10-children-s-routines-morning-bedtime: done
+  7-11-mood-wellbeing-log-optional: done
+  7-12-allowance-points-to-money-tracker-teen: done
+  epic-7-retrospective: optional
+
+  epic-8: done
+  8-1-house-schema-bin_schedules-subscriptions-home_maintenance-me: done
+  8-2-bin-schedule-alternating-cycle-calculator: done
+  8-3-bin-schedule-crud-ui-day-card-icons: done
+  8-4-bin-day-alerts: done
+  8-5-subscription-tracker: done
+  8-6-home-maintenance-log: done
+  8-7-meter-readings-log-chart: done
+  8-8-budget-tracker: done
+  8-9-household-chores-rota-adults: done
+  8-10-checklists-system-foundation: done
+  epic-8-retrospective: optional
+
+  epic-9: done
+  9-1-finance-schema-repositories: done
+  9-2-finance-agreements-crud: done
+  9-3-monthly-commitments-summary: done
+  9-4-savings-goals: done
+  9-5-end-date-alerts-mortgage-agreements-insurance: done
+  9-6-regular-commitments-benefits-income-reminders: done
+  9-7-debt-paydown-visualiser: done
+  epic-9-retrospective: optional
+
+  epic-10: done
+  10-1-pets-schema-repositories: done
+  10-2-pets-crud-ui: done
+  10-3-pet-health-log-vaccination-flea-worming-reminders: done
+  10-4-vet-appointments-calendar-event-with-pet-filter: done
+  10-5-pet-weight-log-chart: done
+  10-6-pet-documents-upload: done
+  epic-10-retrospective: optional
+
+  epic-11: done
+  11-1-board-schema-messages-countdowns-whiteboard-snapshots: done
+  11-2-family-message-board-ui: done
+  11-3-whiteboard-freehand-drawing: done
+  11-4-countdown-timers: done
+  11-5-general-lists: done
+  11-6-guest-visit-checklist: done
+  epic-11-retrospective: optional
+
+  epic-12: done
+  12-1-contacts-schema-crud-endpoints: done
+  12-2-contacts-list-categories-ui: done
+  12-3-tap-to-dial-via-tel-audio-hardware-check: done
+  12-4-cross-linking-from-pets-maintenance: done
+  epic-12-retrospective: optional
+
+  epic-13: done
+  13-1-ev-charging-log-schema-repo: done
+  13-2-manual-charging-log-endpoints-ui: done
+  13-3-energy-overview-dashboard: done
+  13-4-configurable-fuel-electricity-rates: done
+  13-5-ev-not-plugged-in-alert-core-plugin-independent: done
+  epic-13-retrospective: optional
+
+  epic-14: done
+  14-1-alerts-schema-repository: done
+  14-2-alert-engine-service: done
+  14-3-reminder-evaluator-scheduler-job: done
+  14-4-alerts-api-websocket-events: done
+  14-5-audio-chime-per-alert-category: done
+  14-6-severity-colour-coding-nav-badges: done
+  14-7-plugin-source-alerts: done
+  epic-14-retrospective: optional
+
+  epic-15: done
+  15-1-voice-process-bootstrap-systemd-service: done
+  15-2-openwakeword-integration-with-custom-wake-word-training: done
+  15-3-whisper-stt-integration: done
+  15-4-voice-command-router-core-built-ins: done
+  15-5-piper-tts-integration-queue: done
+  15-6-voice-listening-indicator-over-websocket: done
+  15-7-quiet-hours-enforcement: done
+  15-8-voice-command-history-admin-view: done
+  15-9-voice-fallback-when-hardware-missing: done
+  epic-15-retrospective: optional
+
+  epic-16: done
+  16-1-plugin-manifest-schema-loader: done
+  16-2-nestorplugincontext-plugin-manager-runtime: done
+  16-3-plugin-admin-page-enable-disable-settings-panel: done
+  16-4-plugin-settings-repository-encrypted: done
+  16-5-capability-registries-widgets-nav-modes-sidebar-filters-tran: done
+  16-6-plugin-error-isolation-chaos-test: done
+  16-7-tesla-plugin-manifest-auth-battery-widget: done
+  16-8-tesla-plugin-alerts-tts-announcements: done
+  16-9-eufy-plugin-cameras-doorbell-vacuum: done
+  16-10-ai-assistant-plugin-gemini-integration: done
+  16-11-garden-pal-plugin-stub: done
+  16-12-community-plugin-directory-loader: done
+  16-13-youtube-player-plugin: done
+  epic-16-retrospective: optional
+
+  epic-17: done
+  17-1-settings-shell-section-navigation: done
+  17-2-profiles-admin-panel: done
+  17-3-localisation-admin-panel: done
+  17-4-calendar-admin-panel: done
+  17-5-display-behaviour-admin-panel: done
+  17-6-navigation-admin-panel: done
+  17-7-voice-audio-admin-panel: done
+  17-8-accessibility-admin-panel: done
+  17-9-system-admin-panel-version-update-backup-factory-reset: done
+  17-10-notification-advance-days-configuration: done
+  epic-17-retrospective: optional
+
+  epic-18: in-progress
+  18-1-i18next-bootstrap-client-server-locale-settings: done
+  18-2-locale-aware-formatting-helpers: done
+  18-3-i18n-lint-rule-no-hardcoded-strings-in-jsx: done
+  18-4-accessibility-tokens-per-profile-text-size: done
+  18-5-axe-core-integration-in-playwright: backlog
+  18-6-rtl-preparation-css-logical-properties-everywhere: done
+  18-7-colour-blind-safe-palette-toggle: done
+  18-8-simplified-navigation-mode-per-profile: done
+  18-9-french-locale-acceptance-test: done
+  epic-18-retrospective: optional
+
+  epic-19: done
+  19-1-setup-wizard-react-component-10-step-shell: done
+  19-2-wizard-step-content-language-locale-profiles: done
+  19-3-wizard-step-content-calendars-qr-oauth: done
+  19-4-wizard-step-content-display-orientation-voice-features-plugi: done
+  19-5-single-line-install-script: done
+  19-6-systemd-service-templates: done
+  19-7-chromium-kiosk-launcher: done
+  19-8-in-app-update-mechanism: done
+  19-9-json-export-import-factory-reset: done
+  19-10-robust-screen-rotation-for-kiosk-displays: done
+  epic-19-retrospective: optional
+
+  epic-20: in-progress
+  20-1-jest-unit-test-infrastructure: done
+  20-2-supertest-api-integration-test-harness: done
+  20-3-react-testing-library-smoke-tests-on-key-components: done
+  20-4-playwright-e2e-test-suite: done
+  20-5-lighthouse-ci-on-home-calendar: done
+  20-6-network-audit-no-undisclosed-outbound-calls: done
+  20-7-plugin-chaos-test-in-ci: done
+  20-8-release-pipeline-tag-build-release-tarball: done
+  20-9-30-day-uptime-soak-test: in-progress
+  20-10-readme-hardware-guide-plugin-developer-docs: done
+  20-11-release-v1-0-mvp-cut: done
+  epic-20-retrospective: optional
+
+  epic-21: done
+  21-1-design-token-system: done
+  21-2-home-screen-redesign: done
+  21-3-calendar-redesign: done
+  21-4-food-redesign: done
+  21-5-navigation-bar-redesign: done
+  21-6-remaining-screens: done
+  epic-21-retrospective: optional
+
+  epic-22: done
+  22-1-motion-foundation: done
+  22-2-page-route-transitions: done
+  22-3-day-carousel: done
+  22-4-event-list-interactions: done
+  22-5-reward-achievement-animations: done
+  22-6-alert-notification-animations: done
+  22-7-form-button-feedback: done
+  22-8-screensaver-idle: done
+  epic-22-retrospective: optional
+
+  epic-23: backlog
+  23-1-diagnose-and-fix-apple-icloud-caldav: backlog
+  23-2-sync-status-visibility: backlog
+  23-3-sync-reliability: backlog
+  epic-23-retrospective: optional
+
+  epic-24: backlog
+  24-1-tesla-api-authentication: backlog
+  24-2-live-vehicle-data: backlog
+  24-3-home-screen-widget: backlog
+  24-4-alerts: backlog
+  24-5-home-charging-log: backlog
+  24-6-climate-pre-conditioning: backlog
+  epic-24-retrospective: optional
+
+  epic-25: backlog
+  25-1-ohme-api-integration: backlog
+  25-2-charge-session-data: backlog
+  25-3-home-screen-widget: backlog
+  25-4-smart-charge-schedule-display: backlog
+  epic-25-retrospective: optional
+
+  epic-26: backlog
+  26-1-smart-meter-live-data: backlog
+  26-2-energy-dashboard-ev-screen: backlog
+  26-3-agile-intelligent-tariff-display: backlog
+  26-4-home-screen-widget: backlog
+  26-5-alerts: backlog
+  epic-26-retrospective: optional
+
+  epic-27: backlog
+  27-1-eufy-api-integration: backlog
+  27-2-doorbell-ring-detection-alert: backlog
+  27-3-camera-feeds: backlog
+  27-4-robovac-control: backlog
+  27-5-home-screen-widget: backlog
+  epic-27-retrospective: optional
+
+  epic-28: backlog
+  28-1-home-assistant-api-connection: backlog
+  28-2-entity-widget-strip: backlog
+  28-3-entity-control-panel: backlog
+  28-4-automations-scenes: backlog
+  28-5-alerts-from-ha: backlog
+  28-6-voice-integration: backlog
+  epic-28-retrospective: optional
+
+  epic-29: backlog
+  29-1-photo-source-management: backlog
+  29-2-screensaver-component: backlog
+  29-3-idle-detection-trigger: backlog
+  29-4-night-mode-integration: backlog
+  epic-29-retrospective: optional
+
+  epic-30: backlog
+  30-1-update-check-service: backlog
+  30-2-update-badge-notification: backlog
+  30-3-update-execution: backlog
+  30-4-rollback: backlog
+  epic-30-retrospective: optional
+
+  epic-31: backlog
+  31-1-journey-time-commute-widget-prd-9-12: backlog
+  31-2-wfh-in-office-shift-day-indicators-prd-9-10: backlog
+  31-3-landscape-orientation-layout-prd-7: backlog
+  31-4-night-mode-brightness-control-prd-8: backlog
+  31-5-budget-tracker-prd-14: backlog
+  31-6-benefits-income-reminders-prd-15: backlog
+  31-7-toddler-teen-profile-views-prd-5-13: backlog
+  31-8-checklist-templates-prd-19: backlog
+  31-9-remote-access-setup-guide-prd-25: backlog
+  31-10-mileage-log-freelancer-features-prd-28: backlog
+  epic-31-retrospective: optional

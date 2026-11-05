@@ -52,11 +52,13 @@ Pre-commit (husky + lint-staged) runs eslint --fix and prettier on staged files.
 
 **Install/deploy** — `install/` holds the NUC/kiosk setup scripts and systemd unit; `scripts/build-release.sh` and `.github/workflows/release.yml` produce releases.
 
-## Project process (BMAD)
+## Project process (BMAD v7)
 
-Planning was done with the BMAD method; artifacts are the source of truth for scope:
-- `nestor-prd.md` (PRD), `docs/architecture-nestor-2026-05-08.md`, `docs/sprint-plan-nestor-2026-05-08.md`.
-- `docs/bmm-workflow-status.yaml` tracks completed stories and epics; `bmad/config.yaml` holds the BMAD config (output folder `docs`).
-- Epics and stories are in `docs/stories/` (`EPIC-NN-*.md`, `STORY-<epic>-<n>.md`). Per CONTRIBUTING, create/update the story file before and during implementation and tick tasks off as you go. Older `docs/story-*.md` files are legacy.
+Planning used the BMAD method. Installed via the Claude Code plugin marketplace (`bmad-method` + `bmad-toolbox` from `bmad-code-org/bmad-plugins`, user scope); `bmad setup` created `_bmad/` (config in `_bmad/config.toml`). Update through the marketplace, then run `bmad setup` again. Skills are `bmad-*` (e.g. `bmad-build`, `bmad-sprint-planning`, `bmad-correct-course`).
+
+- Planning docs: `nestor-prd.md`, `docs/architecture-nestor-2026-05-08.md`, `docs/sprint-plan-nestor-2026-05-08.md`. BMAD `project_knowledge` points at `docs/`.
+- **Tracking:** `_bmad-output/implementation-artifacts/sprint-status.yaml` is the source of truth for story status (rerun `bmad-sprint-planning` to refresh it). It is generated from `_bmad-output/planning-artifacts/epics.md`, which is a normalized copy of the epic/story headings from the sprint plan (epics 1-20) and `docs/stories/EPIC-21..31` files. If epics change, update the sources and regenerate `epics.md`; do not hand-edit statuses elsewhere.
+- Detailed story specs live in `docs/stories/` (`STORY-<epic>-<n>.md`; some older files use `story-<epic>.<n>.md`). Create/update the story file before and during implementation and tick tasks off.
+- `docs/stories/EPIC-20-osk.md` (on-screen keyboard) reuses epic number 20, which the sprint plan already uses for Testing, Polish & Release. It is not tracked in sprint-status until renumbered.
+- The former `docs/bmm-workflow-status.yaml` (per-epic implementation notes) was removed; read it from git history (before the BMAD v7 migration commit) if needed.
 - Commit messages reference the story ID, e.g. `feat: add X (STORY-1.2)`. Branch from `main`.
-- The BMAD skills/agents themselves are not in the repo.
