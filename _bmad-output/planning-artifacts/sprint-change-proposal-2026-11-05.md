@@ -90,3 +90,13 @@ Effort: large (7 epics, ~35 stories). Risk: medium-high, concentrated in the thr
 ## 5. Implementation handoff
 
 Scope **Major**: Architect (Winston) to confirm the Integrations hub design before 32.2; UX (Sally) for onboarding flows; then Developer (Amelia) via `bmad-build`. Success criteria: fresh NUC install passes 32.1; every day-one integration has a passing live-verification story before it is marked done.
+
+## 6. Research notes (2026-11-05, web search; verify before relying)
+
+- **Day-one scope (decided by owner):** Google, Apple and Yahoo calendars; Tesla; Octopus; Eufy; voice with an AI assistant using Gemini Flash on the free tier. Journey time is phase 2; Garden Pal is an "eventually" item.
+- **Speech-to-text:** Whisper no longer leads on every axis. Parakeet is fast but needs ~16 GB RAM and covers fewer languages; Moonshine suits constrained hardware like a Raspberry Pi; faster-whisper / whisper.cpp (int8) are the safe CPU choices for the NUC. No source benchmarked NUC or Pi hardware, so story 34.1 must measure. Sources: https://www.assemblyai.com/blog/top-open-source-stt-options-for-voice-applications , https://www.onresonant.com/resources/local-stt-models-2026 , https://localaimaster.com/blog/best-local-speech-to-text-models
+- **Wake word:** openWakeWord remains the standard server-side option; microWakeWord targets ESP32-class devices. Nothing found on Piper alternatives. Source: https://home-assistant.io/voice_control/about_wake_word
+- **Gemini free tier:** sources disagree on current Flash model names (2.5 / 3.5 / 3.8) and limits (~10-15 req/min, 250-1,500 req/day); free-tier prompts may be used by Google; Pro models removed from the free tier. Model id must be a setting. Check ai.google.dev. Sources: https://www.morphllm.com/gemini-api-pricing , https://yingtu.ai/en/blog/google-gemini-api-free-tier-limits-2026
+- **Tesla Fleet API:** personal use has a monthly credit (~EUR 10) then pay-per-use; requires a registered developer app and OAuth; commands need a virtual key paired in the car, read-only data does not. Source: https://docs.evcc.io/de/vehicles/tesla.md . Check developer.tesla.com for current pricing.
+- **Eufy:** `eufy-security-client` supports 2FA/captcha login and doorbell events but is an unofficial spare-time project; one source says it needs Node 24 (project targets Node 22). Vacuum control is not part of it. Source: https://www.npmjs.com/package/@rfnovo/eufy-security-client
+- **Google Calendar OAuth (unverified belief):** Google's device-code flow is believed not to allow Calendar scopes, which would make the existing flow unworkable. Not confirmed by search; story 33.1 must check Google's docs.
