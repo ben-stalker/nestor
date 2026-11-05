@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Ubuntu 22.04 LTS or later (Ubuntu 24.04 recommended)
-- Node.js 20 LTS (the installer will install this automatically via nvm if absent)
+- Node.js 22 LTS (the installer will install this automatically via nvm if absent)
 - `git`
 - Root / sudo access for the automated installer
 
@@ -17,7 +17,7 @@ The script:
 
 1. Detects the OS and aborts on unsupported versions.
 2. Installs system packages: `curl`, `wget`, `git`, `sqlite3`, `chromium-browser`, `onboard`, `unclutter`, `ffmpeg`, `xdotool`, `alsa-utils`, `python3-pip`, `jq`.
-3. Installs Node.js 20 LTS via nvm (skipped if a v20+ node is already present).
+3. Installs Node.js 22 LTS via nvm (skipped if a v22+ node is already present).
 4. Creates a dedicated `nestor` system user.
 5. Clones the repo to `/opt/nestor`, runs `npm install` and `npm run build`.
 6. Detects USB audio — if found, installs the voice service; otherwise installs the server and kiosk services only.

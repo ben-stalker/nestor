@@ -45,7 +45,7 @@ npm install
 npm run dev
 ```
 
-Requires Node 20 LTS (see `.nvmrc`). Use `nvm use` to switch automatically.
+Requires Node 22 LTS (see `.nvmrc`). Use `nvm use` to switch automatically.
 
 ## Documentation
 

@@ -53,19 +53,19 @@ install_deps() {
 }
 
 install_node() {
-  if command -v node >/dev/null 2>&1 && node --version | grep -q "v2[0-9]"; then
+  if command -v node >/dev/null 2>&1 && node --version | grep -Eq "^v(2[2-9]|[3-9][0-9])\."; then
     log "Node $(node --version) already installed — skipping"
     return
   fi
-  log "Installing Node.js 20 via nvm..."
+  log "Installing Node.js 22 via nvm..."
   export NVM_DIR="/opt/nvm"
   mkdir -p "$NVM_DIR"
   curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR="$NVM_DIR" bash
   # shellcheck source=/dev/null
   source "$NVM_DIR/nvm.sh"
-  nvm install 20
-  nvm use 20
-  nvm alias default 20
+  nvm install 22
+  nvm use 22
+  nvm alias default 22
   # Symlink to system PATH
   ln -sf "$(which node)" /usr/local/bin/node
   ln -sf "$(which npm)" /usr/local/bin/npm
@@ -92,7 +92,7 @@ install_app() {
 
   log "Installing npm dependencies..."
   cd "$INSTALL_DIR"
-  npm install --silent
+  npm ci
   log "Building app..."
   npm run build
 }

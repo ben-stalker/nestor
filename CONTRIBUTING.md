@@ -4,7 +4,7 @@ Thank you for your interest in contributing!
 
 ## Development Setup
 
-1. Install Node 20 LTS (use `.nvmrc` with `nvm use`)
+1. Install Node 22 LTS (use `.nvmrc` with `nvm use`)
 2. Run `npm install` from the repo root
 3. Use `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` to validate changes
 
