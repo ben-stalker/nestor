@@ -37,6 +37,7 @@ Pre-commit (husky + lint-staged) runs eslint --fix and prettier on staged files.
 ## Architecture
 
 **Server (`server/src`)** — Express 5 modular monolith, layered as `routes/` → `services/` → `repositories/` → better-sqlite3. One `*Repository` per table group, all extending `BaseRepository`. `app.ts` wires everything together (repositories, services, routers, plugin manager). Other pieces:
+
 - `db/migrationRunner.ts` applies `server/migrations/NNN_name.sql` in order (filename must match `^\d{3}_[a-z0-9_]+\.sql$` or it is skipped with a warning); `000_applied_migrations.sql` bootstraps the tracking table. Add schema changes as a new numbered migration, never edit applied ones.
 - `middleware/` handles per-profile auth and permissions (`requireProfile`, `requirePermission`, `requireAdminPin`, `kioskLock`).
 - `core/eventBus.ts` is an in-process event bus; `scheduler/` runs node-cron jobs (calendar sync, alert generation); `ws/` is the WebSocket server.
@@ -57,8 +58,9 @@ Pre-commit (husky + lint-staged) runs eslint --fix and prettier on staged files.
 Planning used the BMAD method. Installed via the Claude Code plugin marketplace (`bmad-method` + `bmad-toolbox` from `bmad-code-org/bmad-plugins`, user scope); `bmad setup` created `_bmad/` (config in `_bmad/config.toml`). Update through the marketplace, then run `bmad setup` again. Skills are `bmad-*` (e.g. `bmad-build`, `bmad-sprint-planning`, `bmad-correct-course`).
 
 - Planning docs: `nestor-prd.md`, `docs/architecture-nestor-2026-05-08.md`, `docs/sprint-plan-nestor-2026-05-08.md`. BMAD `project_knowledge` points at `docs/`.
-- **Tracking:** `_bmad-output/implementation-artifacts/sprint-status.yaml` is the source of truth for story status (rerun `bmad-sprint-planning` to refresh it). It is generated from `_bmad-output/planning-artifacts/epics.md`, which is a normalized copy of the epic/story headings from the sprint plan (epics 1-20) and `docs/stories/EPIC-21..31` files. If epics change, update the sources and regenerate `epics.md`; do not hand-edit statuses elsewhere.
+- **Tracking:** `_bmad-output/implementation-artifacts/sprint-status.yaml` is the source of truth for story status (rerun `bmad-sprint-planning` to refresh it). It is generated from `_bmad-output/planning-artifacts/epics.md`. Epics 1-31 in that file were derived from the sprint plan and `docs/stories/EPIC-21..31`; **epics 32+ are authored directly in `epics.md`** (from `sprint-change-proposal-2026-11-05.md`), so edit it there. Do not hand-edit statuses elsewhere.
+- **Replan (2026-11-05):** first NUC deploy showed integrations were built against mocks and had no onboarding. Read `docs/integration-audit-2026-11-05.md` and `_bmad-output/planning-artifacts/sprint-change-proposal-2026-11-05.md` before touching integrations. Rule: no integration story in epics 33-38 is `done` until its live-verification story passes on real accounts/hardware. Epics 23, 24, 26, 27 are superseded by 33, 36, 37, 38.
 - Detailed story specs live in `docs/stories/` (`STORY-<epic>-<n>.md`; some older files use `story-<epic>.<n>.md`). Create/update the story file before and during implementation and tick tasks off.
-- `docs/stories/EPIC-20-osk.md` (on-screen keyboard) reuses epic number 20, which the sprint plan already uses for Testing, Polish & Release. It is not tracked in sprint-status until renumbered.
+- The on-screen-keyboard epic was renumbered to Epic 39 (`docs/stories/EPIC-39-osk.md`) to resolve a collision with Epic 20.
 - The former `docs/bmm-workflow-status.yaml` (per-epic implementation notes) was removed; read it from git history (before the BMAD v7 migration commit) if needed.
 - Commit messages reference the story ID, e.g. `feat: add X (STORY-1.2)`. Branch from `main`.

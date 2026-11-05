@@ -1,4 +1,4 @@
-# EPIC-20: In-App On-Screen Keyboard (OSK Phase 2)
+# EPIC-39: In-App On-Screen Keyboard (OSK Phase 2)
 
 **Status:** backlog  
 **Priority:** 1
@@ -9,7 +9,7 @@ Replace the OS-level onboard approach (unreliable due to kiosk/AppArmor constrai
 
 ## Stories
 
-### STORY-20.1: Core keyboard component
+### STORY-39.1: Core keyboard component
 
 - Install `react-simple-keyboard` (MIT licence, well maintained)
 - Create `client/src/components/VirtualKeyboard.tsx` — full QWERTY layout matching portrait width
@@ -17,7 +17,7 @@ Replace the OS-level onboard approach (unreliable due to kiosk/AppArmor constrai
 - Themed to match Nestor warm palette (cream keys, rounded corners, subtle shadows)
 - Keyboard state managed via a React context (`KeyboardContext`) so any input anywhere in the app can trigger it without prop drilling
 
-### STORY-20.2: Global input focus detection
+### STORY-39.2: Global input focus detection
 
 - `KeyboardContext` provider wraps the app in `App.tsx`
 - Intercept `focus` and `blur` events on all `<input>` and `<textarea>` elements via a top-level capture listener
@@ -26,7 +26,7 @@ Replace the OS-level onboard approach (unreliable due to kiosk/AppArmor constrai
 - Tapping outside the keyboard + outside an input dismisses it
 - Respect `data-no-osk` attribute on inputs where OSK is explicitly unwanted
 
-### STORY-20.3: Autocomplete & number pad
+### STORY-39.3: Autocomplete & number pad
 
 - Shopping list and recipe ingredient inputs get word suggestions drawn from existing items
 - PIN entry inputs use number pad layout (large digits, no letters)

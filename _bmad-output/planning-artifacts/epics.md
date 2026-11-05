@@ -438,7 +438,7 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 
 ### Story 22.8: Screensaver & idle
 
-## Epic 23: Calendar Sync Fix
+## Epic 23: Calendar Sync Fix (superseded by Epic 33)
 
 ### Story 23.1: Diagnose and fix Apple iCloud CalDAV
 
@@ -446,7 +446,7 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 
 ### Story 23.3: Sync reliability
 
-## Epic 24: Tesla Plugin v2 — Full Implementation
+## Epic 24: Tesla Plugin v2 — Full Implementation (superseded by Epic 36)
 
 ### Story 24.1: Tesla API authentication
 
@@ -470,7 +470,7 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 
 ### Story 25.4: Smart charge schedule display
 
-## Epic 26: Octopus Energy Plugin v2 — Full Home Energy Dashboard
+## Epic 26: Octopus Energy Plugin v2 — Full Home Energy Dashboard (superseded by Epic 37)
 
 ### Story 26.1: Smart meter live data
 
@@ -482,7 +482,7 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 
 ### Story 26.5: Alerts
 
-## Epic 27: Eufy Plugin v2 — Cameras, Doorbell, Vacuum
+## Epic 27: Eufy Plugin v2 — Cameras, Doorbell, Vacuum (superseded by Epic 38)
 
 ### Story 27.1: Eufy API integration
 
@@ -549,3 +549,91 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 ### Story 31.9: Remote access setup guide (PRD §25)
 
 ### Story 31.10: Mileage log & freelancer features (PRD §28)
+
+## Epic 32: Deploy & first-run foundation
+
+### Story 32.1: Fresh-install smoke test
+
+### Story 32.2: Integrations hub
+
+### Story 32.3: Location setup
+
+### Story 32.4: Wizard → hub integration
+
+### Story 32.5: Repair stale tests
+
+## Epic 33: Calendars (Google, Apple, Yahoo)
+
+### Story 33.1: Spike: Google OAuth for Calendar
+
+### Story 33.2: Google onboarding
+
+### Story 33.3: Apple iCloud onboarding
+
+### Story 33.4: Yahoo onboarding
+
+### Story 33.5: Sync status & errors
+
+### Story 33.6: Live verification
+
+## Epic 34: Voice v2
+
+### Story 34.1: Spike: voice stack benchmark on the NUC
+
+### Story 34.2: Installer provisions voice stack
+
+### Story 34.3: Integrate chosen engine
+
+### Story 34.4: Voice diagnostics UI
+
+### Story 34.5: Live verification
+
+## Epic 35: AI assistant (Gemini Flash)
+
+### Story 35.1: Gemini client with configurable model id and API key
+
+### Story 35.2: Voice → AI routing
+
+### Story 35.3: Quota handling and privacy notice
+
+### Story 35.4: Live verification
+
+## Epic 36: Tesla
+
+### Story 36.1: Developer-app setup guide
+
+### Story 36.2: OAuth authorization + token refresh
+
+### Story 36.3: Re-wire existing plugin
+
+### Story 36.4: Virtual key pairing guide and commands
+
+### Story 36.5: Live verification
+
+## Epic 37: Octopus Energy
+
+### Story 37.1: Onboarding:
+
+### Story 37.2: Live verification
+
+## Epic 38: Eufy
+
+### Story 38.1: Spike: `eufy-security-client`
+
+### Story 38.2: Login onboarding
+
+### Story 38.3: Doorbell ring → alert + TTS
+
+### Story 38.4: Camera snapshots/feeds
+
+### Story 38.5: Spike: RoboVac control
+
+### Story 38.6: Live verification
+
+## Epic 39: In-App On-Screen Keyboard (OSK Phase 2)
+
+### Story 39.1: Core keyboard component
+
+### Story 39.2: Global input focus detection
+
+### Story 39.3: Autocomplete & number pad

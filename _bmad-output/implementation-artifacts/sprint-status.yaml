@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-05-2026 19:54
-last_updated: 11-05-2026 20:13
+last_updated: 11-05-2026 20:21
 project: nestor
 project_key: NOKEY
 tracking_system: file-system
@@ -369,3 +369,63 @@ development_status:
   31-9-remote-access-setup-guide-prd-25: backlog
   31-10-mileage-log-freelancer-features-prd-28: backlog
   epic-31-retrospective: optional
+
+  epic-32: backlog
+  32-1-fresh-install-smoke-test: backlog
+  32-2-integrations-hub: backlog
+  32-3-location-setup: backlog
+  32-4-wizard-hub-integration: backlog
+  32-5-repair-stale-tests: backlog
+  epic-32-retrospective: optional
+
+  epic-33: backlog
+  33-1-spike-google-oauth-for-calendar: backlog
+  33-2-google-onboarding: backlog
+  33-3-apple-icloud-onboarding: backlog
+  33-4-yahoo-onboarding: backlog
+  33-5-sync-status-errors: backlog
+  33-6-live-verification: backlog
+  epic-33-retrospective: optional
+
+  epic-34: backlog
+  34-1-spike-voice-stack-benchmark-on-the-nuc: backlog
+  34-2-installer-provisions-voice-stack: backlog
+  34-3-integrate-chosen-engine: backlog
+  34-4-voice-diagnostics-ui: backlog
+  34-5-live-verification: backlog
+  epic-34-retrospective: optional
+
+  epic-35: backlog
+  35-1-gemini-client-with-configurable-model-id-and-api-key: backlog
+  35-2-voice-ai-routing: backlog
+  35-3-quota-handling-and-privacy-notice: backlog
+  35-4-live-verification: backlog
+  epic-35-retrospective: optional
+
+  epic-36: backlog
+  36-1-developer-app-setup-guide: backlog
+  36-2-oauth-authorization-token-refresh: backlog
+  36-3-re-wire-existing-plugin: backlog
+  36-4-virtual-key-pairing-guide-and-commands: backlog
+  36-5-live-verification: backlog
+  epic-36-retrospective: optional
+
+  epic-37: backlog
+  37-1-onboarding: backlog
+  37-2-live-verification: backlog
+  epic-37-retrospective: optional
+
+  epic-38: backlog
+  38-1-spike-eufy-security-client: backlog
+  38-2-login-onboarding: backlog
+  38-3-doorbell-ring-alert-tts: backlog
+  38-4-camera-snapshots-feeds: backlog
+  38-5-spike-robovac-control: backlog
+  38-6-live-verification: backlog
+  epic-38-retrospective: optional
+
+  epic-39: backlog
+  39-1-core-keyboard-component: backlog
+  39-2-global-input-focus-detection: backlog
+  39-3-autocomplete-number-pad: backlog
+  epic-39-retrospective: optional
