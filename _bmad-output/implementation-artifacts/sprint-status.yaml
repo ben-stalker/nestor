@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-05-2026 19:54
-last_updated: 11-05-2026 19:54
+last_updated: 11-05-2026 20:13
 project: nestor
 project_key: NOKEY
 tracking_system: file-system
@@ -64,30 +64,30 @@ development_status:
   2-12-idle-timer-screen-dim-and-dpms-sleep: done
   epic-2-retrospective: optional
 
-  epic-3: done
-  3-1-open-meteo-weather-service-cache: done
+  epic-3: in-progress
+  3-1-open-meteo-weather-service-cache: in-progress
   3-2-home-route-layout: done
   3-3-day-carousel-read-only-render: done
   3-4-day-card-details-wfh-school-drop-vehicle-pet-markers: done
   3-5-mini-weather-widget-on-home-header: done
   3-6-alerts-strip-on-home: done
-  3-7-journey-time-widget: done
+  3-7-journey-time-widget: backlog
   3-8-plugin-widget-strip-on-home: done
   3-9-coming-up-widget: done
   epic-3-retrospective: optional
 
-  epic-4: done
+  epic-4: in-progress
   4-1-calendar-accounts-and-events-schema: done
   4-2-local-event-crud-endpoints: done
   4-3-recurring-event-expansion-via-ical-js: done
   4-4-calendar-service-module-skeleton-sync-interface: done
-  4-5-google-calendar-caldav-adapter-with-oauth2-qr-pairing: done
-  4-6-apple-icloud-yahoo-caldav-adapters: done
+  4-5-google-calendar-caldav-adapter-with-oauth2-qr-pairing: in-progress
+  4-6-apple-icloud-yahoo-caldav-adapters: in-progress
   4-7-calendar-day-view: done
   4-8-calendar-week-view: done
   4-9-calendar-month-view: done
   4-10-event-detail-modal-quick-add-modal: done
-  4-11-term-dates-ical-subscription: done
+  4-11-term-dates-ical-subscription: in-progress
   4-12-custody-schedule-entry-type: done
   epic-4-retrospective: optional
 
@@ -196,32 +196,32 @@ development_status:
   14-7-plugin-source-alerts: done
   epic-14-retrospective: optional
 
-  epic-15: done
-  15-1-voice-process-bootstrap-systemd-service: done
-  15-2-openwakeword-integration-with-custom-wake-word-training: done
-  15-3-whisper-stt-integration: done
+  epic-15: in-progress
+  15-1-voice-process-bootstrap-systemd-service: in-progress
+  15-2-openwakeword-integration-with-custom-wake-word-training: in-progress
+  15-3-whisper-stt-integration: in-progress
   15-4-voice-command-router-core-built-ins: done
-  15-5-piper-tts-integration-queue: done
+  15-5-piper-tts-integration-queue: in-progress
   15-6-voice-listening-indicator-over-websocket: done
   15-7-quiet-hours-enforcement: done
   15-8-voice-command-history-admin-view: done
   15-9-voice-fallback-when-hardware-missing: done
   epic-15-retrospective: optional
 
-  epic-16: done
+  epic-16: in-progress
   16-1-plugin-manifest-schema-loader: done
   16-2-nestorplugincontext-plugin-manager-runtime: done
   16-3-plugin-admin-page-enable-disable-settings-panel: done
   16-4-plugin-settings-repository-encrypted: done
   16-5-capability-registries-widgets-nav-modes-sidebar-filters-tran: done
   16-6-plugin-error-isolation-chaos-test: done
-  16-7-tesla-plugin-manifest-auth-battery-widget: done
-  16-8-tesla-plugin-alerts-tts-announcements: done
-  16-9-eufy-plugin-cameras-doorbell-vacuum: done
-  16-10-ai-assistant-plugin-gemini-integration: done
-  16-11-garden-pal-plugin-stub: done
-  16-12-community-plugin-directory-loader: done
-  16-13-youtube-player-plugin: done
+  16-7-tesla-plugin-manifest-auth-battery-widget: in-progress
+  16-8-tesla-plugin-alerts-tts-announcements: in-progress
+  16-9-eufy-plugin-cameras-doorbell-vacuum: backlog
+  16-10-ai-assistant-plugin-gemini-integration: in-progress
+  16-11-garden-pal-plugin-stub: backlog
+  16-12-community-plugin-directory-loader: in-progress
+  16-13-youtube-player-plugin: in-progress
   epic-16-retrospective: optional
 
   epic-17: done
@@ -249,15 +249,15 @@ development_status:
   18-9-french-locale-acceptance-test: done
   epic-18-retrospective: optional
 
-  epic-19: done
+  epic-19: in-progress
   19-1-setup-wizard-react-component-10-step-shell: done
   19-2-wizard-step-content-language-locale-profiles: done
   19-3-wizard-step-content-calendars-qr-oauth: done
   19-4-wizard-step-content-display-orientation-voice-features-plugi: done
-  19-5-single-line-install-script: done
-  19-6-systemd-service-templates: done
-  19-7-chromium-kiosk-launcher: done
-  19-8-in-app-update-mechanism: done
+  19-5-single-line-install-script: in-progress
+  19-6-systemd-service-templates: in-progress
+  19-7-chromium-kiosk-launcher: in-progress
+  19-8-in-app-update-mechanism: in-progress
   19-9-json-export-import-factory-reset: done
   19-10-robust-screen-rotation-for-kiosk-displays: done
   epic-19-retrospective: optional
