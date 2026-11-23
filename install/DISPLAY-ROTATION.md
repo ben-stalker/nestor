@@ -70,16 +70,16 @@ For Wayland use `wlr-randr` (wlroots compositors) or `gnome-randr` / `kscreen-do
 depending on your compositor, and set touch mapping via the compositor's input
 configuration (e.g. `/etc/libinput/` or `swaymsg input`).
 
-Nestor's kiosk service currently targets X11 (`DISPLAY=:0`). If you migrate to
-Wayland, update the `[Service]` environment in `install/services/nestor-kiosk.service`
-and replace calls to `rotate-display.sh` with the appropriate Wayland tool.
+Nestor's kiosk session (`install/kiosk-session.sh`, installed as a GDM X session by
+`install/scripts/install-kiosk-session.sh`) targets X11 and GDM is configured with
+`WaylandEnable=false`. If you migrate to Wayland, replace the `xrandr`/`xinput` calls
+in `kiosk-session.sh` with the appropriate Wayland tool.
 
 ## Troubleshooting
 
 **"No display detected. Is X running?"**
-The script must run inside an X session. If called from a systemd service, ensure
-`DISPLAY=:0` is set in the `[Service]` environment and the service depends on
-`graphical.target`.
+The script must run inside an X session (the `nestor-kiosk` GDM session provides
+one). If you run it over SSH, set `DISPLAY=:0` and `XAUTHORITY=~/.Xauthority`.
 
 **Touch coordinates are wrong after rotation**
 Run the script with `--dry-run` to verify which CTM would be applied, then apply

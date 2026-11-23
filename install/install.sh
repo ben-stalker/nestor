@@ -40,7 +40,7 @@ install_deps() {
   log "Installing system dependencies..."
   apt-get update -qq
   apt-get install -y -qq \
-    curl wget git unzip build-essential \
+    curl wget git gnupg unzip build-essential \
     sqlite3 \
     chromium-browser \
     onboard \
@@ -50,6 +50,28 @@ install_deps() {
     alsa-utils \
     python3-pip \
     jq
+}
+
+# Google Chrome is preferred for the kiosk: the on-screen keyboard needs its AT-SPI
+# support. Google only ships amd64 builds, so other arches (e.g. Pi 5) keep Chromium.
+install_chrome() {
+  if command -v google-chrome >/dev/null 2>&1; then
+    log "Google Chrome already installed — skipping"
+    return
+  fi
+  if [[ "$(dpkg --print-architecture)" != "amd64" ]]; then
+    log "Google Chrome is amd64-only; using Chromium on $(dpkg --print-architecture)"
+    return
+  fi
+  log "Installing Google Chrome..."
+  install -d -m 0755 /usr/share/keyrings
+  curl -fsSL https://dl.google.com/linux/linux_signing_key.pub \
+    | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+    > /etc/apt/sources.list.d/google-chrome.list
+  apt-get update -qq
+  apt-get install -y -qq google-chrome-stable \
+    || log "WARNING: Google Chrome install failed; kiosk will fall back to Chromium"
 }
 
 install_node() {
@@ -133,10 +155,17 @@ install_services() {
     bash "$INSTALL_DIR/install/scripts/install-services.sh"
 }
 
+install_kiosk_session() {
+  log "Installing kiosk session (GDM auto-login, rotation, touch matrix)..."
+  NESTOR_USER="$NESTOR_USER" INSTALL_DIR="$INSTALL_DIR" \
+    bash "$INSTALL_DIR/install/scripts/install-kiosk-session.sh"
+}
+
 main() {
   require_root
   detect_distro
   install_deps
+  install_chrome
   install_node
   create_user
   install_app
@@ -149,7 +178,9 @@ main() {
     install_services
   fi
 
-  log "Nestor installation complete!"
+  install_kiosk_session
+
+  log "Nestor installation complete! Reboot to enter the kiosk session."
   log "Access at: http://localhost:3000"
   log "View logs: journalctl -u nestor-server -f"
 }

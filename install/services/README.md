@@ -1,6 +1,6 @@
 # Nestor systemd Service Templates
 
-This directory contains systemd unit file templates for the three Nestor services.
+This directory contains systemd unit file templates for the Nestor services.
 They use placeholder tokens that are substituted by `install/scripts/install-services.sh`
 before being copied to `/etc/systemd/system/`.
 
@@ -13,13 +13,6 @@ available before the server tries to connect to external APIs or the local SQLit
 database. Watches the process with `WatchdogSec=30` and restarts automatically on
 any exit. Loads optional runtime environment variables from `/etc/nestor.env`
 (the `-` prefix means the file is silently skipped if it does not exist).
-
-### `nestor-kiosk.service`
-
-Launches Chromium in kiosk mode after both `nestor-server.service` and
-`graphical.target` are ready. Depends on (and requires) the server service so that
-systemd will not start the browser unless the backend is running. Runs as the kiosk
-user with `DISPLAY=:0` so it attaches to the physical screen managed by the X server.
 
 ### `nestor-voice.service`
 

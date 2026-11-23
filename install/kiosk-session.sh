@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Nestor kiosk X session — replaces GNOME, no panels or dock
-exec > /home/nestor/.kiosk-session.log 2>&1
+exec > "$HOME/.kiosk-session.log" 2>&1
 
 xset s off
 xset s noblank
@@ -36,8 +36,16 @@ until curl -sf http://localhost:3000 > /dev/null 2>&1; do
   sleep 1
 done
 
-# Launch Chrome fullscreen kiosk — exec replaces this shell
-exec google-chrome \
+# Prefer Google Chrome (the on-screen keyboard needs its AT-SPI support);
+# fall back to Chromium so a fresh install still gets a working kiosk.
+BROWSER=$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)
+if [[ -z "$BROWSER" ]]; then
+  echo "No Chrome/Chromium found" >&2
+  exit 1
+fi
+
+# Launch fullscreen kiosk — exec replaces this shell
+exec "$BROWSER" \
   --password-store=basic \
   --kiosk \
   --no-first-run \

@@ -17,6 +17,8 @@ cpu=$(top -bn1 | awk '/^%Cpu/ { print $2 }')
 db_path="${NESTOR_DB_PATH:-$HOME/.nestor/nestor.db}"
 db_size=$(stat -c %s "$db_path" 2>/dev/null || echo 0)
 server_restarts=$(systemctl show -p NRestarts nestor-server 2>/dev/null | cut -d= -f2 || echo 0)
-client_restarts=$(systemctl show -p NRestarts nestor-kiosk 2>/dev/null | cut -d= -f2 || echo 0)
+# The kiosk is a GDM X session (kiosk-session.sh), not a systemd unit, so it has
+# no restart counter. Column kept at 0 for CSV compatibility.
+client_restarts=0
 
 echo "$ts,$mem,$cpu,$db_size,$server_restarts,$client_restarts" >> "$CSV"

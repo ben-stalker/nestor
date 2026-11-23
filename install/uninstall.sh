@@ -16,7 +16,7 @@ systemctl disable nestor-server nestor-kiosk nestor-voice 2>/dev/null || true
 
 echo "Removing service files..."
 rm -f /etc/systemd/system/nestor-server.service
-rm -f /etc/systemd/system/nestor-kiosk.service
+rm -f /etc/systemd/system/nestor-kiosk.service /usr/share/xsessions/nestor-kiosk.desktop /etc/X11/xorg.conf.d/90-touch-rotation.conf
 rm -f /etc/systemd/system/nestor-voice.service
 systemctl daemon-reload
 

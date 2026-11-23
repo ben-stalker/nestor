@@ -22,7 +22,17 @@ install_service() {
 }
 
 install_service nestor-server
-install_service nestor-kiosk
+
+# The kiosk browser runs as a GDM X session (see install-kiosk-session.sh), not
+# a systemd unit, so rotation and the touch matrix loop live in one place.
+# Retire the legacy unit names from earlier installs so only one server binds :3000.
+for legacy in nestor nestor-kiosk; do
+  if [[ -f "$SYSTEMD_DIR/$legacy.service" ]]; then
+    systemctl disable --now "$legacy.service" 2>/dev/null || true
+    rm -f "$SYSTEMD_DIR/$legacy.service"
+    echo "Removed legacy $legacy.service"
+  fi
+done
 
 if $INSTALL_VOICE; then
   install_service nestor-voice
@@ -30,7 +40,7 @@ if $INSTALL_VOICE; then
 fi
 
 systemctl daemon-reload
-systemctl enable --now nestor-server.service nestor-kiosk.service
+systemctl enable --now nestor-server.service
 
 if $INSTALL_VOICE; then
   systemctl enable --now nestor-voice.service

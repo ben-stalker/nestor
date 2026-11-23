@@ -53,12 +53,12 @@ NESTOR_USER=nestor INSTALL_DIR=/opt/nestor \
 
 ## Systemd services
 
-Three services are installed under systemd:
+Two services are installed under systemd (plus the kiosk X session below):
 
 | Service | Description |
 |---|---|
 | `nestor-server` | Node.js/Express HTTP server. Serves the React SPA and REST API on port 3000. |
-| `nestor-kiosk` | Launches Chromium in kiosk mode on the attached display. Depends on `nestor-server`. |
+| *(kiosk session)* | Not a systemd unit. `install-kiosk-session.sh` registers a GDM X session (`nestor-kiosk`) that auto-logs in the kiosk user, rotates the display, keeps the touch coordinate matrix applied, and launches Chrome/Chromium full-screen. Reboot after install. |
 | `nestor-voice` | Voice pipeline (OpenWakeWord + Whisper STT + Piper TTS). Only installed when USB audio is detected. Depends on `nestor-server`. |
 
 Common service commands:

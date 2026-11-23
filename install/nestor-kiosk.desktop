@@ -1,5 +1,5 @@
 [Desktop Entry]
 Name=Nestor Kiosk
 Comment=Nestor family dashboard kiosk session
-Exec=/opt/nestor/kiosk-session.sh
+Exec={{INSTALL_DIR}}/install/kiosk-session.sh
 Type=Application
