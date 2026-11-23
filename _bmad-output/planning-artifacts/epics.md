@@ -554,6 +554,8 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 
 ### Story 32.1: Fresh-install smoke test
 
+Progress 2026-11-23: NUC (192.168.1.213) updated to `main`, Node 22, and the installer re-run successfully in place with `INSTALL_DIR=/opt/nestor/app` (commit 9098e63: kiosk installed as a GDM X session with rotation and touch matrix loop, Google Chrome installed on amd64, legacy `nestor`/`nestor-kiosk` units retired). Touch works (the monitor needs its own USB cable). Still to verify from a truly clean machine; the in-place re-run does not prove a fresh install. Known issue: see 32.6.
+
 ### Story 32.2: Integrations hub
 
 ### Story 32.3: Location setup
@@ -561,6 +563,15 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 ### Story 32.4: Wizard → hub integration
 
 ### Story 32.5: Repair stale tests
+
+### Story 32.6: Suppress Chrome popup in the kiosk
+
+Found 2026-11-23 on the NUC after the installer re-run. A Chrome-owned popup shows in the top-left of the portrait screen, mostly clipped: only the end of an orange button and an "x" in the top-right are visible, and the text is unreadable. Tapping the orange button navigates the kiosk to Chrome's marketing page (google.com/chrome, "Gemini in Chrome"), and kiosk mode has no way back (ctrl+L does nothing; restarting gdm3 recovers). Tapping the "x" dismisses it and stays on Nestor. It was still present after a GDM restart, so it is not one-off.
+
+- [ ] Identify the popup (screenshot with `scrot` over SSH with `DISPLAY=:0 XAUTHORITY=~nestor/.Xauthority`, or inspect X windows) and whether it comes from Chrome UI (promo bubble, default-browser, sign-in, update) or something else.
+- [ ] Disable it for good. Preferred: a managed policy at `/etc/opt/chrome/policies/managed/nestor.json` (e.g. `DefaultBrowserSettingEnabled`, `PromotionalTabsEnabled`, `BrowserSignin`, `GeminiSettings`, `MetricsReportingEnabled`), installed by `install-kiosk-session.sh`; fall back to `--disable-features=...` flags in `kiosk-session.sh`.
+- [ ] Guard against kiosk escape: block navigation away from `localhost:3000` (e.g. `URLBlocklist` / `URLAllowlist` policy).
+- [ ] Verify on the NUC after a reboot with a screenshot.
 
 ## Epic 33: Calendars (Google, Apple, Yahoo)
 
@@ -581,6 +592,8 @@ docs/stories/EPIC-20-osk.md is a separate, unnumbered OSK epic that collides wit
 ### Story 34.1: Spike: voice stack benchmark on the NUC
 
 ### Story 34.2: Installer provisions voice stack
+
+Note 2026-11-23: `install.sh` enables `nestor-voice.service` whenever USB audio is detected, but nothing provisions the models. On the NUC the voice process starts, tries `~/.nestor/voice/wakeword-model.tflite`, and the OpenWakeWord process exits with code 2 (restart loop under `Restart=always`). The installer should only enable the voice unit once the stack is provisioned.
 
 ### Story 34.3: Integrate chosen engine
 
